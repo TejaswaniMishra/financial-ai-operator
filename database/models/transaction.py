@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from sqlalchemy import String, ForeignKey, Numeric, DateTime, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from typing import Optional
 
 from database.base import Base, TimestampMixin
