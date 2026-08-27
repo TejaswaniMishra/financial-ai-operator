@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
-from database.connection import get_session
+from database.connection import get_async_db
 from database.models import Payment
 from packages.schemas.domain import PaymentSchema
 
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/transactions", tags=["Transactions"])
 @router.get("/payments", response_model=list[PaymentSchema])
 async def list_payments(
     merchant_id: str | None = None,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_async_db)
 ):
     stmt = select(Payment)
     if merchant_id:
@@ -24,7 +24,7 @@ async def list_payments(
 @router.get("/payments/{payment_id}/lineage")
 async def get_payment_lineage(
     payment_id: str,
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_async_db)
 ):
     """
     Returns the deterministic lineage:
@@ -34,10 +34,7 @@ async def get_payment_lineage(
         selectinload(Payment.order),
         selectinload(Payment.refunds),
         selectinload(Payment.fees),
-        selectinload(Payment.settlement_items).selectinload(
-            # We can't directly do SettlementItem.settlement in this string fashion easily
-            # Let's import the models to make it type safe
-        )
+        selectinload(Payment.settlement_items)
     ).where(Payment.id == payment_id)
     
     result = await session.execute(stmt)

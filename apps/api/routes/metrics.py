@@ -2,14 +2,14 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
-from database.connection import get_session
+from database.connection import get_async_db
 from database.models import Merchant, Payment, Settlement, BankTransaction
 
 router = APIRouter(prefix="/metrics", tags=["Metrics"])
 
 @router.get("/overview")
 async def get_metrics_overview(
-    session: AsyncSession = Depends(get_session)
+    session: AsyncSession = Depends(get_async_db)
 ):
     """
     Returns aggregate counts and total volume for the dashboard.
