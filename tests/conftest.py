@@ -5,8 +5,8 @@ from httpx import ASGITransport, AsyncClient
 
 # Force test environment before importing settings/app
 os.environ["APP_ENV"] = "test"
-os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///:memory:"
-os.environ["DATABASE_URL_SYNC"] = "sqlite:///:memory:"
+os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///file:testdb?mode=memory&cache=shared"
+os.environ["DATABASE_URL_SYNC"] = "sqlite:///file:testdb?mode=memory&cache=shared"
 os.environ["DEBUG"] = "false"
 
 from apps.api.main import app
@@ -25,3 +25,17 @@ async def async_client():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         yield client
+
+@pytest_asyncio.fixture
+async def db_session():
+    from database.connection import async_engine, AsyncSessionLocal
+    from database.base import Base
+    
+    async with async_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+        
+    async with AsyncSessionLocal() as session:
+        yield session
+        
+    async with async_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
