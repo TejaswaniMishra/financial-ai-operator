@@ -3,6 +3,7 @@ import json
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import Optional
+from decimal import Decimal
 
 from database.models.ingestion import IngestionRecord, IngestionException
 
@@ -63,6 +64,17 @@ class IngestionService:
         )
         self.session.add(record)
         return record
+
+    async def validate_refund_domain_rules(self, refund_amount: Decimal, payment_amount: Decimal, refund_currency: str, payment_currency: str):
+        if refund_amount > payment_amount:
+            raise ValueError(f"Refund amount {refund_amount} exceeds payment amount {payment_amount}")
+        if refund_currency != payment_currency:
+            raise ValueError(f"Refund currency {refund_currency} does not match payment currency {payment_currency}")
+
+    async def validate_settlement_totals(self, gross: Decimal, fee: Decimal, adj: Decimal, expected_net: Decimal):
+        calculated_net = gross - fee + adj
+        if expected_net != calculated_net:
+            raise ValueError(f"Settlement totals invalid: {gross} - {fee} + {adj} != {expected_net}")
 
     async def create_ingestion_exception(
         self, exception_id: str, ingestion_record_id: str, error_message: str
