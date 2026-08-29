@@ -44,8 +44,9 @@ class PaymentToSettlementMatcher(BaseMatcher):
                 # UNRESOLVED relationship. We can optionally flag if it's too old (MISSING_SETTLEMENT)
                 # Let's check if it's older than 3 days
                 if datetime.now(timezone.utc).replace(tzinfo=None) - payment.processed_at > timedelta(days=3):
-                    await self._create_missing_settlement_discrepancy(payment)
-                    stats["discrepancies"] += 1
+                    created_disc = await self._create_missing_settlement_discrepancy(payment)
+                    if created_disc:
+                        stats["discrepancies"] += 1
                 continue
             
             # The explicit lineage gives us CONFIRMED relationships
@@ -62,29 +63,33 @@ class PaymentToSettlementMatcher(BaseMatcher):
                     "currency_match": payment.currency == item.currency
                 }
                 
-                discrepancy = None
+                discrepancy_data = None
+                
+                # 1. Amount mismatch
                 if payment.amount != item.amount:
                     fin_status = FinStatusEnum.DISCREPANCY
-                    discrepancy = self._create_discrepancy(
-                        rule_code="PAYMENT_SETTLEMENT_AMOUNT_001",
-                        disc_type=DiscTypeEnum.AMOUNT_MISMATCH,
-                        payment=payment,
-                        target_id=item.settlement_id,
-                        target_type="SETTLEMENT",
-                        expected=payment.amount,
-                        actual=item.amount
-                    )
+                    discrepancy_data = {
+                        "rule_code": "PAYMENT_SETTLEMENT_AMOUNT_001",
+                        "disc_type": DiscTypeEnum.AMOUNT_MISMATCH,
+                        "payment": payment,
+                        "target_id": item.id,
+                        "target_type": "SETTLEMENT_ITEM",
+                        "expected": payment.amount,
+                        "actual": item.amount
+                    }
+                    
+                # 2. Currency mismatch
                 elif payment.currency != item.currency:
                     fin_status = FinStatusEnum.DISCREPANCY
-                    discrepancy = self._create_discrepancy(
-                        rule_code="PAYMENT_SETTLEMENT_CURRENCY_001",
-                        disc_type=DiscTypeEnum.CURRENCY_MISMATCH,
-                        payment=payment,
-                        target_id=item.settlement_id,
-                        target_type="SETTLEMENT",
-                        expected=payment.amount,
-                        actual=item.amount
-                    )
+                    discrepancy_data = {
+                        "rule_code": "PAYMENT_SETTLEMENT_CURRENCY_001",
+                        "disc_type": DiscTypeEnum.CURRENCY_MISMATCH,
+                        "payment": payment,
+                        "target_id": item.id,
+                        "target_type": "SETTLEMENT_ITEM",
+                        "expected": None,
+                        "actual": None
+                    }
                 
                 # Create Relationship
                 created = await self._upsert_relationship(
@@ -100,9 +105,10 @@ class PaymentToSettlementMatcher(BaseMatcher):
                 if created:
                     stats["relationships_created"] += 1
                 
-                if discrepancy:
-                    self.session.add(discrepancy)
-                    stats["discrepancies"] += 1
+                if discrepancy_data:
+                    created_disc = await self._upsert_discrepancy(**discrepancy_data)
+                    if created_disc:
+                        stats["discrepancies"] += 1
 
         return stats
 
@@ -137,22 +143,33 @@ class PaymentToSettlementMatcher(BaseMatcher):
             return True
         return False
 
-    def _create_discrepancy(self, rule_code, disc_type, payment, target_id, target_type, expected, actual):
-        return Discrepancy(
-            id=str(uuid.uuid4()),
-            run_id=self.run_id,
-            rule_code=rule_code,
-            discrepancy_type=disc_type,
-            severity=SevEnum.MEDIUM,
-            source_entity_type="PAYMENT",
-            source_entity_id=payment.id,
-            related_entity_type=target_type,
-            related_entity_id=target_id,
-            expected_amount=expected,
-            actual_amount=actual,
-            difference_amount=abs(expected - actual) if expected and actual else None,
-            currency=payment.currency
+    async def _upsert_discrepancy(self, rule_code, disc_type, payment, target_id, target_type, expected, actual):
+        stmt = select(Discrepancy).where(
+            and_(
+                Discrepancy.source_entity_id == payment.id,
+                Discrepancy.rule_code == rule_code
+            )
         )
+        result = await self.session.execute(stmt)
+        if not result.scalar_one_or_none():
+            disc = Discrepancy(
+                id=str(uuid.uuid4()),
+                run_id=self.run_id,
+                rule_code=rule_code,
+                discrepancy_type=disc_type,
+                severity=SevEnum.HIGH,
+                source_entity_type="PAYMENT",
+                source_entity_id=payment.id,
+                related_entity_type=target_type,
+                related_entity_id=target_id,
+                expected_amount=expected,
+                actual_amount=actual,
+                difference_amount=abs(expected - actual) if expected is not None and actual is not None else None,
+                currency=payment.currency
+            )
+            self.session.add(disc)
+            return True
+        return False
         
     async def _create_missing_settlement_discrepancy(self, payment):
         # Check if already exists to avoid dupes across runs
@@ -176,3 +193,5 @@ class PaymentToSettlementMatcher(BaseMatcher):
                 expected_amount=payment.amount
             )
             self.session.add(disc)
+            return True
+        return False

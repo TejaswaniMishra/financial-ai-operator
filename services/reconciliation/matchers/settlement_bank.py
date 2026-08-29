@@ -42,7 +42,7 @@ class SettlementToBankTransactionMatcher(BaseMatcher):
             
             if settlement.actual_settled_amount and expected_net != settlement.actual_settled_amount:
                 # Fee discrepancy
-                await self._upsert_discrepancy(
+                created = await self._upsert_discrepancy(
                     rule_code="SETTLEMENT_FEE_MISMATCH_001",
                     disc_type=DiscTypeEnum.FEE_MISMATCH,
                     sev=SevEnum.MEDIUM,
@@ -52,13 +52,14 @@ class SettlementToBankTransactionMatcher(BaseMatcher):
                     actual=settlement.actual_settled_amount,
                     currency=settlement.currency
                 )
-                stats["discrepancies"] += 1
+                if created:
+                    stats["discrepancies"] += 1
 
             bank_txs = settlement.bank_transactions
             if not bank_txs:
                 # Missing bank tx if it's older than 3 days
                 if datetime.now(timezone.utc).replace(tzinfo=None) - settlement.settlement_date > timedelta(days=3):
-                    await self._upsert_discrepancy(
+                    created = await self._upsert_discrepancy(
                         rule_code="SETTLEMENT_MISSING_BANK_TX_001",
                         disc_type=DiscTypeEnum.MISSING_BANK_TX,
                         sev=SevEnum.HIGH,
@@ -68,7 +69,8 @@ class SettlementToBankTransactionMatcher(BaseMatcher):
                         actual=None,
                         currency=settlement.currency
                     )
-                    stats["discrepancies"] += 1
+                    if created:
+                        stats["discrepancies"] += 1
                 continue
             
             for btx in bank_txs:
@@ -90,7 +92,7 @@ class SettlementToBankTransactionMatcher(BaseMatcher):
                 amount_to_match = settlement.actual_settled_amount if settlement.actual_settled_amount else expected_net
                 if btx.amount != amount_to_match:
                     fin_status = FinStatusEnum.DISCREPANCY
-                    await self._upsert_discrepancy(
+                    created = await self._upsert_discrepancy(
                         rule_code="SETTLEMENT_BANK_AMOUNT_001",
                         disc_type=DiscTypeEnum.AMOUNT_MISMATCH,
                         sev=SevEnum.HIGH,
@@ -100,12 +102,13 @@ class SettlementToBankTransactionMatcher(BaseMatcher):
                         actual=btx.amount,
                         currency=settlement.currency
                     )
-                    stats["discrepancies"] += 1
+                    if created:
+                        stats["discrepancies"] += 1
                     
                 # 2. Timing policy: bank tx arrived > 3 days late
                 elif evidence["date_diff_days"] is not None and evidence["date_diff_days"] > 3:
                     fin_status = FinStatusEnum.DISCREPANCY
-                    await self._upsert_discrepancy(
+                    created = await self._upsert_discrepancy(
                         rule_code="SETTLEMENT_TIMING_001",
                         disc_type=DiscTypeEnum.LATE_ARRIVAL,
                         sev=SevEnum.LOW,
@@ -115,12 +118,13 @@ class SettlementToBankTransactionMatcher(BaseMatcher):
                         actual=None,
                         currency=settlement.currency
                     )
-                    stats["discrepancies"] += 1
+                    if created:
+                        stats["discrepancies"] += 1
                     
                 # 3. Currency mismatch
                 elif settlement.currency != btx.currency:
                     fin_status = FinStatusEnum.DISCREPANCY
-                    await self._upsert_discrepancy(
+                    created = await self._upsert_discrepancy(
                         rule_code="SETTLEMENT_BANK_CURRENCY_001",
                         disc_type=DiscTypeEnum.CURRENCY_MISMATCH,
                         sev=SevEnum.HIGH,
@@ -130,7 +134,8 @@ class SettlementToBankTransactionMatcher(BaseMatcher):
                         actual=None,
                         currency=settlement.currency
                     )
-                    stats["discrepancies"] += 1
+                    if created:
+                        stats["discrepancies"] += 1
 
                 # Create Relationship
                 created = await self._upsert_relationship(
@@ -199,3 +204,5 @@ class SettlementToBankTransactionMatcher(BaseMatcher):
                 currency=currency
             )
             self.session.add(disc)
+            return True
+        return False
