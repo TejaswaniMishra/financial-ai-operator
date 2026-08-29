@@ -10,6 +10,7 @@ from database.models.transaction import (
 )
 from database.models.ingestion import IngestionRecord, IngestionException
 from database.models.event import FinancialEvent
+from database.models.reconciliation import ReconciliationRun, ReconciliationRelationship, Discrepancy
 
 __all__ = [
     "Merchant",
@@ -24,4 +25,7 @@ __all__ = [
     "IngestionRecord",
     "IngestionException",
     "FinancialEvent",
+    "ReconciliationRun",
+    "ReconciliationRelationship",
+    "Discrepancy"
 ]
