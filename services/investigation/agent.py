@@ -73,6 +73,7 @@ class InvestigationAgent:
         # Update active attempt
         investigation.active_attempt_id = attempt.id
         await self.session.commit()
+        await self.session.refresh(attempt, ["investigation"])
         return attempt
 
     def _build_prompt(self, context: Dict[str, Any]) -> str:
