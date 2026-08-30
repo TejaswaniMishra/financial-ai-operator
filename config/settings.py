@@ -47,6 +47,7 @@ class Settings(BaseSettings):
     # AI / LLM Configuration
     LLM_API_KEY: str | None = Field(default=None, description="API Key for the LLM Provider")
     LLM_PROVIDER: str = Field(default="mock", description="LLM Provider to use (e.g., openai, gemini, mock)")
+    LLM_MODEL: str = Field(default="gemini-2.5-flash", description="Model version to use")
 
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
