@@ -88,6 +88,7 @@ class ContextBuilder:
             if pay:
                 lineage["payment"] = {
                     "id": pay.id,
+                    "provider": pay.provider,
                     "amount": str(pay.amount),
                     "currency": pay.currency,
                     "status": pay.status.value if hasattr(pay.status, 'value') else str(pay.status),
