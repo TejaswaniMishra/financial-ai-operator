@@ -7,10 +7,10 @@ from decimal import Decimal
 from database.models.reconciliation import ReconciliationRun, Discrepancy
 
 @pytest.fixture
-async def seeded_discrepancy(seeded_db: AsyncSession):
+async def seeded_discrepancy(db_session: AsyncSession):
     run_id = str(uuid4())
     run = ReconciliationRun(id=run_id)
-    seeded_db.add(run)
+    db_session.add(run)
     
     disc_id = str(uuid4())
     disc = Discrepancy(
@@ -26,8 +26,8 @@ async def seeded_discrepancy(seeded_db: AsyncSession):
         difference_amount=Decimal("50.00"),
         currency="USD"
     )
-    seeded_db.add(disc)
-    await seeded_db.commit()
+    db_session.add(disc)
+    await db_session.commit()
     return disc_id
 
 @pytest.mark.asyncio
@@ -72,6 +72,6 @@ async def test_investigation_api_approve(async_client: AsyncClient, seeded_discr
     assert "No direct financial changes were made" in data["message"]
 
 @pytest.mark.asyncio
-async def test_investigation_api_not_found(async_client: AsyncClient):
+async def test_investigation_api_not_found(async_client: AsyncClient, db_session):
     response = await async_client.post(f"/api/v1/investigations/discrepancy/invalid-uuid/run")
     assert response.status_code == 404
