@@ -30,6 +30,7 @@ async def async_client():
 async def db_session():
     from database.connection import async_engine, AsyncSessionLocal
     from database.base import Base
+    import database.models  # Ensure all models are registered with Base.metadata
     
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
