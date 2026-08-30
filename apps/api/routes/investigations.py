@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from apps.api.dependencies import get_db
+from apps.api.dependencies import get_db_session
 from database.models.investigation import Investigation, InvestigationAttempt, InvestigationStatus
 from database.models.reconciliation import Discrepancy
 from services.investigation.agent import InvestigationAgent
@@ -15,7 +15,7 @@ router = APIRouter(prefix="/investigations", tags=["Investigations"])
 @router.post("/discrepancy/{discrepancy_id}/run")
 async def run_investigation(
     discrepancy_id: str,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db_session)
 ):
     # Verify discrepancy exists
     stmt = select(Discrepancy).where(Discrepancy.id == discrepancy_id)
@@ -38,7 +38,7 @@ async def run_investigation(
 @router.get("/{investigation_id}")
 async def get_investigation(
     investigation_id: str,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db_session)
 ):
     stmt = select(Investigation).where(Investigation.id == investigation_id)
     investigation = (await db.execute(stmt)).scalar_one_or_none()
@@ -56,7 +56,7 @@ async def get_investigation(
 @router.get("/{investigation_id}/attempts")
 async def get_investigation_attempts(
     investigation_id: str,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db_session)
 ):
     stmt = select(InvestigationAttempt).where(
         InvestigationAttempt.investigation_id == investigation_id
@@ -75,7 +75,7 @@ async def get_investigation_attempts(
 @router.post("/{investigation_id}/approve")
 async def approve_investigation(
     investigation_id: str,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db_session)
 ):
     stmt = select(Investigation).where(Investigation.id == investigation_id)
     investigation = (await db.execute(stmt)).scalar_one_or_none()
