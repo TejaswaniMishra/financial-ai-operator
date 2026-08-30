@@ -44,6 +44,10 @@ class Settings(BaseSettings):
     DATABASE_MAX_OVERFLOW: int = 20
     DATABASE_ECHO: bool = False
 
+    # AI / LLM Configuration
+    LLM_API_KEY: str | None = Field(default=None, description="API Key for the LLM Provider")
+    LLM_PROVIDER: str = Field(default="mock", description="LLM Provider to use (e.g., openai, gemini, mock)")
+
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:
