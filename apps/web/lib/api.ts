@@ -93,3 +93,74 @@ export async function fetchReconciliationDiscrepancies(): Promise<DiscrepancyRes
   }
   return res.json();
 }
+
+export interface InvestigationRunResponse {
+  investigation_id: string;
+  attempt_id: string;
+  status: string;
+  is_valid: boolean;
+  result: unknown | null;
+  errors: unknown | null;
+}
+
+export interface InvestigationResponse {
+  id: string;
+  discrepancy_id: string;
+  status: string;
+  active_attempt_id: string | null;
+  created_at: string | null;
+}
+
+export interface InvestigationAttempt {
+  id: string;
+  prompt_version: string | null;
+  model_used: string | null;
+  is_valid: boolean;
+  created_at: string | null;
+}
+
+export interface InvestigationApprovalResponse {
+  investigation_id: string;
+  action: string;
+  message: string;
+}
+
+export async function runInvestigation(discrepancyId: string): Promise<InvestigationRunResponse> {
+  const res = await fetch(`${API_BASE}/api/v1/investigations/discrepancy/${discrepancyId}/run`, {
+    method: "POST"
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to run investigation: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function fetchInvestigation(investigationId: string): Promise<InvestigationResponse> {
+  const res = await fetch(`${API_BASE}/api/v1/investigations/${investigationId}`, {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch investigation: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function fetchInvestigationAttempts(investigationId: string): Promise<InvestigationAttempt[]> {
+  const res = await fetch(`${API_BASE}/api/v1/investigations/${investigationId}/attempts`, {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch investigation attempts: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function approveInvestigation(investigationId: string): Promise<InvestigationApprovalResponse> {
+  const res = await fetch(`${API_BASE}/api/v1/investigations/${investigationId}/approve`, {
+    method: "POST"
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to approve investigation: ${res.statusText}`);
+  }
+  return res.json();
+}
