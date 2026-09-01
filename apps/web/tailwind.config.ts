@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: ["class"],
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,30 +12,47 @@ const config: Config = {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+        surface: {
+          DEFAULT: "hsl(var(--surface))",
+          foreground: "hsl(var(--surface-foreground))",
         },
         border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
         primary: {
-          DEFAULT: "#00E599",
-          foreground: "#05110E",
-        },
-        secondary: {
-          DEFAULT: "#38bdf8",
-          foreground: "#082f49",
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
         },
-        accent: {
-          DEFAULT: "#6366f1",
-          foreground: "#ffffff",
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
         },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        error: {
+          DEFAULT: "hsl(var(--error))",
+          foreground: "hsl(var(--error-foreground))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
+        },
+        // Financial Semantic States
+        matched: "hsl(var(--matched))",
+        discrepancy: "hsl(var(--discrepancy))",
+        pending: "hsl(var(--pending))",
+        failed: "hsl(var(--failed))",
+        investigation: "hsl(var(--investigation))",
+        unavailable: "hsl(var(--unavailable))",
       },
     },
   },
   plugins: [],
 };
+
 export default config;
