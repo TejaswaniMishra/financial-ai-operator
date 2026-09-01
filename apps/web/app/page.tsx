@@ -13,12 +13,20 @@ import {
   AlertTriangle,
   Code2,
 } from "lucide-react";
-import { HealthResponse, SystemInfoResponse, fetchHealth, fetchSystemInfo } from "../lib/api";
+import {
+  HealthResponse,
+  SystemInfoResponse,
+  MetricsOverviewResponse,
+  fetchHealth,
+  fetchSystemInfo,
+  fetchMetricsOverview
+} from "../lib/api";
 import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [systemInfo, setSystemInfo] = useState<SystemInfoResponse | null>(null);
+  const [metrics, setMetrics] = useState<MetricsOverviewResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -27,9 +35,14 @@ export default function DashboardPage() {
     setLoading(true);
     setError(null);
     try {
-      const [h, s] = await Promise.all([fetchHealth(), fetchSystemInfo()]);
+      const [h, s, m] = await Promise.all([
+        fetchHealth(),
+        fetchSystemInfo(),
+        fetchMetricsOverview()
+      ]);
       setHealth(h);
       setSystemInfo(s);
+      setMetrics(m);
       setLastUpdated(new Date());
     } catch (err: any) {
       setError(err.message || "Failed to communicate with API server");
@@ -78,72 +91,63 @@ export default function DashboardPage() {
         )}
 
         {/* Metrics & Health Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {/* Card 1: API Gateway Status */}
-          <div className="glass-panel rounded-xl p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          {/* Card 1: Total Volume */}
+          <div className="bg-card border border-border rounded-lg shadow-subtle p-5">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                API Gateway
-              </span>
-              <Server className="w-4 h-4 text-emerald-400" />
+              <span className="text-card-title">Total Volume</span>
+              <Activity className="w-4 h-4 text-muted-foreground" />
             </div>
-            <div className="text-xl font-bold text-white flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-              <span>{health?.status === "healthy" ? "Operational" : health?.status || "Checking..."}</span>
+            <div className="text-kpi">
+              {metrics?.total_volume !== undefined 
+                ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(metrics.total_volume) 
+                : "---"}
             </div>
-            <p className="text-xs text-slate-400 mt-2 font-mono">
-              FastAPI v0.115 • REST Async
+            <p className="text-status text-muted-foreground mt-2">
+              Processed lifetime volume
             </p>
           </div>
 
-          {/* Card 2: Database Connectivity */}
-          <div className="glass-panel rounded-xl p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+          {/* Card 2: Payments */}
+          <div className="bg-card border border-border rounded-lg shadow-subtle p-5">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                Persistence Engine
-              </span>
-              <Database className="w-4 h-4 text-cyan-400" />
+              <span className="text-card-title">Payments</span>
+              <Database className="w-4 h-4 text-muted-foreground" />
             </div>
-            <div className="text-xl font-bold text-white flex items-center space-x-2">
-              <span className={`w-2.5 h-2.5 rounded-full ${health?.database.connected ? "bg-emerald-400" : "bg-amber-400"}`}></span>
-              <span>{health?.database.connected ? "Connected" : "Disconnected"}</span>
+            <div className="text-kpi">
+              {metrics?.payments !== undefined ? metrics.payments.toLocaleString() : "---"}
             </div>
-            <p className="text-xs text-slate-400 mt-2 font-mono">
-              {health?.database.engine ? `Engine: ${health.database.engine}` : "SQLAlchemy 2.0 Async"}
-              {health?.database.latency_ms ? ` (${health.database.latency_ms}ms)` : ""}
+            <p className="text-status text-muted-foreground mt-2">
+              Total registered payments
             </p>
           </div>
 
-          {/* Card 3: Financial Schema Engine */}
-          <div className="glass-panel rounded-xl p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+          {/* Card 3: Settlements */}
+          <div className="bg-card border border-border rounded-lg shadow-subtle p-5">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                Financial Correctness
-              </span>
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span className="text-card-title">Settlements</span>
+              <Layers className="w-4 h-4 text-muted-foreground" />
             </div>
-            <div className="text-xl font-bold text-white flex items-center space-x-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>Strict Decimal</span>
+            <div className="text-kpi">
+              {metrics?.settlements !== undefined ? metrics.settlements.toLocaleString() : "---"}
             </div>
-            <p className="text-xs text-slate-400 mt-2 font-mono">
-              Zero Float Policy • Banker's Rounding
+            <p className="text-status text-muted-foreground mt-2">
+              Reconciled settlement batches
             </p>
           </div>
 
-          {/* Card 4: Architecture Uptime */}
-          <div className="glass-panel rounded-xl p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+          {/* Card 4: Merchants */}
+          <div className="bg-card border border-border rounded-lg shadow-subtle p-5">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                System Uptime
-              </span>
-              <Activity className="w-4 h-4 text-purple-400" />
+              <span className="text-card-title">Active Merchants</span>
+              <ShieldCheck className="w-4 h-4 text-muted-foreground" />
             </div>
-            <div className="text-xl font-bold text-white">
-              {systemInfo?.uptime_seconds !== undefined ? `${Math.floor(systemInfo.uptime_seconds)}s` : "---"}
+            <div className="text-kpi">
+              {metrics?.merchants !== undefined ? metrics.merchants.toLocaleString() : "---"}
             </div>
-            <p className="text-xs text-slate-400 mt-2 font-mono">
-              Phase: {systemInfo?.architecture_phase || "Milestone 1"}
+            <p className="text-status text-matched mt-2 flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+              Verified operational
             </p>
           </div>
         </div>
