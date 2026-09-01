@@ -58,6 +58,9 @@
     --error-foreground: var(--discrepancy-fg);
     --info: var(--primary);
     --info-foreground: var(--primary-foreground);
+
+    /* SHAPES & SPACING */
+    --radius: 0.5rem;
   }
 
   .dark {
@@ -103,6 +106,7 @@
     --error-foreground: var(--discrepancy-fg);
     --info: var(--primary);
     --info-foreground: var(--primary-foreground);
+    --radius: 0.5rem;
   }
 }
 
