@@ -77,6 +77,7 @@ const config: Config = {
         failed: "hsl(var(--failed))",
         investigation: "hsl(var(--investigation))",
         unavailable: "hsl(var(--unavailable))",
+        ring: "hsl(var(--ring))",
       },
       borderRadius: {
         lg: "var(--radius)",

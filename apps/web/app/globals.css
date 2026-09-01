@@ -61,6 +61,7 @@
 
     /* SHAPES & SPACING */
     --radius: 0.5rem;
+    --ring: 221.2 83.2% 53.3%;
   }
 
   .dark {
@@ -107,6 +108,7 @@
     --info: var(--primary);
     --info-foreground: var(--primary-foreground);
     --radius: 0.5rem;
+    --ring: 221.2 83.2% 53.3%;
   }
 }
 
@@ -150,6 +152,9 @@
   }
 }
 @layer utilities {
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
   .glass-panel {
     @apply bg-surface/70 backdrop-blur-md border border-border;
   }
