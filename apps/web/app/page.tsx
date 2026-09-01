@@ -42,48 +42,8 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col">
-      {/* Top Navigation Bar */}
-      <header className="border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-cyan-500 p-[2px] flex items-center justify-center glow-emerald">
-              <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-                <Zap className="w-5 h-5 text-emerald-400" />
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center space-x-2">
-                <h1 className="font-bold text-lg text-white tracking-tight">
-                  Financial AI Operator
-                </h1>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                  v0.1.0-alpha
-                </span>
-              </div>
-              <p className="text-xs text-slate-400">Autonomous FinOps & Reconciliation</p>
-            </div>
-          </div>
+    <div className="space-y-8 animate-in fade-in duration-500">
 
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 text-xs font-mono bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-slate-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>API: {health ? health.environment.toUpperCase() : "CONNECTING..."}</span>
-            </div>
-            <button
-              onClick={loadData}
-              disabled={loading}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 transition-all border border-slate-700/50"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-emerald-400" : ""}`} />
-              <span>{loading ? "Checking..." : "Refresh"}</span>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Banner Section */}
         <div className="relative rounded-2xl overflow-hidden glass-panel p-6 sm:p-8 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-emerald-950/20">
           <div className="relative z-10 max-w-3xl space-y-3">
@@ -267,12 +227,9 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-800/80 py-4 px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 font-mono">
-        Financial AI Operator • Milestone 1 Foundation • Last Probe: {lastUpdated ? lastUpdated.toLocaleTimeString() : "Never"}
-      </footer>
+      <div className="text-center text-xs text-muted-foreground font-mono mt-8">
+        Last API Probe: {lastUpdated ? lastUpdated.toLocaleTimeString() : "Never"}
+      </div>
     </div>
   );
 }
