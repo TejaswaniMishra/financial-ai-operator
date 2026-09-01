@@ -75,7 +75,12 @@ class GeminiLLMProvider(ILLMProvider):
     def __init__(self):
         self.settings = get_settings()
         self.api_key = self.settings.LLM_API_KEY
-        self.model = self.settings.LLM_MODEL or "gemini-2.5-flash"
+        self.model = self.settings.LLM_MODEL or "gemini-3.6-flash"
+        
+        # Backward compatibility for legacy env variables specifying sunset models
+        if self.model == "gemini-2.5-flash":
+            logger.warning("Upgrading deprecated model gemini-2.5-flash to gemini-3.6-flash")
+            self.model = "gemini-3.6-flash"
         
         if not self.api_key:
             logger.error("GeminiLLMProvider initialized but no LLM_API_KEY is configured.")
