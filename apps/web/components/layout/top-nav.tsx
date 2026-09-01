@@ -14,77 +14,69 @@ export function TopNav() {
   }, []);
 
   return (
-    <header className="h-16 border-b border-border bg-surface/50 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="h-16 border-b border-border bg-card sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 lg:px-8">
       {/* Search / Command Palette Trigger */}
-      <div className="flex-1 max-w-lg hidden sm:block ml-12 lg:ml-0">
+      <div className="flex-1 max-w-md hidden sm:block ml-12 lg:ml-0">
         <button
-          className="w-full flex items-center px-3 py-1.5 text-sm text-muted-foreground bg-background border border-border rounded-md hover:border-primary/50 hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20"
+          className="w-full flex items-center px-4 py-2 text-[13px] text-muted-foreground bg-surface-muted/50 border border-border-subtle rounded-lg hover:bg-surface-muted hover:text-foreground transition-colors focus-ring"
           onClick={() => {
             // Trigger command palette event
             document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }));
           }}
         >
-          <Search className="w-4 h-4 mr-2" />
+          <Search className="w-4 h-4 mr-2.5 text-muted-foreground/70" />
           <span>Search...</span>
-          <div className="ml-auto flex items-center space-x-1 font-mono text-[10px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+          <div className="ml-auto flex items-center space-x-1 font-mono text-[10px] bg-background px-1.5 py-0.5 rounded text-muted-foreground border border-border-subtle shadow-sm">
             <span>⌘</span>
             <span>K</span>
           </div>
         </button>
       </div>
 
-      <div className="flex items-center ml-auto space-x-4">
+      <div className="flex items-center ml-auto space-x-2 sm:space-x-4">
         {/* Notifications */}
-        <button className="relative p-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-muted transition-colors focus:outline-none">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error border border-surface"></span>
+        <button className="relative p-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-surface-muted transition-colors focus-ring">
+          <Bell className="w-[18px] h-[18px]" />
+          <span className="absolute top-1.5 right-2 w-1.5 h-1.5 rounded-full bg-error ring-2 ring-card"></span>
         </button>
 
         {/* Theme Toggle */}
         {mounted && (
-          <div className="flex items-center border border-border rounded-md bg-background overflow-hidden p-0.5">
+          <div className="flex items-center space-x-1 hidden sm:flex">
             <button
               onClick={() => setTheme("light")}
               className={cn(
-                "p-1.5 rounded-sm transition-colors",
-                theme === "light" ? "bg-surface text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                "p-2 rounded-full transition-colors focus-ring",
+                theme === "light" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-surface-muted"
               )}
               title="Light Mode"
             >
-              <Sun className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setTheme("system")}
-              className={cn(
-                "p-1.5 rounded-sm transition-colors",
-                theme === "system" ? "bg-surface text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
-              )}
-              title="System Theme"
-            >
-              <Laptop className="w-4 h-4" />
+              <Sun className="w-[18px] h-[18px]" />
             </button>
             <button
               onClick={() => setTheme("dark")}
               className={cn(
-                "p-1.5 rounded-sm transition-colors",
-                theme === "dark" ? "bg-surface text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                "p-2 rounded-full transition-colors focus-ring",
+                theme === "dark" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-surface-muted"
               )}
               title="Dark Mode"
             >
-              <Moon className="w-4 h-4" />
+              <Moon className="w-[18px] h-[18px]" />
             </button>
           </div>
         )}
 
+        <div className="h-6 w-px bg-border hidden sm:block mx-1"></div>
+
         {/* Profile Placeholder */}
-        <div className="flex items-center space-x-2 pl-4 border-l border-border">
-          <button className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors focus:outline-none">
-            <User className="w-4 h-4" />
-          </button>
-          <div className="hidden md:block text-sm">
-            <p className="font-medium text-foreground leading-none">Operator</p>
-            <p className="text-[11px] text-muted-foreground mt-1">Admin</p>
+        <div className="flex items-center space-x-3 pl-1 sm:pl-2">
+          <div className="hidden md:block text-right">
+            <p className="text-sm font-medium text-foreground leading-none">Operator</p>
+            <p className="text-[11px] text-muted-foreground mt-1.5">Admin</p>
           </div>
+          <button className="flex items-center justify-center w-9 h-9 rounded-full bg-surface-muted border border-border text-foreground hover:bg-border-subtle transition-colors focus-ring">
+            <User className="w-4 h-4 text-muted-foreground" />
+          </button>
         </div>
       </div>
     </header>
