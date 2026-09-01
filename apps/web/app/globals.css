@@ -4,81 +4,105 @@
 
 @layer base {
   :root {
-    /* Base Colors - Light Theme */
-    --background: 0 0% 100%;
-    --foreground: 222.2 47.4% 11.2%;
+    /* SURFACES */
+    --background: 210 40% 98%; /* slate-50 */
+    --card: 0 0% 100%; /* white */
+    --surface-elevated: 0 0% 100%;
+    --surface-muted: 210 40% 96.1%; /* slate-100 */
     
-    --surface: 0 0% 100%;
-    --surface-foreground: 222.2 47.4% 11.2%;
-    
-    --border: 214.3 31.8% 91.4%;
+    --border: 214.3 31.8% 91.4%; /* slate-200 */
+    --border-subtle: 210 40% 96.1%; /* slate-100 */
     --input: 214.3 31.8% 91.4%;
     
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* PRIMARY */
+    --primary: 221.2 83.2% 53.3%; /* blue-600 */
+    --primary-hover: 221.2 83.2% 43.3%; /* blue-700 */
+    --primary-foreground: 210 40% 98%; /* slate-50 */
     
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* NAVIGATION (Deep Navy/Indigo) */
+    --sidebar-bg: 224 71.4% 4.1%; /* slate-950 or deeper */
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-muted: 215 20.2% 65.1%;
+    --sidebar-active-bg: 221.2 83.2% 53.3%; /* matches primary */
+    --sidebar-active-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
     
-    /* Semantic Colors */
-    --success: 142.1 76.2% 36.3%;
-    --success-foreground: 355.7 100% 97.3%;
+    /* TEXT */
+    --text-primary: 222.2 47.4% 11.2%; /* slate-900 */
+    --text-secondary: 215.4 16.3% 46.9%; /* slate-500 */
+    --text-muted: 215.3 19.3% 65.1%; /* slate-400 */
+    --text-disabled: 214.3 31.8% 91.4%; /* slate-200 */
     
-    --warning: 38 92% 50%;
-    --warning-foreground: 48 96% 89%;
-    
-    --error: 346.8 77.2% 49.8%;
-    --error-foreground: 355.7 100% 97.3%;
-    
-    --info: 217.2 91.2% 59.8%;
-    --info-foreground: 210 40% 98%;
+    /* Standard Aliases */
+    --foreground: var(--text-primary);
+    --muted: var(--surface-muted);
+    --muted-foreground: var(--text-secondary);
 
-    /* Financial States */
+    /* FINANCIAL STATES */
     --matched: 142.1 76.2% 36.3%;
-    --discrepancy: 38 92% 50%;
-    --pending: 217.2 91.2% 59.8%;
+    --matched-fg: 0 0% 100%;
+    --discrepancy: 346.8 77.2% 49.8%;
+    --discrepancy-fg: 0 0% 100%;
+    --pending: 38 92% 50%;
+    --pending-fg: 0 0% 100%;
     --failed: 346.8 77.2% 49.8%;
-    --investigation: 262.1 83.3% 57.8%;
+    --investigation: 38 92% 50%;
     --unavailable: 215.4 16.3% 46.9%;
+    
+    /* Legacy Semantic fallbacks */
+    --success: var(--matched);
+    --success-foreground: var(--matched-fg);
+    --warning: var(--pending);
+    --warning-foreground: var(--pending-fg);
+    --error: var(--failed);
+    --error-foreground: var(--discrepancy-fg);
+    --info: var(--primary);
+    --info-foreground: var(--primary-foreground);
   }
 
   .dark {
-    /* Base Colors - Dark Theme */
-    --background: 222 47% 7%;
-    --foreground: 210 40% 98%;
-    
-    --surface: 222 47% 10%;
-    --surface-foreground: 210 40% 98%;
-    
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    
-    --muted: 217 33% 15%;
-    --muted-foreground: 215 20.2% 65.1%;
-    
-    /* Semantic Colors */
-    --success: 142.1 70.6% 45.3%;
-    --success-foreground: 144.9 80.4% 10%;
-    
-    --warning: 47.9 95.8% 53.1%;
-    --warning-foreground: 26 83.3% 14.1%;
-    
-    --error: 346.8 77.2% 49.8%;
-    --error-foreground: 355.7 100% 97.3%;
-    
-    --info: 217.2 91.2% 59.8%;
-    --info-foreground: 222.2 47.4% 11.2%;
-
-    /* Financial States */
-    --matched: 142.1 70.6% 45.3%;
-    --discrepancy: 47.9 95.8% 53.1%;
-    --pending: 217.2 91.2% 59.8%;
+    /* Forcing the same crisp layout for now, or just leave variables undefined if we want to enforce light mode 
+       We will map them to the light theme explicitly to prevent the system from auto-switching to a broken dark mode */
+    --background: 210 40% 98%;
+    --card: 0 0% 100%;
+    --surface-elevated: 0 0% 100%;
+    --surface-muted: 210 40% 96.1%;
+    --border: 214.3 31.8% 91.4%;
+    --border-subtle: 210 40% 96.1%;
+    --input: 214.3 31.8% 91.4%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-hover: 221.2 83.2% 43.3%;
+    --primary-foreground: 210 40% 98%;
+    --sidebar-bg: 224 71.4% 4.1%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-muted: 215 20.2% 65.1%;
+    --sidebar-active-bg: 221.2 83.2% 53.3%;
+    --sidebar-active-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --text-primary: 222.2 47.4% 11.2%;
+    --text-secondary: 215.4 16.3% 46.9%;
+    --text-muted: 215.3 19.3% 65.1%;
+    --text-disabled: 214.3 31.8% 91.4%;
+    --foreground: var(--text-primary);
+    --muted: var(--surface-muted);
+    --muted-foreground: var(--text-secondary);
+    --matched: 142.1 76.2% 36.3%;
+    --matched-fg: 0 0% 100%;
+    --discrepancy: 346.8 77.2% 49.8%;
+    --discrepancy-fg: 0 0% 100%;
+    --pending: 38 92% 50%;
+    --pending-fg: 0 0% 100%;
     --failed: 346.8 77.2% 49.8%;
-    --investigation: 262.1 83.3% 57.8%;
-    --unavailable: 215 20.2% 65.1%;
+    --investigation: 38 92% 50%;
+    --unavailable: 215.4 16.3% 46.9%;
+    --success: var(--matched);
+    --success-foreground: var(--matched-fg);
+    --warning: var(--pending);
+    --warning-foreground: var(--pending-fg);
+    --error: var(--failed);
+    --error-foreground: var(--discrepancy-fg);
+    --info: var(--primary);
+    --info-foreground: var(--primary-foreground);
   }
 }
 

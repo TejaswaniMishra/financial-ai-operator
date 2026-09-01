@@ -12,15 +12,34 @@ const config: Config = {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        card: "hsl(var(--card))",
         surface: {
-          DEFAULT: "hsl(var(--surface))",
-          foreground: "hsl(var(--surface-foreground))",
+          DEFAULT: "hsl(var(--surface-elevated))",
+          muted: "hsl(var(--surface-muted))",
         },
-        border: "hsl(var(--border))",
+        border: {
+          DEFAULT: "hsl(var(--border))",
+          subtle: "hsl(var(--border-subtle))",
+        },
         input: "hsl(var(--input))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
+          hover: "hsl(var(--primary-hover))",
           foreground: "hsl(var(--primary-foreground))",
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-bg))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          muted: "hsl(var(--sidebar-muted))",
+          active: "hsl(var(--sidebar-active-bg))",
+          activeForeground: "hsl(var(--sidebar-active-foreground))",
+          border: "hsl(var(--sidebar-border))",
+        },
+        text: {
+          primary: "hsl(var(--text-primary))",
+          secondary: "hsl(var(--text-secondary))",
+          muted: "hsl(var(--text-muted))",
+          disabled: "hsl(var(--text-disabled))",
         },
         muted: {
           DEFAULT: "hsl(var(--muted))",
@@ -43,9 +62,18 @@ const config: Config = {
           foreground: "hsl(var(--info-foreground))",
         },
         // Financial Semantic States
-        matched: "hsl(var(--matched))",
-        discrepancy: "hsl(var(--discrepancy))",
-        pending: "hsl(var(--pending))",
+        matched: {
+          DEFAULT: "hsl(var(--matched))",
+          foreground: "hsl(var(--matched-fg))",
+        },
+        discrepancy: {
+          DEFAULT: "hsl(var(--discrepancy))",
+          foreground: "hsl(var(--discrepancy-fg))",
+        },
+        pending: {
+          DEFAULT: "hsl(var(--pending))",
+          foreground: "hsl(var(--pending-fg))",
+        },
         failed: "hsl(var(--failed))",
         investigation: "hsl(var(--investigation))",
         unavailable: "hsl(var(--unavailable))",
