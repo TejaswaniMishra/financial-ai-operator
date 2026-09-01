@@ -55,3 +55,19 @@ export async function fetchMetricsOverview(): Promise<MetricsOverviewResponse> {
   }
   return res.json();
 }
+
+export interface ReconciliationRun {
+  run_id: string;
+  status: string;
+  total_records_processed: number;
+  matches_created: number;
+  discrepancies_found: number;
+}
+
+export async function fetchReconciliationRuns(): Promise<ReconciliationRun[]> {
+  const res = await fetch(`${API_BASE}/api/v1/reconciliation/runs`, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch reconciliation runs: ${res.statusText}`);
+  }
+  return res.json();
+}
