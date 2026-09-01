@@ -21,7 +21,9 @@ import {
   fetchHealth,
   fetchSystemInfo,
   fetchMetricsOverview,
-  fetchReconciliationRuns
+  fetchReconciliationRuns,
+  fetchReconciliationDiscrepancies,
+  DiscrepancyResponse
 } from "../lib/api";
 import { cn } from "@/lib/utils";
 
@@ -36,6 +38,10 @@ export default function DashboardPage() {
   const [runs, setRuns] = useState<ReconciliationRun[] | null>(null);
   const [runsLoading, setRunsLoading] = useState<boolean>(true);
   const [runsError, setRunsError] = useState<string | null>(null);
+
+  const [discrepancies, setDiscrepancies] = useState<DiscrepancyResponse[] | null>(null);
+  const [discrepanciesLoading, setDiscrepanciesLoading] = useState<boolean>(true);
+  const [discrepanciesError, setDiscrepanciesError] = useState<string | null>(null);
 
   const loadData = async () => {
     setLoading(true);
@@ -70,9 +76,23 @@ export default function DashboardPage() {
     }
   };
 
+  const loadDiscrepancies = async () => {
+    setDiscrepanciesLoading(true);
+    setDiscrepanciesError(null);
+    try {
+      const data = await fetchReconciliationDiscrepancies();
+      setDiscrepancies(data);
+    } catch (err: any) {
+      setDiscrepanciesError(err.message || "Failed to load discrepancies");
+    } finally {
+      setDiscrepanciesLoading(false);
+    }
+  };
+
   const refreshAll = () => {
     loadData();
     loadRuns();
+    loadDiscrepancies();
   };
 
   useEffect(() => {
@@ -92,11 +112,11 @@ export default function DashboardPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={refreshAll}
-            disabled={loading || runsLoading}
+            disabled={loading || runsLoading || discrepanciesLoading}
             className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-md transition-colors focus-ring disabled:opacity-50"
           >
-            <RefreshCw className={cn("w-4 h-4 mr-2", (loading || runsLoading) && "animate-spin")} />
-            {loading || runsLoading ? "Refreshing..." : "Refresh Status"}
+            <RefreshCw className={cn("w-4 h-4 mr-2", (loading || runsLoading || discrepanciesLoading) && "animate-spin")} />
+            {loading || runsLoading || discrepanciesLoading ? "Refreshing..." : "Refresh Status"}
           </button>
         </div>
       </div>
@@ -223,6 +243,91 @@ export default function DashboardPage() {
                       <td className="px-5 py-3 text-right font-mono">{run.total_records_processed.toLocaleString()}</td>
                       <td className="px-5 py-3 text-right font-mono text-matched">{run.matches_created.toLocaleString()}</td>
                       <td className="px-5 py-3 text-right font-mono text-unmatched">{run.discrepancies_found.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </div>
+
+        {/* Exceptions / Discrepancies Section */}
+        <div className="bg-card border border-border rounded-lg shadow-subtle overflow-hidden">
+          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+            <h2 className="text-card-title text-base">Exceptions</h2>
+            <div className="text-xs font-mono text-muted-foreground">
+              {discrepancies ? `${discrepancies.length} exceptions retrieved` : ""}
+            </div>
+          </div>
+          
+          <div className="p-0 overflow-x-auto">
+            {discrepanciesLoading ? (
+              <div className="p-8 text-center text-secondary text-sm">Loading exceptions...</div>
+            ) : discrepanciesError ? (
+              <div className="p-8 text-center text-sm text-destructive flex items-center justify-center gap-2">
+                <AlertTriangle className="w-4 h-4" />
+                <span>{discrepanciesError}</span>
+              </div>
+            ) : !discrepancies || discrepancies.length === 0 ? (
+              <div className="p-8 text-center text-secondary text-sm">No exceptions found.</div>
+            ) : (
+              <table className="w-full text-sm text-left">
+                <thead className="bg-surface-muted border-b border-border text-secondary">
+                  <tr>
+                    <th className="px-5 py-3 font-medium whitespace-nowrap">Severity</th>
+                    <th className="px-5 py-3 font-medium whitespace-nowrap">Type & Rule</th>
+                    <th className="px-5 py-3 font-medium whitespace-nowrap">Source Entity</th>
+                    <th className="px-5 py-3 font-medium whitespace-nowrap">Related Entity</th>
+                    <th className="px-5 py-3 font-medium text-right whitespace-nowrap">Amount</th>
+                    <th className="px-5 py-3 font-medium text-right whitespace-nowrap">Created At</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {discrepancies.map((disc) => (
+                    <tr key={disc.id} className="hover:bg-surface-muted/50 transition-colors group">
+                      <td className="px-5 py-3">
+                        <span className={cn(
+                          "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium",
+                          disc.severity === "CRITICAL" ? "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20" :
+                          disc.severity === "HIGH" ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20" :
+                          disc.severity === "MEDIUM" ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20" :
+                          "bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20"
+                        )}>
+                          {disc.severity}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3">
+                        <div className="font-medium">{disc.discrepancy_type}</div>
+                        <div className="text-xs text-muted-foreground font-mono mt-0.5">{disc.rule_code}</div>
+                      </td>
+                      <td className="px-5 py-3">
+                        <div className="font-medium text-xs">{disc.source_entity_type}</div>
+                        <div className="text-xs text-muted-foreground font-mono mt-0.5" title={disc.source_entity_id}>
+                          {disc.source_entity_id.length > 12 ? `${disc.source_entity_id.substring(0, 12)}...` : disc.source_entity_id}
+                        </div>
+                      </td>
+                      <td className="px-5 py-3">
+                        {disc.related_entity_type ? (
+                          <>
+                            <div className="font-medium text-xs">{disc.related_entity_type}</div>
+                            <div className="text-xs text-muted-foreground font-mono mt-0.5" title={disc.related_entity_id || ""}>
+                              {disc.related_entity_id && disc.related_entity_id.length > 12 ? `${disc.related_entity_id.substring(0, 12)}...` : disc.related_entity_id}
+                            </div>
+                          </>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
+                      </td>
+                      <td className="px-5 py-3 text-right font-mono">
+                        {disc.difference_amount !== null ? (
+                          new Intl.NumberFormat('en-US', { style: 'currency', currency: disc.currency || 'USD' }).format(disc.difference_amount)
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </td>
+                      <td className="px-5 py-3 text-right font-mono text-xs text-secondary whitespace-nowrap">
+                        {new Date(disc.created_at).toLocaleString()}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
