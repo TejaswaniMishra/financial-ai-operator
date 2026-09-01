@@ -3,9 +3,9 @@ import { fetchClient } from "../api-client";
 export interface ReconciliationRun {
   run_id: string;
   status: string;
-  total_records_processed: int;
-  matches_created: int;
-  discrepancies_found: int;
+  total_records_processed: number;
+  matches_created: number;
+  discrepancies_found: number;
 }
 
 // We will use standard primitive number mapping for 'int' in TypeScript,
