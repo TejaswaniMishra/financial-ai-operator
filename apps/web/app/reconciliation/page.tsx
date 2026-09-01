@@ -9,6 +9,7 @@ import { ReconciliationDiscrepancies } from "../../components/reconciliation/rec
 import { ReconciliationSkeleton } from "../../components/reconciliation/reconciliation-skeleton";
 import { ReconciliationExplanation } from "../../components/reconciliation/reconciliation-explanation";
 import { reconciliationApi, ReconciliationRunResponse, DiscrepancyResponse } from "../../lib/api/reconciliation";
+import { CheckCircle2, X } from "lucide-react";
 
 export default function ReconciliationWorkspace() {
   const [loading, setLoading] = useState(true);
@@ -16,16 +17,23 @@ export default function ReconciliationWorkspace() {
   const [runs, setRuns] = useState<ReconciliationRunResponse[]>([]);
   const [discrepancies, setDiscrepancies] = useState<DiscrepancyResponse[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [successResult, setSuccessResult] = useState<ReconciliationRunResponse | null>(null);
 
-  const loadData = useCallback(async (isRefresh = false) => {
+  const loadData = useCallback(async (isRefresh = false, result?: ReconciliationRunResponse) => {
     if (isRefresh) setRefreshing(true);
     else setLoading(true);
     setError(null);
 
+    // If we just ran a reconciliation, show the success banner temporarily
+    if (result) {
+      setSuccessResult(result);
+      setTimeout(() => setSuccessResult(null), 8000);
+    }
+
     try {
       const [runsData, discrepanciesData] = await Promise.all([
         reconciliationApi.getReconciliationRuns(),
-        reconciliationApi.getDiscrepancies().catch(() => []) // Partial failure fallback for discrepancies
+        reconciliationApi.getDiscrepancies().catch(() => [])
       ]);
       setRuns(runsData);
       setDiscrepancies(discrepanciesData);
@@ -48,9 +56,30 @@ export default function ReconciliationWorkspace() {
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-12">
       <ReconciliationHeader 
-        onRunComplete={() => loadData(true)} 
+        onRunComplete={(result) => loadData(true, result)} 
         isRefreshing={refreshing} 
       />
+
+      {successResult && (
+        <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-start justify-between animate-in slide-in-from-top-2">
+          <div className="flex space-x-3">
+            <CheckCircle2 className="w-5 h-5 text-emerald-400 mt-0.5 shrink-0" />
+            <div>
+              <h3 className="text-sm font-medium text-emerald-400">Reconciliation completed successfully</h3>
+              <p className="text-xs text-emerald-400/80 mt-1">
+                Processed {successResult.total_records_processed} records. 
+                Found {successResult.matches_created} matches and {successResult.discrepancies_found} discrepancies.
+              </p>
+            </div>
+          </div>
+          <button 
+            onClick={() => setSuccessResult(null)}
+            className="text-emerald-400/60 hover:text-emerald-400 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {error ? (
         <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm flex items-center justify-between">

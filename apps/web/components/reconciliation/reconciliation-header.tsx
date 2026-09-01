@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { ReconciliationRunDialog } from "./reconciliation-run-dialog";
 
 interface Props {
-  onRunComplete: () => void;
+  onRunComplete: (result?: any) => void;
   isRefreshing: boolean;
 }
 
@@ -48,9 +48,9 @@ export function ReconciliationHeader({ onRunComplete, isRefreshing }: Props) {
       <ReconciliationRunDialog 
         open={dialogOpen} 
         onOpenChange={setDialogOpen}
-        onSuccess={() => {
+        onSuccess={(result) => {
           setDialogOpen(false);
-          onRunComplete();
+          onRunComplete(result);
         }}
       />
     </>
