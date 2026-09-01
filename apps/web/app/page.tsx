@@ -17,9 +17,11 @@ import {
   HealthResponse,
   SystemInfoResponse,
   MetricsOverviewResponse,
+  ReconciliationRun,
   fetchHealth,
   fetchSystemInfo,
-  fetchMetricsOverview
+  fetchMetricsOverview,
+  fetchReconciliationRuns
 } from "../lib/api";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +32,10 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
+  const [runs, setRuns] = useState<ReconciliationRun[] | null>(null);
+  const [runsLoading, setRunsLoading] = useState<boolean>(true);
+  const [runsError, setRunsError] = useState<string | null>(null);
 
   const loadData = async () => {
     setLoading(true);
@@ -51,8 +57,26 @@ export default function DashboardPage() {
     }
   };
 
-  useEffect(() => {
+  const loadRuns = async () => {
+    setRunsLoading(true);
+    setRunsError(null);
+    try {
+      const data = await fetchReconciliationRuns();
+      setRuns(data);
+    } catch (err: any) {
+      setRunsError(err.message || "Failed to load reconciliation jobs");
+    } finally {
+      setRunsLoading(false);
+    }
+  };
+
+  const refreshAll = () => {
     loadData();
+    loadRuns();
+  };
+
+  useEffect(() => {
+    refreshAll();
   }, []);
 
   return (
@@ -67,12 +91,12 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={loadData}
-            disabled={loading}
+            onClick={refreshAll}
+            disabled={loading || runsLoading}
             className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-md transition-colors focus-ring disabled:opacity-50"
           >
-            <RefreshCw className={cn("w-4 h-4 mr-2", loading && "animate-spin")} />
-            {loading ? "Refreshing..." : "Refresh Status"}
+            <RefreshCw className={cn("w-4 h-4 mr-2", (loading || runsLoading) && "animate-spin")} />
+            {loading || runsLoading ? "Refreshing..." : "Refresh Status"}
           </button>
         </div>
       </div>
@@ -149,6 +173,61 @@ export default function DashboardPage() {
               <CheckCircle2 className="w-3.5 h-3.5" />
               Verified operational
             </p>
+          </div>
+        </div>
+
+        {/* Reconciliation Jobs Section */}
+        <div className="bg-card border border-border rounded-lg shadow-subtle overflow-hidden">
+          <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+            <h2 className="text-card-title text-base">Reconciliation Jobs</h2>
+            <div className="text-xs font-mono text-muted-foreground">
+              {runs ? `${runs.length} jobs retrieved` : ""}
+            </div>
+          </div>
+          
+          <div className="p-0 overflow-x-auto">
+            {runsLoading ? (
+              <div className="p-8 text-center text-secondary text-sm">Loading jobs...</div>
+            ) : runsError ? (
+              <div className="p-8 text-center text-sm text-destructive flex items-center justify-center gap-2">
+                <AlertTriangle className="w-4 h-4" />
+                <span>{runsError}</span>
+              </div>
+            ) : !runs || runs.length === 0 ? (
+              <div className="p-8 text-center text-secondary text-sm">No reconciliation jobs found.</div>
+            ) : (
+              <table className="w-full text-sm text-left">
+                <thead className="bg-surface-muted border-b border-border text-secondary">
+                  <tr>
+                    <th className="px-5 py-3 font-medium whitespace-nowrap">Run ID</th>
+                    <th className="px-5 py-3 font-medium whitespace-nowrap">Status</th>
+                    <th className="px-5 py-3 font-medium text-right whitespace-nowrap">Records Processed</th>
+                    <th className="px-5 py-3 font-medium text-right whitespace-nowrap">Matches</th>
+                    <th className="px-5 py-3 font-medium text-right whitespace-nowrap">Discrepancies</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {runs.map((run) => (
+                    <tr key={run.run_id} className="hover:bg-surface-muted/50 transition-colors group">
+                      <td className="px-5 py-3 font-mono text-xs text-secondary group-hover:text-foreground transition-colors">{run.run_id}</td>
+                      <td className="px-5 py-3">
+                        <span className={cn(
+                          "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium",
+                          run.status === "COMPLETED" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20" :
+                          run.status === "FAILED" ? "bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20" :
+                          "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                        )}>
+                          {run.status}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3 text-right font-mono">{run.total_records_processed.toLocaleString()}</td>
+                      <td className="px-5 py-3 text-right font-mono text-matched">{run.matches_created.toLocaleString()}</td>
+                      <td className="px-5 py-3 text-right font-mono text-unmatched">{run.discrepancies_found.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
 
