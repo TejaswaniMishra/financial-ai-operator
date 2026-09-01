@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Sidebar } from "@/components/layout/sidebar";
 import { TopNav } from "@/components/layout/top-nav";
 import { CommandPalette } from "@/components/global/command-palette";
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Financial AI Operator | Autonomous FinOps Platform",
@@ -17,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased min-h-screen bg-background text-foreground flex overflow-hidden">
+      <body className={`${inter.className} antialiased min-h-screen bg-background text-foreground flex overflow-hidden`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
