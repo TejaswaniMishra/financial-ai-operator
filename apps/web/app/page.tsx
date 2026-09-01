@@ -14,6 +14,7 @@ import {
   Code2,
 } from "lucide-react";
 import { HealthResponse, SystemInfoResponse, fetchHealth, fetchSystemInfo } from "../lib/api";
+import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
@@ -42,24 +43,26 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-
-        {/* Banner Section */}
-        <div className="relative rounded-2xl overflow-hidden glass-panel p-6 sm:p-8 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-emerald-950/20">
-          <div className="relative z-10 max-w-3xl space-y-3">
-            <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
-              <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Milestone 1 Active: Monorepo Foundation & Deterministic Core</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Enterprise Financial Operations & Autonomous Operator
-            </h2>
-            <p className="text-sm text-slate-400 leading-relaxed">
-              Strictly decoupled deterministic financial engine powering immutable ledger operations,
-              automated multi-source reconciliation, and policy-governed AI operations.
-            </p>
-          </div>
+    <div className="space-y-6 animate-in fade-in duration-500">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-page-title">Dashboard</h1>
+          <p className="text-secondary mt-1">
+            System overview, operational health, and core infrastructure metrics.
+          </p>
         </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={loadData}
+            disabled={loading}
+            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-primary bg-primary/10 hover:bg-primary/20 rounded-md transition-colors focus-ring disabled:opacity-50"
+          >
+            <RefreshCw className={cn("w-4 h-4 mr-2", loading && "animate-spin")} />
+            {loading ? "Refreshing..." : "Refresh Status"}
+          </button>
+        </div>
+      </div>
 
         {/* Status Error Display if API is down */}
         {error && (
