@@ -71,3 +71,25 @@ export async function fetchReconciliationRuns(): Promise<ReconciliationRun[]> {
   }
   return res.json();
 }
+
+export interface DiscrepancyResponse {
+  id: string;
+  rule_code: string;
+  discrepancy_type: string;
+  severity: string;
+  source_entity_type: string;
+  source_entity_id: string;
+  related_entity_type: string | null;
+  related_entity_id: string | null;
+  difference_amount: number | null;
+  currency: string | null;
+  created_at: string;
+}
+
+export async function fetchReconciliationDiscrepancies(): Promise<DiscrepancyResponse[]> {
+  const res = await fetch(`${API_BASE}/api/v1/reconciliation/discrepancies`, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch reconciliation discrepancies: ${res.statusText}`);
+  }
+  return res.json();
+}
