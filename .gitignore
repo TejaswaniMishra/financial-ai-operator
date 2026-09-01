@@ -54,6 +54,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 apps/web/next-env.d.ts
+*.tsbuildinfo
 
 # Environment variable files (Strictly never commit secrets)
 .env
