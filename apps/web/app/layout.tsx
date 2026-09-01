@@ -29,10 +29,12 @@ export default function RootLayout({
         >
           <Sidebar />
           
-          <div className="flex flex-col flex-1 min-w-0 h-screen overflow-hidden">
+          <div className="flex flex-col flex-1 min-w-0 h-screen overflow-hidden bg-background">
             <TopNav />
-            <main className="flex-1 overflow-y-auto bg-background p-4 sm:p-6 lg:p-8">
-              {children}
+            <main className="flex-1 overflow-y-auto focus:outline-none">
+              <div className="mx-auto w-full max-w-[1600px] p-4 sm:p-6 lg:p-8 lg:py-10">
+                {children}
+              </div>
             </main>
           </div>
           
