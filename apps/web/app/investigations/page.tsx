@@ -78,7 +78,7 @@ export default function InvestigationsPage() {
     return (
       <div className="space-y-6 animate-pulse">
         <div className="h-12 w-1/3 bg-surface-muted rounded"></div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           <div className="h-24 bg-surface-muted rounded-xl"></div>
           <div className="h-24 bg-surface-muted rounded-xl"></div>
           <div className="h-24 bg-surface-muted rounded-xl"></div>
@@ -98,7 +98,7 @@ export default function InvestigationsPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
         <div className="bg-card border border-border shadow-subtle rounded-xl p-5">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-card-title text-sm">Total Investigations</h3>
