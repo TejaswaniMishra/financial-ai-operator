@@ -22,7 +22,7 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: Activity },
   { name: "Reconciliation", href: "/reconciliation", icon: Layers },
   { name: "Discrepancies", href: "/discrepancies", icon: Search },
-  { name: "Investigations", href: "/investigations", icon: ShieldCheck, isComingSoon: true },
+  { name: "Investigations", href: "/investigations", icon: ShieldCheck },
   { name: "Transactions", href: "/transactions", icon: Database, isComingSoon: true },
   { name: "Reports", href: "/reports", icon: BarChart3, isComingSoon: true },
   { name: "Exceptions", href: "/exceptions", icon: FileText, isComingSoon: true },
