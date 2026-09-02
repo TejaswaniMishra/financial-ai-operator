@@ -160,7 +160,7 @@ async def login(
         
     # Verify Password
     try:
-        is_valid = verify_password(cred.password_hash, request.password)
+        is_valid = verify_password(request.password, cred.password_hash)
         if not is_valid:
             raise generic_error
     except Exception:
