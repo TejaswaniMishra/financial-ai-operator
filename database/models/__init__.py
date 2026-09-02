@@ -14,6 +14,7 @@ from database.models.reconciliation import ReconciliationRun, ReconciliationRela
 from database.models.investigation import Investigation, InvestigationAttempt
 from database.models.policy import PolicyEvaluation
 from database.models.action_request import ActionRequest, ActionRequestAudit
+from database.models.action_execution import ActionExecution, ActionExecutionAttempt
 
 __all__ = [
     "Merchant",
@@ -35,5 +36,7 @@ __all__ = [
     "InvestigationAttempt",
     "PolicyEvaluation",
     "ActionRequest",
-    "ActionRequestAudit"
+    "ActionRequestAudit",
+    "ActionExecution",
+    "ActionExecutionAttempt"
 ]
