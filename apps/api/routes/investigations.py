@@ -13,6 +13,21 @@ from services.investigation.agent import InvestigationAgent
 
 router = APIRouter(prefix="/investigations", tags=["Investigations"])
 
+@router.get("")
+async def list_investigations(
+    db: AsyncSession = Depends(get_db_session)
+):
+    stmt = select(Investigation).order_by(Investigation.created_at.desc())
+    investigations = (await db.execute(stmt)).scalars().all()
+    
+    return [{
+        "id": inv.id,
+        "discrepancy_id": inv.discrepancy_id,
+        "status": inv.status.value if hasattr(inv.status, 'value') else str(inv.status),
+        "active_attempt_id": inv.active_attempt_id,
+        "created_at": inv.created_at.isoformat() if inv.created_at else None
+    } for inv in investigations]
+
 @router.post("/discrepancy/{discrepancy_id}/run")
 async def run_investigation(
     discrepancy_id: str,
