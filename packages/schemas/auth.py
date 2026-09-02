@@ -34,3 +34,9 @@ class TokenResponse(BaseModel):
     token_type: str = Field(default="bearer", description="Token type, typically 'bearer'")
     expires_in: int = Field(..., description="Token expiration in seconds")
 
+class CurrentUserResponse(BaseModel):
+    id: str = Field(..., description="User ID")
+    email: str = Field(..., description="User email")
+    display_name: str = Field(..., description="User display name")
+    is_active: bool = Field(..., description="Whether the user is currently active")
+
