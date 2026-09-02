@@ -149,7 +149,7 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
             <h1 className="text-2xl font-semibold tracking-tight text-foreground">
               Investigation
             </h1>
-            {investigation && (
+            {investigation ? (
               <span className={cn(
                 "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border",
                 investigation.status === "COMPLETED" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" :
@@ -159,7 +159,9 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
               )}>
                 {investigation.status}
               </span>
-            )}
+            ) : loading ? (
+              <div className="h-5 w-20 bg-surface-muted rounded animate-pulse" />
+            ) : null}
           </div>
           <div className="flex items-center text-sm text-muted-foreground font-mono mt-1 ml-9">
             {id}
