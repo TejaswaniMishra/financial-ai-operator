@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Activity,
   CheckCircle2,
@@ -12,6 +13,7 @@ import {
   Server,
   AlertTriangle,
   Code2,
+  ArrowRight,
 } from "lucide-react";
 import {
   HealthResponse,
@@ -23,7 +25,8 @@ import {
   fetchMetricsOverview,
   fetchReconciliationRuns,
   fetchReconciliationDiscrepancies,
-  DiscrepancyResponse
+  DiscrepancyResponse,
+  runInvestigation
 } from "../lib/api";
 import { cn } from "@/lib/utils";
 
@@ -42,6 +45,11 @@ export default function DashboardPage() {
   const [discrepancies, setDiscrepancies] = useState<DiscrepancyResponse[] | null>(null);
   const [discrepanciesLoading, setDiscrepanciesLoading] = useState<boolean>(true);
   const [discrepanciesError, setDiscrepanciesError] = useState<string | null>(null);
+
+  const [investigatingIds, setInvestigatingIds] = useState<Set<string>>(new Set());
+  const [investigationError, setInvestigationError] = useState<string | null>(null);
+
+  const router = useRouter();
 
   const loadData = async () => {
     setLoading(true);
@@ -86,6 +94,29 @@ export default function DashboardPage() {
       setDiscrepanciesError(err.message || "Failed to load discrepancies");
     } finally {
       setDiscrepanciesLoading(false);
+    }
+  };
+
+  const handleInvestigate = async (discrepancyId: string) => {
+    if (investigatingIds.has(discrepancyId)) return;
+
+    setInvestigatingIds((prev) => {
+      const next = new Set(prev);
+      next.add(discrepancyId);
+      return next;
+    });
+    setInvestigationError(null);
+
+    try {
+      const result = await runInvestigation(discrepancyId);
+      router.push(`/investigations/${result.investigation_id}`);
+    } catch (err: any) {
+      setInvestigationError(err.message || "Failed to start investigation");
+      setInvestigatingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(discrepancyId);
+        return next;
+      });
     }
   };
 
@@ -271,7 +302,22 @@ export default function DashboardPage() {
             ) : !discrepancies || discrepancies.length === 0 ? (
               <div className="p-8 text-center text-secondary text-sm">No exceptions found.</div>
             ) : (
-              <table className="w-full text-sm text-left">
+              <div className="flex flex-col">
+                {investigationError && (
+                  <div className="px-5 py-3 bg-destructive/10 border-b border-destructive/20 text-destructive text-sm flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4" />
+                      <span>{investigationError}</span>
+                    </div>
+                    <button
+                      onClick={() => setInvestigationError(null)}
+                      className="text-xs font-medium px-2 py-1 bg-destructive/20 hover:bg-destructive/30 rounded transition-colors"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                )}
+                <table className="w-full text-sm text-left">
                 <thead className="bg-surface-muted border-b border-border text-secondary">
                   <tr>
                     <th className="px-5 py-3 font-medium whitespace-nowrap">Severity</th>
@@ -280,6 +326,7 @@ export default function DashboardPage() {
                     <th className="px-5 py-3 font-medium whitespace-nowrap">Related Entity</th>
                     <th className="px-5 py-3 font-medium text-right whitespace-nowrap">Amount</th>
                     <th className="px-5 py-3 font-medium text-right whitespace-nowrap">Created At</th>
+                    <th className="px-5 py-3 font-medium text-right whitespace-nowrap">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -328,10 +375,30 @@ export default function DashboardPage() {
                       <td className="px-5 py-3 text-right font-mono text-xs text-secondary whitespace-nowrap">
                         {new Date(disc.created_at).toLocaleString()}
                       </td>
+                      <td className="px-5 py-3 text-right">
+                        <button
+                          onClick={() => handleInvestigate(disc.id)}
+                          disabled={investigatingIds.has(disc.id)}
+                          className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium text-white bg-primary hover:bg-primary/90 rounded transition-colors focus-ring disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {investigatingIds.has(disc.id) ? (
+                            <>
+                              <RefreshCw className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                              Starting...
+                            </>
+                          ) : (
+                            <>
+                              Investigate
+                              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                            </>
+                          )}
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+            </div>
             )}
           </div>
         </div>
