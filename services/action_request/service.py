@@ -51,18 +51,22 @@ class ActionRequestService:
         
         self.db.add(request)
         
+        from sqlalchemy.exc import IntegrityError, InvalidRequestError
         try:
             await self.db.commit()
             await self.db.refresh(request)
             return request
-        except IntegrityError:
+        except (IntegrityError, InvalidRequestError):
             await self.db.rollback()
             # If we hit an IntegrityError (e.g. concurrent creation for the unique policy_evaluation_id constraint),
-            # return the one that was inserted.
-            existing_request = (await self.db.execute(stmt)).scalar_one_or_none()
-            if existing_request:
-                return existing_request
-            raise
+            # the concurrent transaction might not have committed yet. We retry the read briefly.
+            import asyncio
+            for _ in range(3):
+                existing_request = (await self.db.execute(stmt)).scalar_one_or_none()
+                if existing_request:
+                    return existing_request
+                await asyncio.sleep(0.05)
+            raise ValueError(f"ActionRequest for PolicyEvaluation {policy_evaluation_id} could not be created or retrieved due to concurrent modification.")
 
     async def _transition_state(
         self, 

@@ -314,3 +314,55 @@ export async function cancelActionRequest(id: string, reason: string, actor: str
   }
   return res.json();
 }
+
+export type ActionExecutionStatus = "PENDING" | "RUNNING" | "SUCCEEDED" | "FAILED" | "UNKNOWN";
+
+export interface ActionExecutionAttemptResponse {
+  id: string;
+  attempt_number: number;
+  status: ActionExecutionStatus;
+  result: any;
+  error_code: string | null;
+  error_message: string | null;
+  created_at: string;
+  completed_at: string | null;
+}
+
+export interface ActionExecutionResponse {
+  id: string;
+  action_request_id: string;
+  idempotency_key: string;
+  execution_type: string;
+  adapter: string;
+  status: ActionExecutionStatus;
+  result: any;
+  error_code: string | null;
+  error_message: string | null;
+  created_at: string;
+  started_at: string | null;
+  completed_at: string | null;
+  attempts: ActionExecutionAttemptResponse[];
+}
+
+export async function fetchActionExecutions(id: string): Promise<ActionExecutionResponse[]> {
+  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}/executions`, {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch action executions: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function executeActionRequest(id: string, idempotency_key?: string): Promise<ActionExecutionResponse> {
+  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}/execute`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ idempotency_key })
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.detail || `Failed to execute action request: ${res.statusText}`);
+  }
+  return res.json();
+}

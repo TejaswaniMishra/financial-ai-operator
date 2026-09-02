@@ -11,7 +11,9 @@ import {
   ShieldCheck,
   XCircle,
   XSquare,
-  FileText
+  FileText,
+  Activity,
+  BrainCircuit
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { 
@@ -19,7 +21,10 @@ import {
   approveActionRequest, 
   rejectActionRequest, 
   cancelActionRequest,
-  ActionRequestResponse 
+  ActionRequestResponse,
+  fetchActionExecutions,
+  executeActionRequest,
+  ActionExecutionResponse
 } from "../../../lib/api";
 
 export default function ActionRequestDetailPage({ params }: { params: { id: string } }) {
@@ -35,16 +40,37 @@ export default function ActionRequestDetailPage({ params }: { params: { id: stri
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState<string | null>(null);
 
+  // Execution state
+  const [executions, setExecutions] = useState<ActionExecutionResponse[]>([]);
+  const [executionsLoading, setExecutionsLoading] = useState(false);
+  const [executing, setExecuting] = useState(false);
+  const [executionError, setExecutionError] = useState<string | null>(null);
+
   const loadData = async () => {
     setLoading(true);
     setError(null);
     try {
       const data = await fetchActionRequest(id);
       setRequest(data);
+      if (data.status !== "PENDING_APPROVAL") {
+        await loadExecutions();
+      }
     } catch (err: any) {
       setError(err.message || "Failed to load action request");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadExecutions = async () => {
+    setExecutionsLoading(true);
+    try {
+      const data = await fetchActionExecutions(id);
+      setExecutions(data);
+    } catch (err: any) {
+      console.error("Failed to load executions:", err);
+    } finally {
+      setExecutionsLoading(false);
     }
   };
 
@@ -83,6 +109,20 @@ export default function ActionRequestDetailPage({ params }: { params: { id: stri
       setSubmitError(err.message || `Failed to ${actionType} request`);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleExecute = async () => {
+    if (!request) return;
+    setExecuting(true);
+    setExecutionError(null);
+    try {
+      await executeActionRequest(request.id);
+      await loadExecutions();
+    } catch (err: any) {
+      setExecutionError(err.message || "Failed to execute action.");
+    } finally {
+      setExecuting(false);
     }
   };
 
@@ -145,6 +185,23 @@ export default function ActionRequestDetailPage({ params }: { params: { id: stri
           <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-md text-emerald-600 dark:text-emerald-400 text-sm font-medium">
             <CheckCircle2 className="w-4 h-4" />
             {submitSuccess}
+          </div>
+        )}
+        
+        {request?.status === "APPROVED" && (
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleExecute}
+              disabled={executing}
+              className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors shadow-sm disabled:opacity-50"
+            >
+              {executing ? (
+                <div className="w-4 h-4 mr-2 border-2 border-white/60 border-t-white rounded-full animate-spin"></div>
+              ) : (
+                <BrainCircuit className="w-4 h-4 mr-2" />
+              )}
+              {executing ? "Executing..." : "Execute Action"}
+            </button>
           </div>
         )}
       </div>
@@ -261,6 +318,13 @@ export default function ActionRequestDetailPage({ params }: { params: { id: stri
                           </span>
                         </div>
                       </div>
+                      
+                      {executionError && (
+                        <div className="mt-2 text-sm font-medium text-destructive flex items-center gap-1.5 bg-destructive/10 px-3 py-2 rounded-md border border-destructive/20">
+                          <AlertTriangle className="w-4 h-4 shrink-0" />
+                          {executionError}
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -293,6 +357,84 @@ export default function ActionRequestDetailPage({ params }: { params: { id: stri
                       </div>
                     </div>
                   )}
+                </div>
+              </div>
+            )}
+            
+            {/* Executions Section */}
+            {request.status !== "PENDING_APPROVAL" && (
+              <div className="bg-card border border-border rounded-lg shadow-subtle overflow-hidden mt-6">
+                <div className="px-5 py-4 border-b border-border bg-surface-muted/30">
+                  <h2 className="text-card-title text-base flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-primary" />
+                    Action Executions
+                  </h2>
+                </div>
+                <div className="p-0 overflow-x-auto">
+                  <table className="w-full text-sm text-left">
+                    <thead className="bg-surface-muted border-b border-border text-secondary">
+                      <tr>
+                        <th className="px-5 py-3 font-medium whitespace-nowrap">ID</th>
+                        <th className="px-5 py-3 font-medium whitespace-nowrap">Status</th>
+                        <th className="px-5 py-3 font-medium whitespace-nowrap">Adapter</th>
+                        <th className="px-5 py-3 font-medium whitespace-nowrap">Result/Error</th>
+                        <th className="px-5 py-3 font-medium text-right whitespace-nowrap">Started At</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {executionsLoading && executions.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className="px-5 py-8 text-center text-secondary text-sm">
+                            Loading executions...
+                          </td>
+                        </tr>
+                      ) : executions.length > 0 ? (
+                        executions.map((exec) => (
+                          <tr key={exec.id} className="hover:bg-surface-muted/50 transition-colors">
+                            <td className="px-5 py-3 font-mono text-xs text-foreground truncate max-w-[120px]" title={exec.id}>
+                              {exec.id}
+                            </td>
+                            <td className="px-5 py-3">
+                              <span className={cn(
+                                "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border",
+                                exec.status === "SUCCEEDED" ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" :
+                                exec.status === "FAILED" ? "bg-rose-500/10 text-rose-600 border-rose-500/20" :
+                                exec.status === "RUNNING" ? "bg-blue-500/10 text-blue-600 border-blue-500/20" :
+                                exec.status === "UNKNOWN" ? "bg-amber-500/10 text-amber-600 border-amber-500/20" :
+                                "bg-surface-muted text-secondary border-border"
+                              )}>
+                                {exec.status}
+                              </span>
+                            </td>
+                            <td className="px-5 py-3 text-secondary text-xs">{exec.adapter}</td>
+                            <td className="px-5 py-3 text-xs">
+                              {exec.status === "SUCCEEDED" ? (
+                                <span className="text-emerald-600 font-medium">Completed successfully</span>
+                              ) : exec.status === "FAILED" ? (
+                                <div className="text-rose-600 flex flex-col">
+                                  <span className="font-semibold">{exec.error_code}</span>
+                                  <span className="text-[10px] text-rose-600/80 truncate max-w-[200px]" title={exec.error_message || ""}>
+                                    {exec.error_message}
+                                  </span>
+                                </div>
+                              ) : (
+                                <span className="text-secondary">—</span>
+                              )}
+                            </td>
+                            <td className="px-5 py-3 text-right text-secondary whitespace-nowrap">
+                              {exec.started_at ? new Date(exec.started_at).toLocaleString() : "—"}
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={5} className="px-5 py-8 text-center text-muted-foreground text-sm">
+                            No executions found.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             )}
