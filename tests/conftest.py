@@ -42,3 +42,41 @@ async def db_session():
         
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
+
+@pytest_asyncio.fixture
+async def auth_headers(db_session):
+    from database.models.identity import User, UserCredential, Role, RoleName, UserRole
+    from packages.utils.crypto import hash_password
+    from packages.utils.jwt import create_access_token
+    from sqlalchemy.future import select
+    
+    # 1. Create or get Operator role
+    stmt = select(Role).where(Role.name == RoleName.OPERATOR)
+    res = await db_session.execute(stmt)
+    role = res.scalar_one_or_none()
+    if not role:
+        role = Role(name=RoleName.OPERATOR, description="Operator")
+        db_session.add(role)
+        await db_session.commit()
+        await db_session.refresh(role)
+        
+    # 2. Create Active User
+    user = User(
+        email="test_auth@example.com",
+        display_name="Test Auth User",
+        is_active=True
+    )
+    db_session.add(user)
+    await db_session.flush()
+    
+    # 3. Create Credential and Role mapping
+    pwd_hash = hash_password("ValidPassword123!")
+    cred = UserCredential(user_id=user.id, password_hash=pwd_hash)
+    user_role = UserRole(user_id=user.id, role_id=role.id)
+    db_session.add(cred)
+    db_session.add(user_role)
+    await db_session.commit()
+    
+    # 4. Generate Token
+    token = create_access_token(user_id=user.id)
+    return {"Authorization": f"Bearer {token}"}
