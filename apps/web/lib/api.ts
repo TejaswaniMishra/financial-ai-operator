@@ -164,3 +164,25 @@ export async function approveInvestigation(investigationId: string): Promise<Inv
   }
   return res.json();
 }
+
+export interface InvestigationAttemptResultResponse {
+  investigation_id: string;
+  attempt_id: string;
+  status: string;
+  is_valid: boolean;
+  result: unknown | null;
+  errors: unknown | null;
+}
+
+export async function fetchInvestigationAttemptResult(
+  investigationId: string,
+  attemptId: string
+): Promise<InvestigationAttemptResultResponse> {
+  const res = await fetch(`${API_BASE}/api/v1/investigations/${investigationId}/attempts/${attemptId}`, {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch investigation attempt result: ${res.statusText}`);
+  }
+  return res.json();
+}
