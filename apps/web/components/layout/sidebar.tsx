@@ -21,11 +21,11 @@ import { cn } from "@/lib/utils";
 const navigation = [
   { name: "Dashboard", href: "/", icon: Activity },
   { name: "Reconciliation", href: "/reconciliation", icon: Layers },
-  { name: "Discrepancies", href: "/discrepancies", icon: Search },
-  { name: "Investigations", href: "/investigations", icon: ShieldCheck },
-  { name: "Transactions", href: "/transactions", icon: Database },
-  { name: "Reports", href: "/reports", icon: BarChart3 },
-  { name: "Exceptions", href: "/exceptions", icon: FileText },
+  { name: "Discrepancies", href: "/discrepancies", icon: Search, isComingSoon: true },
+  { name: "Investigations", href: "/investigations", icon: ShieldCheck, isComingSoon: true },
+  { name: "Transactions", href: "/transactions", icon: Database, isComingSoon: true },
+  { name: "Reports", href: "/reports", icon: BarChart3, isComingSoon: true },
+  { name: "Exceptions", href: "/exceptions", icon: FileText, isComingSoon: true },
 ];
 
 export function Sidebar() {
@@ -83,21 +83,28 @@ export function Sidebar() {
             return (
               <Link
                 key={item.name}
-                href={item.href}
+                href={item.isComingSoon ? "#" : item.href}
                 className={cn(
                   "flex items-center px-3 py-2.5 rounded-md transition-colors group relative",
                   isActive
                     ? "bg-sidebar-active text-sidebar-activeForeground font-medium"
-                    : "text-sidebar-muted hover:bg-sidebar-muted/10 hover:text-sidebar-foreground"
+                    : "text-sidebar-muted hover:bg-sidebar-muted/10 hover:text-sidebar-foreground",
+                  item.isComingSoon && "opacity-75 cursor-default hover:bg-transparent"
                 )}
                 title={collapsed ? item.name : undefined}
-                onClick={() => setMobileOpen(false)}
+                onClick={(e) => {
+                  if (item.isComingSoon) {
+                    e.preventDefault();
+                  } else {
+                    setMobileOpen(false);
+                  }
+                }}
               >
                 <item.icon className={cn("w-4 h-4 shrink-0", isActive ? "text-sidebar-activeForeground" : "text-sidebar-muted group-hover:text-sidebar-foreground")} />
                 {!collapsed && (
                   <span className="ml-3 text-sm flex-1">{item.name}</span>
                 )}
-                {!collapsed && item.name === "Exceptions" && (
+                {!collapsed && item.isComingSoon && (
                   <span className="bg-primary/20 text-primary-foreground text-[10px] px-1.5 py-0.5 rounded uppercase tracking-wider font-semibold">
                     Soon
                   </span>
@@ -109,17 +116,23 @@ export function Sidebar() {
           <div className="pt-6 pb-2">
             {!collapsed && <div className="px-3 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted/50 mb-2">System</div>}
             <Link
-              href="/settings"
+              href="#"
+              onClick={(e) => e.preventDefault()}
               className={cn(
-                "flex items-center px-3 py-2.5 rounded-md transition-colors group",
+                "flex items-center px-3 py-2.5 rounded-md transition-colors group opacity-75 cursor-default hover:bg-transparent",
                 pathname?.startsWith("/settings")
                   ? "bg-sidebar-active text-sidebar-activeForeground font-medium"
-                  : "text-sidebar-muted hover:bg-sidebar-muted/10 hover:text-sidebar-foreground"
+                  : "text-sidebar-muted"
               )}
               title={collapsed ? "Settings" : undefined}
             >
               <Settings className={cn("w-4 h-4 shrink-0", pathname?.startsWith("/settings") ? "text-sidebar-activeForeground" : "text-sidebar-muted group-hover:text-sidebar-foreground")} />
-              {!collapsed && <span className="ml-3 text-sm">Settings</span>}
+              {!collapsed && (
+                <>
+                  <span className="ml-3 text-sm flex-1">Settings</span>
+                  <span className="bg-primary/20 text-primary-foreground text-[10px] px-1.5 py-0.5 rounded uppercase tracking-wider font-semibold">Soon</span>
+                </>
+              )}
             </Link>
           </div>
         </nav>
