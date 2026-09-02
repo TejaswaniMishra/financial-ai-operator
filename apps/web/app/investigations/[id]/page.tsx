@@ -123,7 +123,7 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-12">
       {/* Breadcrumb Navigation */}
-      <nav className="flex items-center text-sm text-muted-foreground font-medium">
+      <nav className="flex items-center text-sm text-muted-foreground font-medium mb-2">
         <Link href="/" className="hover:text-foreground transition-colors">
           Dashboard
         </Link>
