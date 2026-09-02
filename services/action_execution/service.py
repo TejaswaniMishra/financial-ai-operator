@@ -13,6 +13,8 @@ from services.action_execution.simulator import SimulatedExecutionAdapter
 class ExecutionError(Exception):
     pass
 
+from sqlalchemy.orm import selectinload
+
 class ActionExecutionService:
     def __init__(self, db: AsyncSession, adapter: ActionExecutionAdapter = None):
         self.db = db
@@ -58,7 +60,9 @@ class ActionExecutionService:
         execution.status = ActionExecutionStatus.RUNNING
         execution.started_at = datetime.now(timezone.utc).replace(tzinfo=None)
         
-        attempt_number = len(execution.attempts) + 1 if execution.attempts else 1
+        stmt_attempts = select(ActionExecutionAttempt).where(ActionExecutionAttempt.action_execution_id == execution.id)
+        attempts = (await self.db.execute(stmt_attempts)).scalars().all()
+        attempt_number = len(attempts) + 1
         
         attempt = ActionExecutionAttempt(
             action_execution_id=execution.id,
@@ -89,8 +93,7 @@ class ActionExecutionService:
             attempt.completed_at = datetime.now(timezone.utc).replace(tzinfo=None)
             
             await self.db.commit()
-            await self.db.refresh(execution)
-            return execution
+            return await self._get_execution(execution.id)
             
         except Exception as e:
             # Catch unexpected exceptions (e.g., adapter crashed) and treat as UNKNOWN
@@ -112,12 +115,11 @@ class ActionExecutionService:
             attempt.completed_at = datetime.now(timezone.utc).replace(tzinfo=None)
             
             await self.db.commit()
-            await self.db.refresh(execution)
-            return execution
+            return await self._get_execution(execution.id)
 
     async def _get_or_create_execution(self, action_request: ActionRequest, idempotency_key: str) -> ActionExecution:
         # Check existing
-        stmt = select(ActionExecution).where(ActionExecution.idempotency_key == idempotency_key)
+        stmt = select(ActionExecution).options(selectinload(ActionExecution.attempts)).where(ActionExecution.idempotency_key == idempotency_key)
         existing = (await self.db.execute(stmt)).scalar_one_or_none()
         if existing:
             return existing
@@ -133,10 +135,7 @@ class ActionExecutionService:
         
         try:
             await self.db.commit()
-            await self.db.refresh(execution)
-            # Ensure relationships are loaded (e.g. attempts)
-            stmt = select(ActionExecution).where(ActionExecution.id == execution.id)
-            return (await self.db.execute(stmt)).scalar_one_or_none()
+            return await self._get_execution(execution.id)
         except (IntegrityError, InvalidRequestError):
             await self.db.rollback()
             # Concurrency fallback
@@ -148,7 +147,7 @@ class ActionExecutionService:
             raise ExecutionError(f"Failed to resolve execution for key {idempotency_key} due to concurrency.")
             
     async def _get_execution(self, id: str) -> ActionExecution:
-        stmt = select(ActionExecution).where(ActionExecution.id == id)
+        stmt = select(ActionExecution).options(selectinload(ActionExecution.attempts)).where(ActionExecution.id == id)
         return (await self.db.execute(stmt)).scalar_one_or_none()
         
     async def _get_attempt(self, id: str) -> ActionExecutionAttempt:
@@ -156,6 +155,6 @@ class ActionExecutionService:
         return (await self.db.execute(stmt)).scalar_one_or_none()
 
     async def get_executions_for_request(self, request_id: str) -> list[ActionExecution]:
-        stmt = select(ActionExecution).where(ActionExecution.action_request_id == request_id).order_by(ActionExecution.created_at.desc())
+        stmt = select(ActionExecution).options(selectinload(ActionExecution.attempts)).where(ActionExecution.action_request_id == request_id).order_by(ActionExecution.created_at.desc())
         result = await self.db.execute(stmt)
         return list(result.scalars().all())
