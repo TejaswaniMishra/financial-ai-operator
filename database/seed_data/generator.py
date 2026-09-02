@@ -51,6 +51,22 @@ class DataGenerator:
         
         await self.session.commit()
         
+        # 1.5. Seed Roles Idempotently
+        from sqlalchemy.future import select
+        from database.models.identity import Role, RoleName
+
+        for role_name in RoleName:
+            stmt = select(Role).where(Role.name == role_name)
+            existing_role = (await self.session.execute(stmt)).scalar_one_or_none()
+            if not existing_role:
+                new_role = Role(
+                    name=role_name,
+                    description=f"System generated {role_name.value} role"
+                )
+                self.session.add(new_role)
+        
+        await self.session.commit()
+        
         # We will implement the 11 scenarios in subsequent PRs/commits to keep this file focused.
         # Let's start with Scenario 1: Perfect Match Flow
         
