@@ -187,3 +187,36 @@ def test_production_secret_fails_fast():
     # This should fail in PROD
     with pytest.raises(ValueError, match="secure JWT_SECRET_KEY must be explicitly configured"):
         Settings(APP_ENV=Environment.PRODUCTION, JWT_SECRET_KEY="dev-secret-key-change-me")
+
+@pytest.mark.asyncio
+async def test_get_me_success(async_client: AsyncClient, setup_test_user):
+    token = create_access_token(setup_test_user.id)
+    headers = {"Authorization": f"Bearer {token}"}
+    res = await async_client.get("/api/v1/auth/me", headers=headers)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["id"] == str(setup_test_user.id)
+    assert data["email"] == setup_test_user.email
+    assert data["display_name"] == setup_test_user.display_name
+    assert data["is_active"] is True
+    assert "roles" not in data
+    assert "password_hash" not in data
+    assert "token" not in data
+
+@pytest.mark.asyncio
+async def test_get_me_missing_token(async_client: AsyncClient):
+    res = await async_client.get("/api/v1/auth/me")
+    assert res.status_code == 401
+    
+@pytest.mark.asyncio
+async def test_get_me_invalid_token(async_client: AsyncClient):
+    headers = {"Authorization": "Bearer bad.token.here"}
+    res = await async_client.get("/api/v1/auth/me", headers=headers)
+    assert res.status_code == 401
+
+@pytest.mark.asyncio
+async def test_get_me_inactive_user(async_client: AsyncClient, inactive_test_user):
+    token = create_access_token(inactive_test_user.id)
+    headers = {"Authorization": f"Bearer {token}"}
+    res = await async_client.get("/api/v1/auth/me", headers=headers)
+    assert res.status_code == 401
