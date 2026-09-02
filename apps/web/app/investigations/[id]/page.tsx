@@ -344,7 +344,8 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
               ) : attemptResult.result ? (
                 <div className="flex-1 p-0 divide-y divide-border">
                   {(() => {
-                    const res = attemptResult.result as any;
+                    const res = attemptResult.result;
+                    if (!res) return null;
                     return (
                       <>
                         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-surface-muted/10">
@@ -386,14 +387,14 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
                               Evidence Claims
                             </div>
                             <div className="space-y-4">
-                              {res.claims.map((claim: any, idx: number) => (
+                              {res.claims.map((claim, idx) => (
                                 <div key={idx} className="bg-surface-muted/50 rounded-md p-4 border border-border/50">
                                   <div className="text-sm font-medium text-foreground mb-2">{claim.claim}</div>
                                   {claim.evidence && Array.isArray(claim.evidence) && (
                                     <div className="flex flex-wrap gap-2 mt-3">
-                                      {claim.evidence.map((ev: any, evIdx: number) => (
+                                      {claim.evidence.map((ev, evIdx) => (
                                         <span key={evIdx} className="inline-flex items-center px-2 py-1 rounded bg-background border border-border text-xs text-muted-foreground font-mono">
-                                          {ev.field || ev.entity_type || 'Evidence'}: <span className="text-foreground ml-1 font-medium">{String(ev.value || ev.entity_id || '')}</span>
+                                          {ev.field}: <span className="text-foreground ml-1 font-medium">{String(ev.value)}</span>
                                         </span>
                                       ))}
                                     </div>
@@ -411,32 +412,13 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
                               Recommended Actions
                             </div>
                             <ul className="space-y-2">
-                              {res.recommendations.map((rec: string, idx: number) => (
+                              {res.recommendations.map((rec, idx) => (
                                 <li key={idx} className="flex gap-3 text-sm text-foreground items-start">
                                   <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary/60 shrink-0"></div>
                                   <span className="leading-relaxed">{rec}</span>
                                 </li>
                               ))}
                             </ul>
-                          </div>
-                        )}
-
-                        {/* Catch-all for other fields */}
-                        {Object.entries(res).filter(([k]) => !['root_cause_category', 'ai_confidence', 'summary', 'claims', 'recommendations', 'chain_of_thought', 'reasoning', 'context_snapshot', 'context_hash', 'raw_llm_response', 'prompts', 'internal_diagnostics'].includes(k)).length > 0 && (
-                          <div className="p-6">
-                            <div className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-semibold">Additional Details</div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              {Object.entries(res)
-                                .filter(([k]) => !['root_cause_category', 'ai_confidence', 'summary', 'claims', 'recommendations', 'chain_of_thought', 'reasoning', 'context_snapshot', 'context_hash', 'raw_llm_response', 'prompts', 'internal_diagnostics'].includes(k))
-                                .map(([key, val], idx) => (
-                                  <div key={idx} className="bg-surface-muted/30 p-3 rounded border border-border/50">
-                                    <div className="text-xs text-muted-foreground mb-1 capitalize">{key.replace(/_/g, ' ')}</div>
-                                    <div className="text-sm font-medium text-foreground truncate" title={String(val)}>
-                                      {typeof val === 'object' ? JSON.stringify(val) : String(val)}
-                                    </div>
-                                  </div>
-                              ))}
-                            </div>
                           </div>
                         )}
                       </>
