@@ -8,6 +8,8 @@ os.environ["APP_ENV"] = "test"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///file:testdb?mode=memory&cache=shared"
 os.environ["DATABASE_URL_SYNC"] = "sqlite:///file:testdb?mode=memory&cache=shared"
 os.environ["DEBUG"] = "false"
+os.environ["LLM_PROVIDER"] = "mock"
+os.environ["LLM_API_KEY"] = ""
 
 from apps.api.main import app
 from config.settings import get_settings
