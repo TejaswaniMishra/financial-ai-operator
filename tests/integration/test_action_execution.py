@@ -117,10 +117,11 @@ async def test_execute_simulator_unknown(async_client, db_session, sample_invest
     assert data["status"] == "UNKNOWN"
     assert data["error_code"] == "SIMULATED_TIMEOUT"
     
-    # Try to execute again (should be blocked from auto-retry because it's UNKNOWN)
+    # Try to execute again (should be blocked from auto-retry because it's UNKNOWN, but idempotency returns the existing execution)
     exec_response_2 = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_simulate_unknown"})
-    assert exec_response_2.status_code == status.HTTP_400_BAD_REQUEST
-    assert "is UNKNOWN" in exec_response_2.json()["detail"]
+    assert exec_response_2.status_code == status.HTTP_200_OK
+    data2 = exec_response_2.json()
+    assert data2["status"] == "UNKNOWN"
 
 async def test_execution_concurrency_and_idempotency(async_client, db_session, sample_investigation):
     eval5 = await create_unique_policy_eval(db_session, sample_investigation)
@@ -137,11 +138,11 @@ async def test_execution_concurrency_and_idempotency(async_client, db_session, s
 
     idempotency_key = "concurrent_test_key"
 
-    # Fire first request
-    req1 = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": idempotency_key})
-    
-    # Fire second request with same key
-    req2 = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": idempotency_key})
+    # Fire both requests concurrently
+    req1, req2 = await asyncio.gather(
+        async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": idempotency_key}),
+        async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": idempotency_key})
+    )
 
     assert req1.status_code == status.HTTP_200_OK
     assert req2.status_code == status.HTTP_200_OK

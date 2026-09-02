@@ -38,48 +38,70 @@ class ActionExecutionService:
         if not idempotency_key:
             idempotency_key = f"exec_{request_id}"
             
-        # 3. Create or Reuse ActionExecution safely (Concurrency handling)
-        execution = await self._get_or_create_execution(action_request, idempotency_key)
+        # 3. Global Request Guard
+        # Check all existing executions for this request.
+        stmt_execs = select(ActionExecution).options(selectinload(ActionExecution.attempts)).where(ActionExecution.action_request_id == request_id)
+        existing_executions = (await self.db.execute(stmt_execs)).scalars().all()
         
-        # 4. Check if execution is already successfully finished or running
-        if execution.status == ActionExecutionStatus.SUCCEEDED:
-            return execution
-        if execution.status == ActionExecutionStatus.RUNNING:
-            raise ExecutionError(f"Execution {execution.id} is already RUNNING")
+        for ex in existing_executions:
+            if ex.idempotency_key == idempotency_key:
+                # Idempotent return of the EXACT same execution attempt
+                return ex
+                
+            if ex.status in (ActionExecutionStatus.SUCCEEDED, ActionExecutionStatus.RUNNING, ActionExecutionStatus.UNKNOWN):
+                # A DIFFERENT execution attempt is already successful, running, or stuck in unknown.
+                raise ExecutionError(f"ActionRequest {request_id} already has an execution in status {ex.status.value}. Cannot start a new execution.")
+
+        # 4. Idempotency Ownership Claim
+        # If we get here, no conflicting executions exist. We try to claim ownership by inserting.
+        execution_id = str(uuid.uuid4())
+        execution = ActionExecution(
+            id=execution_id,
+            action_request_id=action_request.id,
+            idempotency_key=idempotency_key,
+            execution_type="simulation",
+            adapter=self.adapter.name,
+            status=ActionExecutionStatus.PENDING
+        )
+        self.db.add(execution)
+        
+        try:
+            await self.db.commit()
+            # We successfully inserted the row! We are the sole owner of this execution.
+        except (IntegrityError, InvalidRequestError):
+            await self.db.rollback()
+            # A concurrent request with the SAME idempotency_key beat us to the insert.
+            # We fetch and return it without executing.
+            import asyncio
+            for _ in range(3):
+                stmt_conflict = select(ActionExecution).options(selectinload(ActionExecution.attempts)).where(ActionExecution.idempotency_key == idempotency_key)
+                conflict_ex = (await self.db.execute(stmt_conflict)).scalar_one_or_none()
+                if conflict_ex:
+                    return conflict_ex
+                await asyncio.sleep(0.05)
+            raise ExecutionError(f"Failed to resolve execution for key {idempotency_key} due to concurrency.")
             
-        # Do NOT auto-retry UNKNOWN
-        if execution.status == ActionExecutionStatus.UNKNOWN:
-            raise ExecutionError(f"Execution {execution.id} is UNKNOWN. Manual review required. Will not auto-retry.")
-            
-        # We can execute if status is PENDING or FAILED (retry)
-        
-        # 5. Preflight Validation
-        # In a real system, we'd check action parameters here. For M7, just basic validation.
-        
-        # 6. Mark as RUNNING and create attempt
+        # 5. Mark as RUNNING and create attempt
+        # (Since we are the owner, it's safe to proceed)
         execution.status = ActionExecutionStatus.RUNNING
         execution.started_at = datetime.now(timezone.utc).replace(tzinfo=None)
         
-        stmt_attempts = select(ActionExecutionAttempt).where(ActionExecutionAttempt.action_execution_id == execution.id)
-        attempts = (await self.db.execute(stmt_attempts)).scalars().all()
-        attempt_number = len(attempts) + 1
-        
+        attempt_id = str(uuid.uuid4())
         attempt = ActionExecutionAttempt(
+            id=attempt_id,
             action_execution_id=execution.id,
-            attempt_number=attempt_number,
+            attempt_number=1,
             status=ActionExecutionStatus.RUNNING
         )
         self.db.add(attempt)
         await self.db.commit()
-        await self.db.refresh(execution)
-        await self.db.refresh(attempt)
         
-        # 7. Invoke Adapter
+        # 6. Invoke Adapter
         try:
             # We don't hold the DB transaction open during external execution!
             result = await self.adapter.execute(action_request, idempotency_key)
             
-            # 8. Handle Result
+            # 7. Handle Result
             execution.status = result.status
             execution.result = result.result_data
             execution.error_code = result.error_code
@@ -96,9 +118,6 @@ class ActionExecutionService:
             return await self._get_execution(execution.id)
             
         except Exception as e:
-            # Catch unexpected exceptions (e.g., adapter crashed) and treat as UNKNOWN
-            # if we can't be sure the execution didn't partially happen.
-            # For pure code exceptions, it might be FAILED, but UNKNOWN is safer for financial ops.
             await self.db.rollback()
             
             execution = await self._get_execution(execution.id)
@@ -117,35 +136,6 @@ class ActionExecutionService:
             await self.db.commit()
             return await self._get_execution(execution.id)
 
-    async def _get_or_create_execution(self, action_request: ActionRequest, idempotency_key: str) -> ActionExecution:
-        # Check existing
-        stmt = select(ActionExecution).options(selectinload(ActionExecution.attempts)).where(ActionExecution.idempotency_key == idempotency_key)
-        existing = (await self.db.execute(stmt)).scalar_one_or_none()
-        if existing:
-            return existing
-            
-        execution = ActionExecution(
-            action_request_id=action_request.id,
-            idempotency_key=idempotency_key,
-            execution_type="simulation",
-            adapter=self.adapter.name,
-            status=ActionExecutionStatus.PENDING
-        )
-        self.db.add(execution)
-        
-        try:
-            await self.db.commit()
-            return await self._get_execution(execution.id)
-        except (IntegrityError, InvalidRequestError):
-            await self.db.rollback()
-            # Concurrency fallback
-            for _ in range(3):
-                existing = (await self.db.execute(stmt)).scalar_one_or_none()
-                if existing:
-                    return existing
-                await asyncio.sleep(0.05)
-            raise ExecutionError(f"Failed to resolve execution for key {idempotency_key} due to concurrency.")
-            
     async def _get_execution(self, id: str) -> ActionExecution:
         stmt = select(ActionExecution).options(selectinload(ActionExecution.attempts)).where(ActionExecution.id == id)
         return (await self.db.execute(stmt)).scalar_one_or_none()
