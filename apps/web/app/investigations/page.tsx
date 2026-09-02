@@ -153,10 +153,10 @@ export default function InvestigationsPage() {
         <div className="flex flex-col items-center justify-center py-32 text-center border border-dashed border-border rounded-xl bg-surface/50 shadow-subtle">
           <FileSearch className="w-10 h-10 text-muted-foreground/50 mb-4" />
           <h3 className="text-lg font-medium text-foreground mb-2">
-            No active investigations
+            No investigations yet
           </h3>
           <p className="text-muted-foreground text-sm max-w-sm">
-            There are currently no AI-assisted investigation cases to monitor.
+            There are currently no investigation records.
           </p>
         </div>
       ) : (
