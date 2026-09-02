@@ -14,7 +14,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
-  Menu
+  Menu,
+  CheckSquare
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +24,7 @@ const navigation = [
   { name: "Reconciliation", href: "/reconciliation", icon: Layers },
   { name: "Discrepancies", href: "/discrepancies", icon: Search },
   { name: "Investigations", href: "/investigations", icon: ShieldCheck },
+  { name: "Action Requests", href: "/action-requests", icon: CheckSquare },
   { name: "Transactions", href: "/transactions", icon: Database, isComingSoon: true },
   { name: "Reports", href: "/reports", icon: BarChart3, isComingSoon: true },
   { name: "Exceptions", href: "/exceptions", icon: FileText, isComingSoon: true },
