@@ -15,7 +15,14 @@ import {
   FileText
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { fetchInvestigation, InvestigationResponse, fetchInvestigationAttempts, InvestigationAttempt } from "../../../lib/api";
+import {
+  fetchInvestigation,
+  InvestigationResponse,
+  fetchInvestigationAttempts,
+  InvestigationAttempt,
+  fetchInvestigationAttemptResult,
+  InvestigationAttemptResultResponse
+} from "../../../lib/api";
 
 export default function InvestigationDetailPage({ params }: { params: { id: string } }) {
   const id = params.id;
@@ -26,6 +33,11 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
   const [attempts, setAttempts] = useState<InvestigationAttempt[] | null>(null);
   const [attemptsLoading, setAttemptsLoading] = useState<boolean>(false);
   const [attemptsError, setAttemptsError] = useState<string | null>(null);
+
+  // Result state
+  const [attemptResult, setAttemptResult] = useState<InvestigationAttemptResultResponse | null>(null);
+  const [resultLoading, setResultLoading] = useState<boolean>(false);
+  const [resultError, setResultError] = useState<string | null>(null);
 
   const loadInvestigation = async () => {
     setLoading(true);
@@ -63,6 +75,28 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
       loadAttempts();
     }
   }, [id]);
+
+  const loadAttemptResult = async (invId: string, attId: string) => {
+    setResultLoading(true);
+    setResultError(null);
+    try {
+      const data = await fetchInvestigationAttemptResult(invId, attId);
+      setAttemptResult(data);
+    } catch (err: any) {
+      setResultError(err.message || "Failed to load investigation result");
+    } finally {
+      setResultLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (investigation?.active_attempt_id && attempts && attempts.length > 0) {
+      const activeAttemptExists = attempts.some(a => a.id === investigation.active_attempt_id);
+      if (activeAttemptExists) {
+        loadAttemptResult(investigation.id, investigation.active_attempt_id);
+      }
+    }
+  }, [investigation?.active_attempt_id, attempts, investigation?.id]);
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-12">
@@ -205,15 +239,170 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
                 AI Investigation Result
               </h2>
             </div>
-            <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
-              <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center mb-4">
-                <BrainCircuit className="w-6 h-6 text-muted-foreground" />
+
+            {resultLoading ? (
+              <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center mb-4">
+                  <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+                <h3 className="text-sm font-medium text-foreground mb-1">Loading Result...</h3>
               </div>
-              <h3 className="text-sm font-medium text-foreground mb-1">No results available yet</h3>
-              <p className="text-sm text-muted-foreground max-w-sm">
-                Investigation results, resolution paths, and agent reasoning will be displayed here once an attempt completes.
-              </p>
-            </div>
+            ) : resultError ? (
+              <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center mb-4">
+                  <AlertTriangle className="w-6 h-6 text-destructive" />
+                </div>
+                <h3 className="text-sm font-medium text-foreground mb-1">Failed to load result</h3>
+                <p className="text-sm text-muted-foreground mb-4">{resultError}</p>
+                <button
+                  onClick={() => investigation?.active_attempt_id && loadAttemptResult(investigation.id, investigation.active_attempt_id)}
+                  className="text-xs font-medium px-4 py-2 bg-destructive/10 hover:bg-destructive/20 text-destructive rounded-md transition-colors"
+                >
+                  Retry
+                </button>
+              </div>
+            ) : attemptResult ? (
+              attemptResult.is_valid === false ? (
+                <div className="flex-1 p-6">
+                  <div className="bg-rose-500/10 border border-rose-500/20 rounded-md p-4 mb-4">
+                    <h3 className="text-sm font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-2 mb-2">
+                      <AlertTriangle className="w-4 h-4" /> Validation Failed
+                    </h3>
+                    <p className="text-sm text-rose-600/80 dark:text-rose-400/80">The AI response did not pass schema validation.</p>
+                  </div>
+                  {attemptResult.errors != null && (
+                    <div className="mt-4">
+                      <h4 className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Validation Errors</h4>
+                      <pre className="text-xs bg-surface-muted p-3 rounded-md overflow-x-auto text-foreground whitespace-pre-wrap">
+                        {JSON.stringify(attemptResult.errors, null, 2)}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              ) : attemptResult.result ? (
+                <div className="flex-1 p-0 divide-y divide-border">
+                  {(() => {
+                    const res = attemptResult.result as any;
+                    return (
+                      <>
+                        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-surface-muted/10">
+                          {res.root_cause_category && (
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wider font-semibold">Root Cause Category</div>
+                              <div className="font-medium text-sm text-foreground">{res.root_cause_category}</div>
+                            </div>
+                          )}
+                          {res.ai_confidence !== undefined && (
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1 uppercase tracking-wider font-semibold">Confidence</div>
+                              <div className="flex items-center gap-2">
+                                <div className="w-full bg-border rounded-full h-2 max-w-[150px]">
+                                  <div
+                                    className="bg-primary h-2 rounded-full"
+                                    style={{ width: `${Math.min(Math.max(res.ai_confidence * 100, 0), 100)}%` }}
+                                  ></div>
+                                </div>
+                                <span className="font-mono text-sm text-secondary">
+                                  {Math.round(res.ai_confidence * 100)}%
+                                </span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {res.summary && (
+                          <div className="p-6">
+                            <div className="text-xs text-muted-foreground mb-2 uppercase tracking-wider font-semibold">Summary</div>
+                            <p className="text-sm text-foreground leading-relaxed">{res.summary}</p>
+                          </div>
+                        )}
+
+                        {res.claims && Array.isArray(res.claims) && res.claims.length > 0 && (
+                          <div className="p-6">
+                            <div className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-semibold flex items-center gap-2">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
+                              Evidence Claims
+                            </div>
+                            <div className="space-y-4">
+                              {res.claims.map((claim: any, idx: number) => (
+                                <div key={idx} className="bg-surface-muted/50 rounded-md p-4 border border-border/50">
+                                  <div className="text-sm font-medium text-foreground mb-2">{claim.claim}</div>
+                                  {claim.evidence && Array.isArray(claim.evidence) && (
+                                    <div className="flex flex-wrap gap-2 mt-3">
+                                      {claim.evidence.map((ev: any, evIdx: number) => (
+                                        <span key={evIdx} className="inline-flex items-center px-2 py-1 rounded bg-background border border-border text-xs text-muted-foreground font-mono">
+                                          {ev.field || ev.entity_type || 'Evidence'}: <span className="text-foreground ml-1 font-medium">{String(ev.value || ev.entity_id || '')}</span>
+                                        </span>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {res.recommendations && Array.isArray(res.recommendations) && res.recommendations.length > 0 && (
+                          <div className="p-6">
+                            <div className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-semibold flex items-center gap-2">
+                              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                              Recommended Actions
+                            </div>
+                            <ul className="space-y-2">
+                              {res.recommendations.map((rec: string, idx: number) => (
+                                <li key={idx} className="flex gap-3 text-sm text-foreground items-start">
+                                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-primary/60 shrink-0"></div>
+                                  <span className="leading-relaxed">{rec}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Catch-all for other fields */}
+                        {Object.entries(res).filter(([k]) => !['root_cause_category', 'ai_confidence', 'summary', 'claims', 'recommendations'].includes(k)).length > 0 && (
+                          <div className="p-6">
+                            <div className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-semibold">Additional Details</div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              {Object.entries(res)
+                                .filter(([k]) => !['root_cause_category', 'ai_confidence', 'summary', 'claims', 'recommendations'].includes(k))
+                                .map(([key, val], idx) => (
+                                  <div key={idx} className="bg-surface-muted/30 p-3 rounded border border-border/50">
+                                    <div className="text-xs text-muted-foreground mb-1 capitalize">{key.replace(/_/g, ' ')}</div>
+                                    <div className="text-sm font-medium text-foreground truncate" title={String(val)}>
+                                      {typeof val === 'object' ? JSON.stringify(val) : String(val)}
+                                    </div>
+                                  </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
+              ) : (
+                <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
+                  <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center mb-4">
+                    <FileText className="w-6 h-6 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-sm font-medium text-foreground mb-1">Result Empty</h3>
+                  <p className="text-sm text-muted-foreground max-w-sm">
+                    The valid result contains no data.
+                  </p>
+                </div>
+              )
+            ) : (
+              <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center mb-4">
+                  <BrainCircuit className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <h3 className="text-sm font-medium text-foreground mb-1">No results available yet</h3>
+                <p className="text-sm text-muted-foreground max-w-sm">
+                  Investigation results, resolution paths, and agent reasoning will be displayed here once an attempt completes.
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Investigation Attempts Section */}
