@@ -418,12 +418,12 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
                         )}
 
                         {/* Catch-all for other fields */}
-                        {Object.entries(res).filter(([k]) => !['root_cause_category', 'ai_confidence', 'summary', 'claims', 'recommendations'].includes(k)).length > 0 && (
+                        {Object.entries(res).filter(([k]) => !['root_cause_category', 'ai_confidence', 'summary', 'claims', 'recommendations', 'chain_of_thought', 'reasoning', 'context_snapshot', 'context_hash', 'raw_llm_response', 'prompts', 'internal_diagnostics'].includes(k)).length > 0 && (
                           <div className="p-6">
                             <div className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-semibold">Additional Details</div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               {Object.entries(res)
-                                .filter(([k]) => !['root_cause_category', 'ai_confidence', 'summary', 'claims', 'recommendations'].includes(k))
+                                .filter(([k]) => !['root_cause_category', 'ai_confidence', 'summary', 'claims', 'recommendations', 'chain_of_thought', 'reasoning', 'context_snapshot', 'context_hash', 'raw_llm_response', 'prompts', 'internal_diagnostics'].includes(k))
                                 .map(([key, val], idx) => (
                                   <div key={idx} className="bg-surface-muted/30 p-3 rounded border border-border/50">
                                     <div className="text-xs text-muted-foreground mb-1 capitalize">{key.replace(/_/g, ' ')}</div>
