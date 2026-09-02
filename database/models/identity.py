@@ -25,6 +25,7 @@ class User(Base):
 
     # Relationships
     roles = relationship("UserRole", back_populates="user", cascade="all, delete-orphan")
+    credentials = relationship("UserCredential", back_populates="user", uselist=False, cascade="all, delete-orphan")
 
 
 class Role(Base):
@@ -57,3 +58,16 @@ class UserRole(Base):
     # Relationships
     user = relationship("User", back_populates="roles")
     role = relationship("Role", back_populates="users")
+
+class UserCredential(Base):
+    __tablename__ = "user_credentials"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True, index=True)
+    password_hash = Column(String, nullable=False)
+    
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+
+    # Relationships
+    user = relationship("User", back_populates="credentials")
