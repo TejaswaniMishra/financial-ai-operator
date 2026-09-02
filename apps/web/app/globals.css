@@ -9,16 +9,16 @@
     --card: 0 0% 100%; /* white */
     --surface-elevated: 0 0% 100%;
     --surface-muted: 210 40% 96.1%; /* slate-100 */
-    
+
     --border: 214.3 31.8% 91.4%; /* slate-200 */
     --border-subtle: 210 40% 96.1%; /* slate-100 */
     --input: 214.3 31.8% 91.4%;
-    
+
     /* PRIMARY */
     --primary: 221.2 83.2% 53.3%; /* blue-600 */
     --primary-hover: 221.2 83.2% 43.3%; /* blue-700 */
     --primary-foreground: 210 40% 98%; /* slate-50 */
-    
+
     /* NAVIGATION (Deep Navy/Indigo) */
     --sidebar-bg: 224 71.4% 4.1%; /* slate-950 or deeper */
     --sidebar-foreground: 210 40% 98%;
@@ -26,13 +26,13 @@
     --sidebar-active-bg: 221.2 83.2% 53.3%; /* matches primary */
     --sidebar-active-foreground: 210 40% 98%;
     --sidebar-border: 217 33% 17%;
-    
+
     /* TEXT */
     --text-primary: 222.2 47.4% 11.2%; /* slate-900 */
     --text-secondary: 215.4 16.3% 46.9%; /* slate-500 */
     --text-muted: 215.3 19.3% 65.1%; /* slate-400 */
     --text-disabled: 214.3 31.8% 91.4%; /* slate-200 */
-    
+
     /* Standard Aliases */
     --foreground: var(--text-primary);
     --muted: var(--surface-muted);
@@ -48,7 +48,7 @@
     --failed: 346.8 77.2% 49.8%;
     --investigation: 38 92% 50%;
     --unavailable: 215.4 16.3% 46.9%;
-    
+
     /* Legacy Semantic fallbacks */
     --success: var(--matched);
     --success-foreground: var(--matched-fg);
@@ -65,40 +65,45 @@
   }
 
   .dark {
-    /* Forcing the same crisp layout for now, or just leave variables undefined if we want to enforce light mode 
-       We will map them to the light theme explicitly to prevent the system from auto-switching to a broken dark mode */
-    --background: 210 40% 98%;
-    --card: 0 0% 100%;
-    --surface-elevated: 0 0% 100%;
-    --surface-muted: 210 40% 96.1%;
-    --border: 214.3 31.8% 91.4%;
-    --border-subtle: 210 40% 96.1%;
-    --input: 214.3 31.8% 91.4%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-hover: 221.2 83.2% 43.3%;
-    --primary-foreground: 210 40% 98%;
+    --background: 222.2 84% 4.9%;
+    --card: 222.2 84% 4.9%;
+    --surface-elevated: 222.2 47.4% 11.2%;
+    --surface-muted: 217.2 32.6% 17.5%;
+
+    --border: 217.2 32.6% 17.5%;
+    --border-subtle: 222.2 47.4% 11.2%;
+    --input: 217.2 32.6% 17.5%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-hover: 217.2 91.2% 69.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
     --sidebar-bg: 224 71.4% 4.1%;
     --sidebar-foreground: 210 40% 98%;
     --sidebar-muted: 215 20.2% 65.1%;
-    --sidebar-active-bg: 221.2 83.2% 53.3%;
-    --sidebar-active-foreground: 210 40% 98%;
+    --sidebar-active-bg: 217.2 91.2% 59.8%;
+    --sidebar-active-foreground: 222.2 47.4% 11.2%;
     --sidebar-border: 217 33% 17%;
-    --text-primary: 222.2 47.4% 11.2%;
-    --text-secondary: 215.4 16.3% 46.9%;
-    --text-muted: 215.3 19.3% 65.1%;
-    --text-disabled: 214.3 31.8% 91.4%;
+
+    --text-primary: 210 40% 98%;
+    --text-secondary: 215 20.2% 65.1%;
+    --text-muted: 215 20.2% 65.1%;
+    --text-disabled: 217.2 32.6% 17.5%;
+
     --foreground: var(--text-primary);
     --muted: var(--surface-muted);
     --muted-foreground: var(--text-secondary);
-    --matched: 142.1 76.2% 36.3%;
-    --matched-fg: 0 0% 100%;
+
+    --matched: 142.1 70.6% 45.3%;
+    --matched-fg: 144.9 80.4% 10%;
     --discrepancy: 346.8 77.2% 49.8%;
-    --discrepancy-fg: 0 0% 100%;
-    --pending: 38 92% 50%;
-    --pending-fg: 0 0% 100%;
+    --discrepancy-fg: 355.7 100% 97.3%;
+    --pending: 47.9 95.8% 53.1%;
+    --pending-fg: 26 83.3% 14.1%;
     --failed: 346.8 77.2% 49.8%;
-    --investigation: 38 92% 50%;
-    --unavailable: 215.4 16.3% 46.9%;
+    --investigation: 47.9 95.8% 53.1%;
+    --unavailable: 215 20.2% 65.1%;
+
     --success: var(--matched);
     --success-foreground: var(--matched-fg);
     --warning: var(--pending);
@@ -108,14 +113,16 @@
     --info: var(--primary);
     --info-foreground: var(--primary-foreground);
     --radius: 0.5rem;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 217.2 91.2% 59.8%;
   }
 }
 
 @layer base {
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/20;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family:
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+      Arial, sans-serif;
   }
 }
 @layer components {

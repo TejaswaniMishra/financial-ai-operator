@@ -47,7 +47,7 @@ export function TopNav() {
               onClick={() => setTheme("light")}
               className={cn(
                 "p-2 rounded-full transition-colors focus-ring",
-                theme === "light" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-surface-muted"
+                resolvedTheme === "light" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-surface-muted"
               )}
               title="Light Mode"
             >
@@ -57,7 +57,7 @@ export function TopNav() {
               onClick={() => setTheme("dark")}
               className={cn(
                 "p-2 rounded-full transition-colors focus-ring",
-                theme === "dark" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-surface-muted"
+                resolvedTheme === "dark" ? "text-primary bg-primary/10" : "text-muted-foreground hover:text-foreground hover:bg-surface-muted"
               )}
               title="Dark Mode"
             >
