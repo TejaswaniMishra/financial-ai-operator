@@ -20,3 +20,17 @@ class SignupRequest(BaseModel):
     def normalize_email(self) -> str:
         """Deterministically normalize the email address."""
         return self.email.lower().strip()
+
+class LoginRequest(BaseModel):
+    email: str = Field(..., description="User's email address")
+    password: str = Field(..., description="User's password")
+
+    def normalize_email(self) -> str:
+        """Deterministically normalize the email address."""
+        return self.email.lower().strip()
+
+class TokenResponse(BaseModel):
+    access_token: str = Field(..., description="JWT access token")
+    token_type: str = Field(default="bearer", description="Token type, typically 'bearer'")
+    expires_in: int = Field(..., description="Token expiration in seconds")
+
