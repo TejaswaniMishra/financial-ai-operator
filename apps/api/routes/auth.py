@@ -5,8 +5,9 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
 from apps.api.dependencies import get_db_session
+from apps.api.auth import get_current_user
 from database.models.identity import User, UserCredential, Role, RoleName, UserRole
-from packages.schemas.auth import SignupRequest, LoginRequest, TokenResponse
+from packages.schemas.auth import SignupRequest, LoginRequest, TokenResponse, CurrentUserResponse
 from packages.schemas.identity import UserResponse
 from packages.utils.crypto import hash_password, verify_password
 from packages.utils.password_policy import validate_password
@@ -174,3 +175,18 @@ async def login(
         token_type="bearer",
         expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
     )
+
+
+@router.get(
+    "/me",
+    response_model=CurrentUserResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get current user"
+)
+async def get_me(
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Returns the currently authenticated user's safe identity profile.
+    """
+    return current_user
