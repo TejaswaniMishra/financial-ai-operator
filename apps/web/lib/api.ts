@@ -222,7 +222,7 @@ export interface InvestigationAttemptResultResponse {
   attempt_id: string;
   status: string;
   is_valid: boolean;
-  result: unknown | null;
+  result: InvestigationResult | null;
   errors: unknown | null;
 }
 
