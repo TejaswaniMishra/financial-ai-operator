@@ -1,10 +1,37 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Search, Filter, AlertCircle, AlertTriangle, ArrowRight, RefreshCw, FileSearch, ShieldCheck, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { fetchInvestigations, InvestigationListItem } from "../../lib/api";
 
 export default function InvestigationsPage() {
+  const [investigations, setInvestigations] = useState<InvestigationListItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await fetchInvestigations();
+      setInvestigations(data || []);
+    } catch (err: any) {
+      setError(err.message || "Failed to load investigations");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const totalInvestigations = investigations.length;
+  const runningCount = investigations.filter(inv => inv.status === "PENDING" || inv.status === "RUNNING").length;
+  const completedValidCount = investigations.filter(inv => inv.status === "COMPLETED").length;
+  const failedInvalidCount = investigations.filter(inv => inv.status === "FAILED").length;
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-12">
       <div className="flex flex-col gap-2">
@@ -20,7 +47,7 @@ export default function InvestigationsPage() {
             <h3 className="text-card-title text-sm">Total Investigations</h3>
             <AlertCircle className="w-4 h-4 text-discrepancy" />
           </div>
-          <div className="text-kpi">0</div>
+          <div className="text-kpi">{totalInvestigations}</div>
           <p className="text-status text-muted-foreground mt-2">All cases</p>
         </div>
 
@@ -29,7 +56,7 @@ export default function InvestigationsPage() {
             <h3 className="text-card-title text-sm">Running</h3>
             <RefreshCw className="w-4 h-4 text-info" />
           </div>
-          <div className="text-kpi">0</div>
+          <div className="text-kpi">{runningCount}</div>
           <p className="text-status text-muted-foreground mt-2">In progress</p>
         </div>
 
@@ -38,7 +65,7 @@ export default function InvestigationsPage() {
             <h3 className="text-card-title text-sm">Completed / Valid</h3>
             <ShieldCheck className="w-4 h-4 text-matched" />
           </div>
-          <div className="text-kpi">0</div>
+          <div className="text-kpi">{completedValidCount}</div>
           <p className="text-status text-muted-foreground mt-2">Ready for review</p>
         </div>
 
@@ -47,7 +74,7 @@ export default function InvestigationsPage() {
             <h3 className="text-card-title text-sm">Failed / Invalid</h3>
             <XCircle className="w-4 h-4 text-error" />
           </div>
-          <div className="text-kpi">0</div>
+          <div className="text-kpi">{failedInvalidCount}</div>
           <p className="text-status text-muted-foreground mt-2">Requires manual intervention</p>
         </div>
       </div>
