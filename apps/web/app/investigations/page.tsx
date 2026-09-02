@@ -11,6 +11,9 @@ export default function InvestigationsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+
   const loadData = async () => {
     setLoading(true);
     setError(null);
@@ -32,6 +35,23 @@ export default function InvestigationsPage() {
   const runningCount = investigations.filter(inv => inv.status === "PENDING" || inv.status === "RUNNING").length;
   const completedValidCount = investigations.filter(inv => inv.status === "COMPLETED").length;
   const failedInvalidCount = investigations.filter(inv => inv.status === "FAILED").length;
+
+  const uniqueStatuses = useMemo(() => Array.from(new Set(investigations.map(i => i.status))), [investigations]);
+
+  const filteredInvestigations = useMemo(() => {
+    return investigations.filter(inv => {
+      if (statusFilter !== "ALL" && inv.status !== statusFilter) return false;
+      if (search) {
+        const q = search.toLowerCase();
+        const matches = 
+          inv.id.toLowerCase().includes(q) || 
+          inv.discrepancy_id.toLowerCase().includes(q) ||
+          (inv.active_attempt_id && inv.active_attempt_id.toLowerCase().includes(q));
+        if (!matches) return false;
+      }
+      return true;
+    });
+  }, [investigations, search, statusFilter]);
 
   const router = useRouter();
 
@@ -102,6 +122,35 @@ export default function InvestigationsPage() {
       </div>
 
       <div className="bg-card border border-border shadow-subtle rounded-xl overflow-hidden flex flex-col min-h-[400px]">
+        {/* Toolbar */}
+        <div className="p-4 sm:p-5 border-b border-border flex flex-col sm:flex-row gap-4 justify-between bg-surface-muted/30">
+          <div className="relative w-full sm:max-w-xs">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search IDs..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 text-sm bg-surface border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground placeholder:text-muted-foreground transition-all"
+            />
+          </div>
+          <div className="flex items-center gap-3 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+            <div className="flex items-center space-x-2 shrink-0">
+              <Filter className="w-4 h-4 text-muted-foreground" />
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="text-sm bg-surface border border-border rounded-md px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="ALL">All Statuses</option>
+                {uniqueStatuses.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -115,7 +164,7 @@ export default function InvestigationsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {investigations.map((inv) => (
+              {filteredInvestigations.map((inv) => (
                 <tr key={inv.id} onClick={() => handleRowClick(inv.id)} className="hover:bg-surface-muted/50 transition-colors group cursor-pointer">
                   <td className="px-5 py-3">
                     <div className="font-medium text-sm text-foreground">Inv</div>
