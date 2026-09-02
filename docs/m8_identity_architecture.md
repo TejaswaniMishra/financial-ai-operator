@@ -59,6 +59,7 @@ The system uses a strict vocabulary for role assignment to support future RBAC d
 > **Authentication is NOT implemented.**
 > There is no capability for login, JWT tokens, session cookies, or password handling.
 > M8.2.1 implements strictly isolated storage using Argon2id for secure password hashing.
+> M8.2.2 implements Secure User Signup endpoint `POST /api/v1/auth/signup` that atomically creates the User, UserCredential, and explicitly enforces a default `OPERATOR` role assignment. Clients cannot request privileged roles, and duplicate emails result in safe 409 Conflict responses.
 > Authentication APIs and routing are reserved for future work.
 
 > [!WARNING]
