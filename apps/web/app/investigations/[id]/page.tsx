@@ -21,7 +21,9 @@ import {
   fetchInvestigationAttempts,
   InvestigationAttempt,
   fetchInvestigationAttemptResult,
-  InvestigationAttemptResultResponse
+  InvestigationAttemptResultResponse,
+  approveInvestigation,
+  InvestigationApprovalResponse
 } from "../../../lib/api";
 
 export default function InvestigationDetailPage({ params }: { params: { id: string } }) {
@@ -38,6 +40,11 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
   const [attemptResult, setAttemptResult] = useState<InvestigationAttemptResultResponse | null>(null);
   const [resultLoading, setResultLoading] = useState<boolean>(false);
   const [resultError, setResultError] = useState<string | null>(null);
+
+  // Approval state
+  const [approving, setApproving] = useState<boolean>(false);
+  const [approvalResult, setApprovalResult] = useState<InvestigationApprovalResponse | null>(null);
+  const [approvalError, setApprovalError] = useState<string | null>(null);
 
   const loadInvestigation = async () => {
     setLoading(true);
@@ -98,6 +105,21 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
     }
   }, [investigation?.active_attempt_id, attempts, investigation?.id]);
 
+  const handleApprove = async () => {
+    if (!investigation || investigation.status !== "COMPLETED") return;
+    setApproving(true);
+    setApprovalError(null);
+    try {
+      const data = await approveInvestigation(investigation.id);
+      setApprovalResult(data);
+      loadInvestigation(); // refresh to get the updated status
+    } catch (err: any) {
+      setApprovalError(err.message || "Failed to approve investigation.");
+    } finally {
+      setApproving(false);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-12">
       {/* Breadcrumb Navigation */}
@@ -144,15 +166,51 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
           </div>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col items-end gap-2">
           {/* Approval Action Area */}
-          <button 
-            disabled
-            className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors focus-ring disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-          >
-            <ShieldCheck className="w-4 h-4 mr-2" />
-            Approve Investigation
-          </button>
+          <div className="flex items-center gap-3">
+            {!approvalResult && (
+              <button
+                disabled={!investigation || investigation.status !== "COMPLETED" || approving}
+                onClick={handleApprove}
+                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors focus-ring disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              >
+                {approving ? (
+                  <div className="w-4 h-4 mr-2 border-2 border-white/60 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  <ShieldCheck className="w-4 h-4 mr-2" />
+                )}
+                {approving ? "Approving..." : "Approve Investigation"}
+              </button>
+            )}
+          </div>
+
+          {investigation && investigation.status !== "COMPLETED" && !approvalResult && (
+            <div className="text-xs text-muted-foreground max-w-xs text-right">
+              Approval is unavailable until the investigation is completed.
+            </div>
+          )}
+
+          {approvalError && (
+            <div className="text-xs font-medium text-destructive max-w-xs text-right flex items-center gap-1.5 justify-end bg-destructive/10 px-3 py-2 rounded-md border border-destructive/20">
+              <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+              <span>{approvalError}</span>
+            </div>
+          )}
+
+          {approvalResult && (
+            <div className="flex flex-col items-end bg-emerald-500/10 border border-emerald-500/20 px-4 py-3 rounded-md text-right max-w-md">
+              <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-2 mb-1 justify-end">
+                <CheckCircle2 className="w-4 h-4" /> Approval Successful
+              </div>
+              <div className="text-xs text-emerald-600/90 dark:text-emerald-400/90 font-medium mb-1">
+                Action: <span className="font-mono bg-emerald-500/10 px-1 py-0.5 rounded text-emerald-700 dark:text-emerald-300">{approvalResult.action}</span>
+              </div>
+              <div className="text-xs text-emerald-600/80 dark:text-emerald-400/80">
+                {approvalResult.message}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
