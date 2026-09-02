@@ -18,14 +18,14 @@ async def sample_investigation(db_session):
     return inv
 
 @pytest.mark.asyncio
-async def test_evaluate_policy_api(async_client: AsyncClient, sample_investigation):
+async def test_evaluate_policy_api(async_client: AsyncClient, sample_investigation, auth_headers):
     response = await async_client.post(
         "/api/v1/policies/evaluate",
         json={
             "investigation_id": sample_investigation.id,
             "action": "RESOLVE_DISCREPANCY"
         }
-    )
+    , headers=auth_headers)
     
     assert response.status_code == 200
     data = response.json()
@@ -36,27 +36,27 @@ async def test_evaluate_policy_api(async_client: AsyncClient, sample_investigati
     assert "policy_decision_id" in data
 
 @pytest.mark.asyncio
-async def test_evaluate_policy_api_not_found(async_client: AsyncClient, db_session):
+async def test_evaluate_policy_api_not_found(async_client: AsyncClient, db_session, auth_headers):
     response = await async_client.post(
         "/api/v1/policies/evaluate",
         json={
             "investigation_id": "missing_id",
             "action": "RESOLVE_DISCREPANCY"
         }
-    )
+    , headers=auth_headers)
     
     assert response.status_code == 404
     assert "not found" in response.json()["detail"].lower()
 
 @pytest.mark.asyncio
-async def test_evaluate_policy_api_unsupported_action(async_client: AsyncClient, db_session):
+async def test_evaluate_policy_api_unsupported_action(async_client: AsyncClient, db_session, auth_headers):
     response = await async_client.post(
         "/api/v1/policies/evaluate",
         json={
             "investigation_id": "some_id",
             "action": "BOGUS_ACTION"
         }
-    )
+    , headers=auth_headers)
     
     # Pydantic validation should fail this before it hits the engine
     assert response.status_code == 422

@@ -28,17 +28,17 @@ async def sample_transaction_data(db_session: AsyncSession):
     return {"payment_id": "pay_test1", "merchant_id": "mch_test1"}
 
 @pytest.mark.asyncio
-async def test_list_payments(async_client: AsyncClient, sample_transaction_data):
-    response = await async_client.get("/api/v1/transactions/payments")
+async def test_list_payments(async_client: AsyncClient, sample_transaction_data, auth_headers):
+    response = await async_client.get("/api/v1/transactions/payments", headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
     assert len(data) >= 1
     assert data[0]["id"] == "pay_test1"
     
 @pytest.mark.asyncio
-async def test_get_payment_lineage(async_client: AsyncClient, sample_transaction_data):
+async def test_get_payment_lineage(async_client: AsyncClient, sample_transaction_data, auth_headers):
     pid = sample_transaction_data["payment_id"]
-    response = await async_client.get(f"/api/v1/transactions/payments/{pid}/lineage")
+    response = await async_client.get(f"/api/v1/transactions/payments/{pid}/lineage", headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
     
@@ -47,8 +47,8 @@ async def test_get_payment_lineage(async_client: AsyncClient, sample_transaction
     assert data["payment"]["provider"] == "MOCK_GATEWAY"
     
 @pytest.mark.asyncio
-async def test_metrics_overview(async_client: AsyncClient, sample_transaction_data):
-    response = await async_client.get("/api/v1/metrics/overview")
+async def test_metrics_overview(async_client: AsyncClient, sample_transaction_data, auth_headers):
+    response = await async_client.get("/api/v1/metrics/overview", headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
     

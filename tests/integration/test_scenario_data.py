@@ -16,7 +16,7 @@ async def seeded_db(db_session: AsyncSession):
     return db_session
 
 @pytest.mark.asyncio
-async def test_scenario_1_perfect_match(seeded_db: AsyncSession):
+async def test_scenario_1_perfect_match(seeded_db: AsyncSession, auth_headers):
     # Just verify that payment and settlement exist
     stmt = select(Payment).where(Payment.amount == Decimal("100.00"))
     result = await seeded_db.execute(stmt)
@@ -24,7 +24,7 @@ async def test_scenario_1_perfect_match(seeded_db: AsyncSession):
     assert len(payments) >= 1
 
 @pytest.mark.asyncio
-async def test_scenario_2_multi_payment_settlement(seeded_db: AsyncSession):
+async def test_scenario_2_multi_payment_settlement(seeded_db: AsyncSession, auth_headers):
     # Settlement of 110.00 with two payments (50 and 60)
     stmt = select(Settlement).options(selectinload(Settlement.items)).where(Settlement.gross_amount == Decimal("110.00"))
     result = await seeded_db.execute(stmt)
@@ -35,7 +35,7 @@ async def test_scenario_2_multi_payment_settlement(seeded_db: AsyncSession):
     assert len(settlement.items) == 2
 
 @pytest.mark.asyncio
-async def test_scenario_3_fee_difference(seeded_db: AsyncSession):
+async def test_scenario_3_fee_difference(seeded_db: AsyncSession, auth_headers):
     # Expected net 98, actual settled 97
     stmt = select(Settlement).where(Settlement.expected_net_amount == Decimal("98.00"))
     result = await seeded_db.execute(stmt)
@@ -45,7 +45,7 @@ async def test_scenario_3_fee_difference(seeded_db: AsyncSession):
     assert settlement.status == "DISCREPANT"
 
 @pytest.mark.asyncio
-async def test_scenario_4_missing_bank_transaction(seeded_db: AsyncSession):
+async def test_scenario_4_missing_bank_transaction(seeded_db: AsyncSession, auth_headers):
     stmt = select(Settlement).options(selectinload(Settlement.bank_transactions)).where(Settlement.gross_amount == Decimal("75.00"))
     result = await seeded_db.execute(stmt)
     settlement = result.scalar_one_or_none()
@@ -54,7 +54,7 @@ async def test_scenario_4_missing_bank_transaction(seeded_db: AsyncSession):
     assert settlement.status == "PENDING"
 
 @pytest.mark.asyncio
-async def test_scenario_5_duplicate_ingestion(seeded_db: AsyncSession):
+async def test_scenario_5_duplicate_ingestion(seeded_db: AsyncSession, auth_headers):
     service = IngestionService(seeded_db)
     payload = {"id": "test_dup"}
     
@@ -68,7 +68,7 @@ async def test_scenario_5_duplicate_ingestion(seeded_db: AsyncSession):
     assert existing.id == "rec_1"
 
 @pytest.mark.asyncio
-async def test_scenario_6_partial_refund(seeded_db: AsyncSession):
+async def test_scenario_6_partial_refund(seeded_db: AsyncSession, auth_headers):
     stmt = select(Payment).options(selectinload(Payment.refunds)).where(Payment.amount == Decimal("120.00"))
     result = await seeded_db.execute(stmt)
     payment = result.scalar_one_or_none()
@@ -78,7 +78,7 @@ async def test_scenario_6_partial_refund(seeded_db: AsyncSession):
     assert payment.refunds[0].amount == Decimal("40.00")
 
 @pytest.mark.asyncio
-async def test_scenario_10_currency_mismatch(seeded_db: AsyncSession):
+async def test_scenario_10_currency_mismatch(seeded_db: AsyncSession, auth_headers):
     # Settlement in USD, Bank Tx in EUR
     stmt = select(Settlement).options(selectinload(Settlement.bank_transactions)).where(Settlement.gross_amount == Decimal("300.00"))
     result = await seeded_db.execute(stmt)
@@ -90,7 +90,7 @@ async def test_scenario_10_currency_mismatch(seeded_db: AsyncSession):
     assert settlement.bank_transactions[0].currency == "EUR"
 
 @pytest.mark.asyncio
-async def test_scenario_11_orphan_handling(seeded_db: AsyncSession):
+async def test_scenario_11_orphan_handling(seeded_db: AsyncSession, auth_headers):
     service = IngestionService(seeded_db)
     
     # Create record that will be an orphan
@@ -114,20 +114,20 @@ async def test_scenario_11_orphan_handling(seeded_db: AsyncSession):
     assert updated_record.exceptions[0].error_message == "Order not found"
 
 @pytest.mark.asyncio
-async def test_api_lineage_with_seeded_data(async_client: AsyncClient, seeded_db: AsyncSession):
+async def test_api_lineage_with_seeded_data(async_client: AsyncClient, seeded_db: AsyncSession, auth_headers):
     # Test that the API works with the newly seeded complex data
     stmt = select(Payment).where(Payment.amount == Decimal("100.00"))
     result = await seeded_db.execute(stmt)
     payment = result.scalars().first()
     
-    response = await async_client.get(f"/api/v1/transactions/payments/{payment.id}/lineage")
+    response = await async_client.get(f"/api/v1/transactions/payments/{payment.id}/lineage", headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
     assert data["payment"]["id"] == payment.id
     
 @pytest.mark.asyncio
-async def test_api_metrics_with_seeded_data(async_client: AsyncClient, seeded_db: AsyncSession):
-    response = await async_client.get("/api/v1/metrics/overview")
+async def test_api_metrics_with_seeded_data(async_client: AsyncClient, seeded_db: AsyncSession, auth_headers):
+    response = await async_client.get("/api/v1/metrics/overview", headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
     assert data["merchants"] >= 1

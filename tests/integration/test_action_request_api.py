@@ -58,14 +58,14 @@ async def sample_evaluation_denied(db_session, sample_investigation):
 
 
 @pytest.mark.asyncio
-async def test_action_request_creation_approval_required(async_client: AsyncClient, sample_evaluation_approval_required):
+async def test_action_request_creation_approval_required(async_client: AsyncClient, sample_evaluation_approval_required, auth_headers):
     response = await async_client.post(
         "/api/v1/action-requests",
         json={
             "policy_evaluation_id": sample_evaluation_approval_required.id,
             "requested_source": "test"
         }
-    )
+    , headers=auth_headers)
     
     assert response.status_code == 200
     data = response.json()
@@ -80,12 +80,12 @@ async def test_action_request_creation_approval_required(async_client: AsyncClie
             "policy_evaluation_id": sample_evaluation_approval_required.id,
             "requested_source": "test"
         }
-    )
+    , headers=auth_headers)
     assert response2.status_code == 200
     assert response2.json()["id"] == data["id"]
 
 @pytest.mark.asyncio
-async def test_action_request_concurrent_creation(async_client: AsyncClient, sample_evaluation_approval_required):
+async def test_action_request_concurrent_creation(async_client: AsyncClient, sample_evaluation_approval_required, auth_headers):
     # Fire two sequential creation requests for the exact same policy evaluation
     # This tests idempotency and race condition handling at the API level
     payload = {
@@ -93,8 +93,8 @@ async def test_action_request_concurrent_creation(async_client: AsyncClient, sam
         "requested_source": "concurrent_test"
     }
 
-    response1 = await async_client.post("/api/v1/action-requests", json=payload)
-    response2 = await async_client.post("/api/v1/action-requests", json=payload)
+    response1 = await async_client.post("/api/v1/action-requests", json=payload, headers=auth_headers)
+    response2 = await async_client.post("/api/v1/action-requests", json=payload, headers=auth_headers)
 
     # One of them might be 200 (created) and the other 200 (returned existing)
     assert response1.status_code == 200
@@ -107,13 +107,13 @@ async def test_action_request_concurrent_creation(async_client: AsyncClient, sam
     assert data1["id"] == data2["id"] == response2.json()["id"]
 
 @pytest.mark.asyncio
-async def test_action_request_creation_denied(async_client: AsyncClient, sample_evaluation_denied):
+async def test_action_request_creation_denied(async_client: AsyncClient, sample_evaluation_denied, auth_headers):
     response = await async_client.post(
         "/api/v1/action-requests",
         json={
             "policy_evaluation_id": sample_evaluation_denied.id
         }
-    )
+    , headers=auth_headers)
     
     assert response.status_code == 400
     assert "rejected" in response.json()["detail"].lower()
@@ -134,11 +134,11 @@ async def sample_action_request(db_session, sample_evaluation_approval_required)
     return ar
 
 @pytest.mark.asyncio
-async def test_action_request_approve(async_client: AsyncClient, sample_action_request, db_session):
+async def test_action_request_approve(async_client: AsyncClient, sample_action_request, db_session, auth_headers):
     response = await async_client.post(
         f"/api/v1/action-requests/{sample_action_request.id}/approve",
         json={"actor": "test_user"}
-    )
+    , headers=auth_headers)
     
     assert response.status_code == 200
     assert response.json()["status"] == "APPROVED"
@@ -155,27 +155,27 @@ async def test_action_request_approve(async_client: AsyncClient, sample_action_r
     response2 = await async_client.post(
         f"/api/v1/action-requests/{sample_action_request.id}/reject",
         json={"reason": "test"}
-    )
+    , headers=auth_headers)
     assert response2.status_code == 400
     assert "invalid state transition" in response2.json()["detail"].lower()
 
 @pytest.mark.asyncio
-async def test_action_request_reject(async_client: AsyncClient, sample_action_request, db_session):
+async def test_action_request_reject(async_client: AsyncClient, sample_action_request, db_session, auth_headers):
     response = await async_client.post(
         f"/api/v1/action-requests/{sample_action_request.id}/reject",
         json={"reason": "bad data"}
-    )
+    , headers=auth_headers)
     
     assert response.status_code == 200
     assert response.json()["status"] == "REJECTED"
     assert response.json()["rejection_reason"] == "bad data"
 
 @pytest.mark.asyncio
-async def test_action_request_cancel(async_client: AsyncClient, sample_action_request, db_session):
+async def test_action_request_cancel(async_client: AsyncClient, sample_action_request, db_session, auth_headers):
     response = await async_client.post(
         f"/api/v1/action-requests/{sample_action_request.id}/cancel",
         json={"reason": "mistake"}
-    )
+    , headers=auth_headers)
     
     assert response.status_code == 200
     assert response.json()["status"] == "CANCELLED"
