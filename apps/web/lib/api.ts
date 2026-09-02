@@ -111,6 +111,14 @@ export interface InvestigationResponse {
   created_at: string | null;
 }
 
+export interface InvestigationListItem {
+  id: string;
+  discrepancy_id: string;
+  status: string;
+  active_attempt_id: string | null;
+  created_at: string | null;
+}
+
 export interface InvestigationAttempt {
   id: string;
   prompt_version: string | null;
