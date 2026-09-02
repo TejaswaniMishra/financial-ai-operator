@@ -75,3 +75,49 @@ async def test_investigation_api_approve(async_client: AsyncClient, seeded_discr
 async def test_investigation_api_not_found(async_client: AsyncClient, db_session):
     response = await async_client.post(f"/api/v1/investigations/discrepancy/invalid-uuid/run")
     assert response.status_code == 404
+
+@pytest.mark.asyncio
+async def test_investigation_api_get_attempt(async_client: AsyncClient, seeded_discrepancy: str):
+    # 1. Run investigation to create attempt
+    run_resp = await async_client.post(f"/api/v1/investigations/discrepancy/{seeded_discrepancy}/run")
+    assert run_resp.status_code == 200
+    run_data = run_resp.json()
+
+    investigation_id = run_data["investigation_id"]
+    attempt_id = run_data["attempt_id"]
+
+    # 2. Get specific attempt successfully
+    get_resp = await async_client.get(f"/api/v1/investigations/{investigation_id}/attempts/{attempt_id}")
+    assert get_resp.status_code == 200
+
+    attempt_data = get_resp.json()
+    assert attempt_data["investigation_id"] == investigation_id
+    assert attempt_data["attempt_id"] == attempt_id
+    assert attempt_data["status"] == run_data["status"]
+    assert attempt_data["is_valid"] == run_data["is_valid"]
+
+    # Check that 'result' comes from validated_output and 'errors' from validation_errors
+    assert "result" in attempt_data
+    if run_data["is_valid"]:
+        assert attempt_data["result"] is not None
+        assert attempt_data["errors"] is None
+    else:
+        assert attempt_data["result"] is None
+        assert attempt_data["errors"] is not None
+
+    # Check that internal fields are NOT exposed
+    assert "context_snapshot" not in attempt_data
+    assert "context_hash" not in attempt_data
+    assert "raw_llm_response" not in attempt_data
+
+    # 3. Test non-existent attempt
+    bad_attempt_id = str(uuid4())
+    bad_resp = await async_client.get(f"/api/v1/investigations/{investigation_id}/attempts/{bad_attempt_id}")
+    assert bad_resp.status_code == 404
+    assert "Investigation attempt not found" in bad_resp.json()["detail"]
+
+    # 4. Test existing attempt with wrong investigation_id
+    bad_investigation_id = str(uuid4())
+    wrong_inv_resp = await async_client.get(f"/api/v1/investigations/{bad_investigation_id}/attempts/{attempt_id}")
+    assert wrong_inv_resp.status_code == 404
+    assert "Investigation attempt not found" in wrong_inv_resp.json()["detail"]
