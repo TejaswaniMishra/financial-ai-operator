@@ -128,9 +128,9 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
           Dashboard
         </Link>
         <ChevronRight className="w-4 h-4 mx-2 text-border" />
-        <span className="hover:text-foreground transition-colors cursor-pointer">
+        <Link href="/investigations" className="hover:text-foreground transition-colors">
           Investigations
-        </span>
+        </Link>
         <ChevronRight className="w-4 h-4 mx-2 text-border" />
         <span className="text-foreground">Investigation Detail</span>
       </nav>
@@ -140,9 +140,9 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
         <div>
           <div className="flex items-center gap-3 mb-1">
             <Link 
-              href="/" 
+              href="/investigations" 
               className="p-1 -ml-1 text-muted-foreground hover:text-foreground transition-colors rounded hover:bg-surface-muted focus-ring"
-              aria-label="Back to Dashboard"
+              aria-label="Back to Investigations"
             >
               <ArrowLeft className="w-5 h-5" />
             </Link>
