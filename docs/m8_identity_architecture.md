@@ -56,12 +56,13 @@ The system uses a strict vocabulary for role assignment to support future RBAC d
 ## Security Constraints and Clarifications
 
 > [!WARNING]
-> **M8.2.3 implements JWT Authentication Foundation.**
+> **M8.2.3 & M8.2.4 implement JWT Authentication and Protected API Boundaries.**
 > A generic login endpoint `POST /api/v1/auth/login` is implemented using Argon2id for secure password hashing. It issues a short-lived HS256 JWT access token.
 > The JWT contains ONLY standard claims (`sub`, `iat`, `exp`, `iss`, `aud`, `jti`) and intentionally EXCLUDES roles.
-> `get_current_user` dependency dynamically validates the JWT and verifies active database state.
+> The `get_current_user` FastAPI dependency dynamically validates the JWT and verifies active database state.
+> The identity endpoint `GET /api/v1/auth/me` returns safe identity details (excluding roles and security internals).
+> All business routers (Transactions, Metrics, Policies, Reconciliation, Investigations, ActionRequests, ActionExecutions) are strictly protected at the router level requiring a valid JWT.
 > Refresh tokens, revocation, logout, frontend authentication, and RBAC enforcement are NOT yet implemented and belong to future milestones.
-
 > [!WARNING]
 > **Authorization is NOT enforced in M8.1.**
 > RBAC (Role-Based Access Control) enforcement belongs to later M8 milestones. The roles are defined and seeded purely as structural foundations.
