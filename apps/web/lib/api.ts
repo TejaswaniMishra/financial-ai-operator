@@ -143,6 +143,16 @@ export async function runInvestigation(discrepancyId: string): Promise<Investiga
   return res.json();
 }
 
+export async function fetchInvestigations(): Promise<InvestigationListItem[]> {
+  const res = await fetch(`${API_BASE}/api/v1/investigations`, {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch investigations: ${res.statusText}`);
+  }
+  return res.json();
+}
+
 export async function fetchInvestigation(investigationId: string): Promise<InvestigationResponse> {
   const res = await fetch(`${API_BASE}/api/v1/investigations/${investigationId}`, {
     cache: "no-store"
