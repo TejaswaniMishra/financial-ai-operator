@@ -15,6 +15,7 @@ from database.models.investigation import Investigation, InvestigationAttempt
 from database.models.policy import PolicyEvaluation
 from database.models.action_request import ActionRequest, ActionRequestAudit
 from database.models.action_execution import ActionExecution, ActionExecutionAttempt
+from database.models.identity import User, Role, UserRole, RoleName
 
 __all__ = [
     "Merchant",
@@ -38,5 +39,9 @@ __all__ = [
     "ActionRequest",
     "ActionRequestAudit",
     "ActionExecution",
-    "ActionExecutionAttempt"
+    "ActionExecutionAttempt",
+    "User",
+    "Role",
+    "UserRole",
+    "RoleName",
 ]
