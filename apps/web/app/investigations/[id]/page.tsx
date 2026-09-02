@@ -499,9 +499,14 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
                         </td>
                       </tr>
                     )}
-                    {!attemptsLoading && !attemptsError && attempts && attempts.length > 0 && attempts.map((attempt) => (
-                      <tr key={attempt.id} className="border-t border-border">
-                        <td className="px-5 py-3 text-sm font-medium text-foreground">{attempt.id}</td>
+                    {!attemptsLoading && !attemptsError && attempts && attempts.length > 0 && attempts.map((attempt) => {
+                      const isActive = attempt.id === investigation?.active_attempt_id;
+                      return (
+                      <tr key={attempt.id} className={cn("transition-colors group", isActive ? "bg-primary/5" : "hover:bg-surface-muted/50")}>
+                        <td className="px-5 py-3 text-sm font-medium text-foreground">
+                          {attempt.id}
+                          {isActive && <span className="ml-2 inline-flex items-center rounded-full bg-primary/20 px-1.5 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">Active</span>}
+                        </td>
                         <td className="px-5 py-3 text-sm text-foreground">{attempt.model_used ?? "-"}</td>
                         <td className="px-5 py-3 text-sm text-foreground">{attempt.prompt_version ?? "-"}</td>
                         <td className="px-5 py-3 text-sm text-foreground">
@@ -515,7 +520,8 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
                           {attempt.created_at ? new Date(attempt.created_at).toLocaleString() : "-"}
                         </td>
                       </tr>
-                    ))}
+                      );
+                    })}
                     {!attemptsLoading && !attemptsError && attempts && attempts.length === 0 && (
                       <tr>
                         <td colSpan={5} className="px-5 py-8 text-center text-muted-foreground text-sm">
