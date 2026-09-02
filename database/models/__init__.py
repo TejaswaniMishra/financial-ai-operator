@@ -13,6 +13,7 @@ from database.models.event import FinancialEvent
 from database.models.reconciliation import ReconciliationRun, ReconciliationRelationship, Discrepancy
 from database.models.investigation import Investigation, InvestigationAttempt
 from database.models.policy import PolicyEvaluation
+from database.models.action_request import ActionRequest, ActionRequestAudit
 
 __all__ = [
     "Merchant",
@@ -32,5 +33,7 @@ __all__ = [
     "Discrepancy",
     "Investigation",
     "InvestigationAttempt",
-    "PolicyEvaluation"
+    "PolicyEvaluation",
+    "ActionRequest",
+    "ActionRequestAudit"
 ]
