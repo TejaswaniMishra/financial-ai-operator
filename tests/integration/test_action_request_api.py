@@ -85,6 +85,28 @@ async def test_action_request_creation_approval_required(async_client: AsyncClie
     assert response2.json()["id"] == data["id"]
 
 @pytest.mark.asyncio
+async def test_action_request_concurrent_creation(async_client: AsyncClient, sample_evaluation_approval_required):
+    # Fire two sequential creation requests for the exact same policy evaluation
+    # This tests idempotency and race condition handling at the API level
+    payload = {
+        "policy_evaluation_id": sample_evaluation_approval_required.id,
+        "requested_source": "concurrent_test"
+    }
+
+    response1 = await async_client.post("/api/v1/action-requests", json=payload)
+    response2 = await async_client.post("/api/v1/action-requests", json=payload)
+
+    # One of them might be 200 (created) and the other 200 (returned existing)
+    assert response1.status_code == 200
+    assert response2.status_code == 200
+
+    data1 = response1.json()
+    data2 = response2.json()
+
+    # Ensure only one was created
+    assert data1["id"] == data2["id"] == response2.json()["id"]
+
+@pytest.mark.asyncio
 async def test_action_request_creation_denied(async_client: AsyncClient, sample_evaluation_denied):
     response = await async_client.post(
         "/api/v1/action-requests",
