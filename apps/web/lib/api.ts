@@ -94,6 +94,40 @@ export async function fetchReconciliationDiscrepancies(): Promise<DiscrepancyRes
   return res.json();
 }
 
+export enum RootCauseEnum {
+  UNEXPECTED_FEE = "UNEXPECTED_FEE",
+  TIMING_DELAY = "TIMING_DELAY",
+  DATA_INGESTION_ERROR = "DATA_INGESTION_ERROR",
+  CURRENCY_FX_RATE_MISMATCH = "CURRENCY_FX_RATE_MISMATCH",
+  SYSTEMIC_PROVIDER_ISSUE = "SYSTEMIC_PROVIDER_ISSUE",
+  MISSING_TRANSACTION = "MISSING_TRANSACTION",
+  DUPLICATE_TRANSACTION = "DUPLICATE_TRANSACTION",
+  PROVIDER_CONFIGURATION_ERROR = "PROVIDER_CONFIGURATION_ERROR",
+  RECONCILIATION_RULE_ERROR = "RECONCILIATION_RULE_ERROR",
+  UNKNOWN = "UNKNOWN",
+}
+
+export interface EvidenceCitation {
+  entity_id: string;
+  entity_type: string;
+  field: string;
+  value: unknown;
+  currency: string | null;
+}
+
+export interface InvestigationClaim {
+  claim: string;
+  evidence: EvidenceCitation[];
+}
+
+export interface InvestigationResult {
+  summary: string;
+  root_cause_category: RootCauseEnum;
+  ai_confidence: number;
+  claims: InvestigationClaim[];
+  recommendations: string[];
+}
+
 export interface InvestigationRunResponse {
   investigation_id: string;
   attempt_id: string;
