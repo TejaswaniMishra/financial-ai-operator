@@ -206,14 +206,20 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
           {approvalResult && (
             <div className="flex flex-col items-end bg-emerald-500/10 border border-emerald-500/20 px-4 py-3 rounded-md text-right max-w-md">
               <div className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-2 mb-1 justify-end">
-                <CheckCircle2 className="w-4 h-4" /> Approval Successful
+                <CheckCircle2 className="w-4 h-4" /> Investigation Approved
               </div>
-              <div className="text-xs text-emerald-600/90 dark:text-emerald-400/90 font-medium mb-1">
+              <div className="text-xs text-emerald-600/90 dark:text-emerald-400/90 font-medium mb-2">
                 Action: <span className="font-mono bg-emerald-500/10 px-1 py-0.5 rounded text-emerald-700 dark:text-emerald-300">{approvalResult.action}</span>
               </div>
-              <div className="text-xs text-emerald-600/80 dark:text-emerald-400/80">
+              <div className="text-xs text-emerald-600/80 dark:text-emerald-400/80 mb-3">
                 {approvalResult.message}
               </div>
+              <Link
+                href="/action-requests"
+                className="inline-flex items-center text-xs font-medium text-emerald-700 dark:text-emerald-300 hover:underline"
+              >
+                View Action Requests <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+              </Link>
             </div>
           )}
         </div>
