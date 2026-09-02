@@ -49,12 +49,14 @@ def create_app() -> FastAPI:
     from apps.api.routes.investigations import router as investigations_router
     from apps.api.routes.policies import router as policies_router
     from apps.api.routes.action_requests import router as action_requests_router
+    from apps.api.routes.action_executions import router as action_executions_router
     application.include_router(transactions_router, prefix=settings.API_V1_PREFIX)
     application.include_router(metrics_router, prefix=settings.API_V1_PREFIX)
     application.include_router(reconciliation_router, prefix=settings.API_V1_PREFIX)
     application.include_router(investigations_router, prefix=settings.API_V1_PREFIX)
     application.include_router(policies_router, prefix=settings.API_V1_PREFIX)
     application.include_router(action_requests_router, prefix=settings.API_V1_PREFIX)
+    application.include_router(action_executions_router, prefix=settings.API_V1_PREFIX)
     application.include_router(system_router, prefix=settings.API_V1_PREFIX)
 
     @application.get("/", tags=["Root"])

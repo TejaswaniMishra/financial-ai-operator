@@ -91,3 +91,33 @@ async def cancel_action_request(
         if "not found" in str(e).lower():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+from packages.schemas.action_execution import ActionExecutionResponse, ActionExecutionRequest
+from services.action_execution.service import ActionExecutionService, ExecutionError
+
+@router.post("/{request_id}/execute", response_model=ActionExecutionResponse)
+async def execute_action_request(
+    request_id: str,
+    payload: ActionExecutionRequest,
+    db: AsyncSession = Depends(get_db_session)
+):
+    service = ActionExecutionService(db)
+    try:
+        execution = await service.execute_action_request(
+            request_id=request_id,
+            idempotency_key=payload.idempotency_key
+        )
+        return execution
+    except ExecutionError as e:
+        if "not found" in str(e).lower():
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+
+@router.get("/{request_id}/executions", response_model=List[ActionExecutionResponse])
+async def list_action_request_executions(
+    request_id: str,
+    db: AsyncSession = Depends(get_db_session)
+):
+    service = ActionExecutionService(db)
+    executions = await service.get_executions_for_request(request_id)
+    return executions
