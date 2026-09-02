@@ -125,19 +125,27 @@ async def approve_investigation(
         raise HTTPException(status_code=400, detail="Can only approve completed investigations")
         
     from services.policy.engine import PolicyEngine
-    from database.models.policy import PolicyAction
+    from database.models.policy import PolicyAction, PolicyDecision
+    from services.action_request.service import ActionRequestService
 
     # We use RESOLVE_DISCREPANCY as the default action for an investigation approval
     engine = PolicyEngine(db)
     evaluation = await engine.evaluate(investigation_id, PolicyAction.RESOLVE_DISCREPANCY)
     
+    action_request_id = None
+    if evaluation.decision == PolicyDecision.APPROVAL_REQUIRED:
+        ar_service = ActionRequestService(db)
+        action_request = await ar_service.create_from_evaluation(evaluation.id)
+        action_request_id = action_request.id
+    
     return {
         "investigation_id": investigation_id,
         "policy_decision_id": evaluation.id,
+        "action_request_id": action_request_id,
         "action": evaluation.action.value if hasattr(evaluation.action, 'value') else str(evaluation.action),
         "decision": evaluation.decision.value if hasattr(evaluation.decision, 'value') else str(evaluation.decision),
         "rule_code": evaluation.rule_code,
         "reason": evaluation.reason,
         "approval_required": evaluation.approval_required,
-        "message": "The recommended actions have been queued for the Policy Engine. No direct financial changes were made."
+        "message": "The recommended actions have been processed by the Policy Engine. No direct financial changes were made."
     }
