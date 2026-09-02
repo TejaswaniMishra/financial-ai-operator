@@ -68,8 +68,10 @@ async def test_investigation_api_approve(async_client: AsyncClient, seeded_discr
     assert app_resp.status_code == 200
     data = app_resp.json()
 
-    assert data["action"] == "APPROVED_ACTION_REQUEST_CREATED"
-    assert "No direct financial changes were made" in data["message"]
+    assert data["action"] == "RESOLVE_DISCREPANCY"
+    assert data["decision"] == "APPROVAL_REQUIRED"
+    assert data["rule_code"] == "POLICY_RESOLUTION_REQUIRES_APPROVAL"
+    assert data["approval_required"] is True
 
 @pytest.mark.asyncio
 async def test_investigation_api_not_found(async_client: AsyncClient, db_session):
