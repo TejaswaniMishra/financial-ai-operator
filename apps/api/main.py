@@ -47,10 +47,12 @@ def create_app() -> FastAPI:
     from apps.api.routes.metrics import router as metrics_router
     from apps.api.routes.reconciliation import router as reconciliation_router
     from apps.api.routes.investigations import router as investigations_router
+    from apps.api.routes.policies import router as policies_router
     application.include_router(transactions_router, prefix=settings.API_V1_PREFIX)
     application.include_router(metrics_router, prefix=settings.API_V1_PREFIX)
     application.include_router(reconciliation_router, prefix=settings.API_V1_PREFIX)
     application.include_router(investigations_router, prefix=settings.API_V1_PREFIX)
+    application.include_router(policies_router, prefix=settings.API_V1_PREFIX)
     application.include_router(system_router, prefix=settings.API_V1_PREFIX)
 
     @application.get("/", tags=["Root"])
