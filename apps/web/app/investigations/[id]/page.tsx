@@ -185,9 +185,11 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
             )}
           </div>
 
-          {investigation && investigation.status !== "COMPLETED" && !approvalResult && (
-            <div className="text-xs text-muted-foreground max-w-xs text-right">
-              Approval is unavailable until the investigation is completed.
+          {!approvalResult && (
+            <div className="text-xs text-muted-foreground max-w-[280px] text-right mt-1">
+              {investigation?.status !== "COMPLETED" 
+                ? "Approval is unavailable until the investigation is completed." 
+                : "Approval queues the AI's recommended action for Policy Engine evaluation. No direct financial changes are executed."}
             </div>
           )}
 
