@@ -12,6 +12,7 @@ from database.models.ingestion import IngestionRecord, IngestionException
 from database.models.event import FinancialEvent
 from database.models.reconciliation import ReconciliationRun, ReconciliationRelationship, Discrepancy
 from database.models.investigation import Investigation, InvestigationAttempt
+from database.models.policy import PolicyEvaluation
 
 __all__ = [
     "Merchant",
@@ -30,5 +31,6 @@ __all__ = [
     "ReconciliationRelationship",
     "Discrepancy",
     "Investigation",
-    "InvestigationAttempt"
+    "InvestigationAttempt",
+    "PolicyEvaluation"
 ]
