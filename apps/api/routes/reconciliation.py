@@ -5,11 +5,16 @@ from typing import List, Optional
 from datetime import datetime
 from pydantic import BaseModel
 
+from apps.api.auth import get_current_user
 from database.connection import get_async_db
 from database.models.reconciliation import ReconciliationRun, Discrepancy
 from services.reconciliation.engine import ReconciliationEngine
 
-router = APIRouter(prefix="/reconciliation", tags=["Reconciliation"])
+router = APIRouter(
+    prefix="/reconciliation",
+    tags=["Reconciliation"],
+    dependencies=[Depends(get_current_user)]
+)
 
 class ReconciliationResultResponse(BaseModel):
     run_id: str

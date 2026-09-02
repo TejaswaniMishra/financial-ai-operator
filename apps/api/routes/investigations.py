@@ -6,12 +6,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
+from apps.api.auth import get_current_user
 from apps.api.dependencies import get_db_session
 from database.models.investigation import Investigation, InvestigationAttempt, InvestigationStatus
 from database.models.reconciliation import Discrepancy
 from services.investigation.agent import InvestigationAgent
 
-router = APIRouter(prefix="/investigations", tags=["Investigations"])
+router = APIRouter(
+    prefix="/investigations",
+    tags=["Investigations"],
+    dependencies=[Depends(get_current_user)]
+)
 
 @router.get("")
 async def list_investigations(

@@ -3,11 +3,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
+from apps.api.auth import get_current_user
 from database.connection import get_async_db
 from database.models import Payment
 from packages.schemas.domain import PaymentSchema
 
-router = APIRouter(prefix="/transactions", tags=["Transactions"])
+router = APIRouter(
+    prefix="/transactions",
+    tags=["Transactions"],
+    dependencies=[Depends(get_current_user)]
+)
 
 @router.get("/payments", response_model=list[PaymentSchema])
 async def list_payments(
