@@ -124,14 +124,20 @@ async def approve_investigation(
     if investigation.status != InvestigationStatus.COMPLETED:
         raise HTTPException(status_code=400, detail="Can only approve completed investigations")
         
-    # As per instruction 7 & 13: DO NOT execute financial changes. 
-    # Create an Approved Action Request. Do not bypass the Policy Engine.
-    
-    # In a real app we'd insert into `approved_action_requests` table.
-    # For now we return the approval payload to confirm the boundary.
+    from services.policy.engine import PolicyEngine
+    from database.models.policy import PolicyAction
+
+    # We use RESOLVE_DISCREPANCY as the default action for an investigation approval
+    engine = PolicyEngine(db)
+    evaluation = await engine.evaluate(investigation_id, PolicyAction.RESOLVE_DISCREPANCY)
     
     return {
         "investigation_id": investigation_id,
-        "action": "APPROVED_ACTION_REQUEST_CREATED",
+        "policy_decision_id": evaluation.id,
+        "action": evaluation.action.value if hasattr(evaluation.action, 'value') else str(evaluation.action),
+        "decision": evaluation.decision.value if hasattr(evaluation.decision, 'value') else str(evaluation.decision),
+        "rule_code": evaluation.rule_code,
+        "reason": evaluation.reason,
+        "approval_required": evaluation.approval_required,
         "message": "The recommended actions have been queued for the Policy Engine. No direct financial changes were made."
     }
