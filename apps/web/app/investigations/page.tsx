@@ -32,7 +32,7 @@ export default function InvestigationsPage() {
   }, []);
 
   const totalInvestigations = investigations.length;
-  const runningCount = investigations.filter(inv => inv.status === "PENDING" || inv.status === "RUNNING").length;
+  const runningCount = investigations.filter(inv => inv.status === "PENDING").length;
   const completedValidCount = investigations.filter(inv => inv.status === "COMPLETED").length;
   const failedInvalidCount = investigations.filter(inv => inv.status === "FAILED").length;
 
@@ -67,8 +67,8 @@ export default function InvestigationsPage() {
         return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-error/10 text-error border border-error/20">Failed</span>;
       case "PENDING":
         return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-warning/10 text-warning border border-warning/20">Pending</span>;
-      case "RUNNING":
-        return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-info/10 text-info border border-info/20">Running</span>;
+      case "UNAVAILABLE":
+        return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-muted text-muted-foreground border border-border">Unavailable</span>;
       default:
         return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-muted text-foreground border border-border">{status}</span>;
     }
