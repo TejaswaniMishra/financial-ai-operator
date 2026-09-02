@@ -11,7 +11,7 @@ async def seeded_discrepancy(db_session: AsyncSession):
     run_id = str(uuid4())
     run = ReconciliationRun(id=run_id)
     db_session.add(run)
-    
+
     disc_id = str(uuid4())
     disc = Discrepancy(
         id=disc_id,
@@ -35,21 +35,21 @@ async def test_investigation_api_run(async_client: AsyncClient, seeded_discrepan
     response = await async_client.post(f"/api/v1/investigations/discrepancy/{seeded_discrepancy}/run")
     assert response.status_code == 200
     data = response.json()
-    
+
     assert data["status"] == "COMPLETED"
     assert data["is_valid"] is True
     assert "investigation_id" in data
     assert "attempt_id" in data
-    
+
     investigation_id = data["investigation_id"]
-    
+
     # Test GET investigation
     response_get = await async_client.get(f"/api/v1/investigations/{investigation_id}")
     assert response_get.status_code == 200
     data_get = response_get.json()
     assert data_get["discrepancy_id"] == seeded_discrepancy
     assert data_get["status"] == "COMPLETED"
-    
+
     # Test GET attempts
     response_attempts = await async_client.get(f"/api/v1/investigations/{investigation_id}/attempts")
     assert response_attempts.status_code == 200
@@ -62,12 +62,12 @@ async def test_investigation_api_approve(async_client: AsyncClient, seeded_discr
     # Run first
     run_resp = await async_client.post(f"/api/v1/investigations/discrepancy/{seeded_discrepancy}/run")
     investigation_id = run_resp.json()["investigation_id"]
-    
+
     # Approve
     app_resp = await async_client.post(f"/api/v1/investigations/{investigation_id}/approve")
     assert app_resp.status_code == 200
     data = app_resp.json()
-    
+
     assert data["action"] == "APPROVED_ACTION_REQUEST_CREATED"
     assert "No direct financial changes were made" in data["message"]
 
@@ -121,3 +121,106 @@ async def test_investigation_api_get_attempt(async_client: AsyncClient, seeded_d
     wrong_inv_resp = await async_client.get(f"/api/v1/investigations/{bad_investigation_id}/attempts/{attempt_id}")
     assert wrong_inv_resp.status_code == 404
     assert "Investigation attempt not found" in wrong_inv_resp.json()["detail"]
+
+@pytest.mark.asyncio
+async def test_investigation_api_list_empty(async_client: AsyncClient, db_session: AsyncSession):
+    # To ensure it's empty, we need to clear the table, but since tests might run in parallel or share DB,
+    # we can just test that the response is a list and 200 OK.
+    response = await async_client.get("/api/v1/investigations")
+    assert response.status_code == 200
+    data = response.json()
+    assert isinstance(data, list)
+
+@pytest.mark.asyncio
+async def test_investigation_api_list(async_client: AsyncClient, seeded_discrepancy: str, db_session: AsyncSession):
+    # 1. Run investigation on first discrepancy
+    run_resp1 = await async_client.post(f"/api/v1/investigations/discrepancy/{seeded_discrepancy}/run")
+    assert run_resp1.status_code == 200
+    inv1_id = run_resp1.json()["investigation_id"]
+
+    # 2. Create a second discrepancy manually to run again
+    run_id = str(uuid4())
+    run = ReconciliationRun(id=run_id)
+    db_session.add(run)
+    disc2_id = str(uuid4())
+    disc2 = Discrepancy(
+        id=disc2_id,
+        run_id=run_id,
+        rule_code="API_TEST_002",
+        discrepancy_type="AMOUNT_MISMATCH",
+        severity="MEDIUM",
+        source_entity_type="PAYMENT",
+        source_entity_id=str(uuid4()),
+        expected_amount=Decimal("100.00"),
+        actual_amount=Decimal("0.00"),
+        difference_amount=Decimal("100.00"),
+        currency="USD"
+    )
+    db_session.add(disc2)
+    await db_session.commit()
+
+    run_resp2 = await async_client.post(f"/api/v1/investigations/discrepancy/{disc2_id}/run")
+    assert run_resp2.status_code == 200
+    inv2_id = run_resp2.json()["investigation_id"]
+
+    # 3. List investigations
+    list_resp = await async_client.get("/api/v1/investigations")
+    assert list_resp.status_code == 200
+    data = list_resp.json()
+
+    assert len(data) >= 2
+
+    # Verify newest first (created_at DESC)
+    inv2_index = next((i for i, inv in enumerate(data) if inv["id"] == inv2_id), -1)
+    inv1_index = next((i for i, inv in enumerate(data) if inv["id"] == inv1_id), -1)
+    assert inv2_index < inv1_index
+
+    # Verify exact contract and no internal fields
+    first_inv = data[0]
+    expected_keys = {"id", "discrepancy_id", "status", "active_attempt_id", "created_at"}
+    assert set(first_inv.keys()) == expected_keys
+
+    # Ensure internal fields are missing
+    assert "context_snapshot" not in first_inv
+    assert "context_hash" not in first_inv
+    assert "raw_llm_response" not in first_inv
+
+    # 4. Nullable active_attempt_id check
+    from database.models.investigation import Investigation, InvestigationStatus
+    # Create a third discrepancy manually to run again
+    run_id3 = str(uuid4())
+    run3 = ReconciliationRun(id=run_id3)
+    db_session.add(run3)
+    disc3_id = str(uuid4())
+    disc3 = Discrepancy(
+        id=disc3_id,
+        run_id=run_id3,
+        rule_code="API_TEST_003",
+        discrepancy_type="AMOUNT_MISMATCH",
+        severity="LOW",
+        source_entity_type="PAYMENT",
+        source_entity_id=str(uuid4()),
+        expected_amount=Decimal("10.00"),
+        actual_amount=Decimal("0.00"),
+        difference_amount=Decimal("10.00"),
+        currency="USD"
+    )
+    db_session.add(disc3)
+    await db_session.commit()
+
+    inv3_id = str(uuid4())
+    inv3 = Investigation(
+        id=inv3_id,
+        discrepancy_id=disc3_id,
+        status=InvestigationStatus.PENDING,
+        active_attempt_id=None
+    )
+    db_session.add(inv3)
+    await db_session.commit()
+
+    list_resp2 = await async_client.get("/api/v1/investigations")
+    data2 = list_resp2.json()
+
+    inv3_data = next((inv for inv in data2 if inv["id"] == inv3_id), None)
+    assert inv3_data is not None
+    assert inv3_data["active_attempt_id"] is None
