@@ -6,10 +6,12 @@ from sqlalchemy.orm import selectinload
 
 from apps.api.dependencies import get_db_session
 from database.models.identity import User, UserCredential, Role, RoleName, UserRole
-from packages.schemas.auth import SignupRequest
+from packages.schemas.auth import SignupRequest, LoginRequest, TokenResponse
 from packages.schemas.identity import UserResponse
-from packages.utils.crypto import hash_password
+from packages.utils.crypto import hash_password, verify_password
 from packages.utils.password_policy import validate_password
+from packages.utils.jwt import create_access_token
+from config.settings import get_settings
 
 router = APIRouter(
     prefix="/auth",
@@ -113,3 +115,62 @@ async def signup(
     full_user = res_full.scalar_one()
 
     return full_user
+
+
+@router.post(
+    "/login",
+    response_model=TokenResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Login to get access token"
+)
+async def login(
+    request: LoginRequest,
+    db: AsyncSession = Depends(get_db_session)
+):
+    """
+    Authenticate user and return a JWT access token.
+    - Validates email and password
+    - Issues short-lived access token
+    - Fails genericly for unknown/wrong/inactive
+    """
+    generic_error = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid email or password",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    normalized_email = request.normalize_email()
+    
+    # Lookup User
+    stmt = select(User).where(User.email == normalized_email)
+    result = await db.execute(stmt)
+    user = result.scalar_one_or_none()
+    
+    # Generic error if user missing or inactive
+    if not user or not user.is_active:
+        raise generic_error
+        
+    # Lookup Credential
+    stmt_cred = select(UserCredential).where(UserCredential.user_id == user.id)
+    result_cred = await db.execute(stmt_cred)
+    cred = result_cred.scalar_one_or_none()
+    
+    if not cred:
+        raise generic_error
+        
+    # Verify Password
+    try:
+        is_valid = verify_password(cred.password_hash, request.password)
+        if not is_valid:
+            raise generic_error
+    except Exception:
+        raise generic_error
+        
+    settings = get_settings()
+    token = create_access_token(user_id=user.id)
+    
+    return TokenResponse(
+        access_token=token,
+        token_type="bearer",
+        expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+    )
