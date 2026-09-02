@@ -2,7 +2,7 @@ import json
 from functools import lru_cache
 from typing import List, Union
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from config.env import Environment
@@ -74,6 +74,24 @@ class Settings(BaseSettings):
     @property
     def is_test(self) -> bool:
         return self.APP_ENV == Environment.TEST
+
+    # JWT Configuration
+    JWT_SECRET_KEY: str = Field(
+        default="dev-secret-key-change-me",
+        description="Secret key for JWT signing. Must be securely configured in production."
+    )
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 20
+    JWT_ISSUER: str = "financial-ai-operator"
+    JWT_AUDIENCE: str = "financial-ai-operator-api"
+
+    @model_validator(mode="after")
+    def validate_production_jwt_secret(self) -> 'Settings':
+        if self.is_production:
+            predictable_keys = {"secret", "changeme", "dev-secret-key-change-me", "dev-secret"}
+            if not self.JWT_SECRET_KEY or self.JWT_SECRET_KEY.lower() in predictable_keys:
+                raise ValueError("A secure JWT_SECRET_KEY must be explicitly configured in production.")
+        return self
 
 
 @lru_cache()
