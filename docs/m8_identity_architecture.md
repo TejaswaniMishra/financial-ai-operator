@@ -7,6 +7,7 @@ This document outlines the foundation of the identity domain implemented in Mile
 The identity domain establishes three core entities utilizing SQLAlchemy 2 async definitions:
 
 - **User**: The primary actor entity representing individuals accessing the system.
+- **UserCredential**: A strictly isolated credential model associated 1:1 with a User.
 - **Role**: Defined system roles based on strict enum values.
 - **UserRole**: An associative entity mapping Users to Roles.
 
@@ -33,8 +34,16 @@ erDiagram
         string role_id FK
         datetime created_at
     }
+    user_credentials {
+        string id PK
+        string user_id FK
+        string password_hash
+        datetime created_at
+        datetime updated_at
+    }
     users ||--o{ user_roles : "has"
     roles ||--o{ user_roles : "assigned to"
+    users ||--|| user_credentials : "has credential"
 ```
 
 ## Initial Roles
@@ -47,9 +56,10 @@ The system uses a strict vocabulary for role assignment to support future RBAC d
 ## Security Constraints and Clarifications
 
 > [!WARNING]
-> **Authentication is NOT implemented in M8.1.**
+> **Authentication is NOT implemented.**
 > There is no capability for login, JWT tokens, session cookies, or password handling.
-> Passwords are explicitly **NOT** stored in M8.1. Authentication is reserved for M8.2.
+> M8.2.1 implements strictly isolated storage using Argon2id for secure password hashing.
+> Authentication APIs and routing are reserved for future work.
 
 > [!WARNING]
 > **Authorization is NOT enforced in M8.1.**
