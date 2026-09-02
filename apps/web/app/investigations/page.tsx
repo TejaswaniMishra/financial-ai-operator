@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { Search, Filter, AlertCircle, AlertTriangle, ArrowRight, RefreshCw, FileSearch, ShieldCheck, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { fetchInvestigations, InvestigationListItem } from "../../lib/api";
@@ -31,6 +32,27 @@ export default function InvestigationsPage() {
   const runningCount = investigations.filter(inv => inv.status === "PENDING" || inv.status === "RUNNING").length;
   const completedValidCount = investigations.filter(inv => inv.status === "COMPLETED").length;
   const failedInvalidCount = investigations.filter(inv => inv.status === "FAILED").length;
+
+  const router = useRouter();
+
+  const handleRowClick = (id: string) => {
+    router.push(`/investigations/${id}`);
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status.toUpperCase()) {
+      case "COMPLETED":
+        return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-matched/10 text-matched border border-matched/20">Completed</span>;
+      case "FAILED":
+        return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-error/10 text-error border border-error/20">Failed</span>;
+      case "PENDING":
+        return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-warning/10 text-warning border border-warning/20">Pending</span>;
+      case "RUNNING":
+        return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-info/10 text-info border border-info/20">Running</span>;
+      default:
+        return <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-muted text-foreground border border-border">{status}</span>;
+    }
+  };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 pb-12">
@@ -80,10 +102,58 @@ export default function InvestigationsPage() {
       </div>
 
       <div className="bg-card border border-border shadow-subtle rounded-xl overflow-hidden flex flex-col min-h-[400px]">
-        {/* Placeholder for table */}
-        <div className="p-8 text-center text-muted-foreground flex flex-col items-center justify-center flex-1">
-          <FileSearch className="w-10 h-10 text-muted-foreground/50 mb-4" />
-          <h3 className="text-lg font-medium text-foreground mb-2">Investigations Loading...</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-surface-muted border-b border-border">
+                <th className="px-5 py-3 text-xs font-medium text-secondary uppercase tracking-wider whitespace-nowrap">Investigation</th>
+                <th className="px-5 py-3 text-xs font-medium text-secondary uppercase tracking-wider whitespace-nowrap">Discrepancy</th>
+                <th className="px-5 py-3 text-xs font-medium text-secondary uppercase tracking-wider whitespace-nowrap">Status</th>
+                <th className="px-5 py-3 text-xs font-medium text-secondary uppercase tracking-wider whitespace-nowrap">Active Attempt</th>
+                <th className="px-5 py-3 text-xs font-medium text-secondary uppercase tracking-wider whitespace-nowrap text-right">Created</th>
+                <th className="px-5 py-3 text-xs font-medium text-secondary uppercase tracking-wider whitespace-nowrap text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {investigations.map((inv) => (
+                <tr key={inv.id} onClick={() => handleRowClick(inv.id)} className="hover:bg-surface-muted/50 transition-colors group cursor-pointer">
+                  <td className="px-5 py-3">
+                    <div className="font-medium text-sm text-foreground">Inv</div>
+                    <div className="text-xs text-muted-foreground font-mono mt-0.5" title={inv.id}>
+                      {inv.id.substring(0, 8)}...
+                    </div>
+                  </td>
+                  <td className="px-5 py-3">
+                    <div className="font-medium text-sm text-foreground">Discrepancy</div>
+                    <div className="text-xs text-muted-foreground font-mono mt-0.5" title={inv.discrepancy_id}>
+                      {inv.discrepancy_id.substring(0, 8)}...
+                    </div>
+                  </td>
+                  <td className="px-5 py-3 whitespace-nowrap">
+                    {getStatusBadge(inv.status)}
+                  </td>
+                  <td className="px-5 py-3">
+                    {inv.active_attempt_id ? (
+                      <div className="text-xs text-muted-foreground font-mono" title={inv.active_attempt_id}>
+                        {inv.active_attempt_id.substring(0, 8)}...
+                      </div>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">—</span>
+                    )}
+                  </td>
+                  <td className="px-5 py-3 text-right font-mono text-xs text-secondary whitespace-nowrap">
+                    {inv.created_at ? new Date(inv.created_at).toLocaleString() : "—"}
+                  </td>
+                  <td className="px-5 py-3 text-right whitespace-nowrap">
+                    <button className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium text-primary-foreground bg-primary hover:bg-primary/90 rounded transition-colors focus-ring shadow-sm">
+                      View
+                      <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
