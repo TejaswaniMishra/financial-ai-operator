@@ -238,3 +238,79 @@ export async function fetchInvestigationAttemptResult(
   }
   return res.json();
 }
+
+export type ActionRequestStatus = "PENDING_APPROVAL" | "APPROVED" | "REJECTED" | "CANCELLED";
+
+export interface ActionRequestResponse {
+  id: string;
+  investigation_id: string;
+  discrepancy_id: string | null;
+  policy_evaluation_id: string;
+  action: string;
+  status: ActionRequestStatus;
+  requested_source: string | null;
+  approved_by: string | null;
+  approved_at: string | null;
+  rejection_reason: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export async function fetchActionRequests(): Promise<ActionRequestResponse[]> {
+  const res = await fetch(`${API_BASE}/api/v1/action-requests`, {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch action requests: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function fetchActionRequest(id: string): Promise<ActionRequestResponse> {
+  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}`, {
+    cache: "no-store"
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch action request: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function approveActionRequest(id: string, actor: string = "system"): Promise<ActionRequestResponse> {
+  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}/approve`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ actor })
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.detail || `Failed to approve action request: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function rejectActionRequest(id: string, reason: string, actor: string = "system"): Promise<ActionRequestResponse> {
+  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}/reject`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason, actor })
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.detail || `Failed to reject action request: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function cancelActionRequest(id: string, reason: string, actor: string = "system"): Promise<ActionRequestResponse> {
+  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}/cancel`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ reason, actor })
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.detail || `Failed to cancel action request: ${res.statusText}`);
+  }
+  return res.json();
+}
