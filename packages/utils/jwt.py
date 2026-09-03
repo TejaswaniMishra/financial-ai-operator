@@ -11,9 +11,16 @@ class JWTError(Exception):
     """Base exception for JWT validation failures."""
     pass
 
-def create_access_token(user_id: str) -> str:
+def create_access_token(user_id: str, credential_version: int = 1) -> str:
     """
     Generate a secure, short-lived JWT access token for a user.
+
+    `credential_version` (the user's DB `credential_version`) is embedded as
+    the `cver` claim. Authentication rejects any token whose cver does not
+    match the user's current DB value, so a password change/reset (which
+    increments the version) invalidates every previously issued token at
+    once. Only authentication-lifecycle state lives in the token — never
+    roles, permissions, passwords, or hashes.
     """
     now = datetime.now(timezone.utc)
     expire = now + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -25,7 +32,8 @@ def create_access_token(user_id: str) -> str:
         "exp": expire,
         "iss": settings.JWT_ISSUER,
         "aud": settings.JWT_AUDIENCE,
-        "jti": str(uuid.uuid4())
+        "jti": str(uuid.uuid4()),
+        "cver": credential_version
     }
     
     token = jwt.encode(
