@@ -17,13 +17,16 @@ export interface SignupRequest {
 
 /**
  * Authenticated user returned by GET /api/v1/auth/me (via BFF).
- * Contains ONLY identity fields — no roles, no auth internals.
+ * Identity fields plus the authoritative, DB-resolved roles and permission
+ * codes. Contains no credentials, password hashes, or JWT internals.
  */
 export interface CurrentUser {
   id: string;
   email: string;
   display_name: string | null;
   is_active: boolean;
+  roles: string[];
+  permissions: string[];
 }
 
 // ─── API Base resolution ────────────────────────────────────────────────────

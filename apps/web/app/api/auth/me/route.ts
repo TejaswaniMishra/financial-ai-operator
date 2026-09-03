@@ -40,11 +40,19 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ detail: "Invalid backend response" }, { status: 502 });
   }
 
+  // Whitelist safe fields only — roles/permissions come from the backend's
+  // DB-resolved authorization contract; nothing is invented client-side.
   const safeUser = {
     id: data.id,
     email: data.email,
     display_name: data.display_name ?? null,
     is_active: data.is_active,
+    roles: Array.isArray(data.roles)
+      ? data.roles.filter((r): r is string => typeof r === "string")
+      : [],
+    permissions: Array.isArray(data.permissions)
+      ? data.permissions.filter((p): p is string => typeof p === "string")
+      : [],
   };
 
   return NextResponse.json(safeUser, { status: 200 });

@@ -1,3 +1,5 @@
+from typing import List
+
 from pydantic import BaseModel, Field
 
 class SignupRequest(BaseModel):
@@ -39,6 +41,14 @@ class CurrentUserResponse(BaseModel):
     email: str = Field(..., description="User email")
     display_name: str = Field(..., description="User display name")
     is_active: bool = Field(..., description="Whether the user is currently active")
+    roles: List[str] = Field(
+        default_factory=list,
+        description="Authoritative role names resolved from the database",
+    )
+    permissions: List[str] = Field(
+        default_factory=list,
+        description="Permission codes resolved from the user's database roles",
+    )
 
 class LogoutResponse(BaseModel):
     message: str = Field(..., description="Success message")

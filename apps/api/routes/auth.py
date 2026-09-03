@@ -189,9 +189,27 @@ async def get_me(
     current_user: User = Depends(get_current_user)
 ):
     """
-    Returns the currently authenticated user's safe identity profile.
+    Returns the currently authenticated user's safe identity profile plus the
+    authoritative roles and resolved permissions from the database.
+
+    The response is constructed explicitly so only safe fields are exposed:
+    no password hashes, credentials, JWT internals, or authorization
+    diagnostics. Roles are DB-authoritative; JWT carries identity only.
     """
-    return current_user
+    from packages.rbac.matrix import permissions_for_user
+
+    roles = [
+        ur.role.name.value for ur in current_user.roles if ur.role is not None
+    ]
+    permissions = sorted(p.value for p in permissions_for_user(current_user))
+    return CurrentUserResponse(
+        id=current_user.id,
+        email=current_user.email,
+        display_name=current_user.display_name,
+        is_active=current_user.is_active,
+        roles=roles,
+        permissions=permissions,
+    )
 
 
 @router.post(
