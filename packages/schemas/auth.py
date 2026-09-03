@@ -40,3 +40,5 @@ class CurrentUserResponse(BaseModel):
     display_name: str = Field(..., description="User display name")
     is_active: bool = Field(..., description="Whether the user is currently active")
 
+class LogoutResponse(BaseModel):
+    message: str = Field(..., description="Success message")

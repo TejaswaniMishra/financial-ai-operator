@@ -1,17 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
 from apps.api.dependencies import get_db_session
-from apps.api.auth import get_current_user
+from apps.api.auth import get_current_user, security
 from database.models.identity import User, UserCredential, Role, RoleName, UserRole
-from packages.schemas.auth import SignupRequest, LoginRequest, TokenResponse, CurrentUserResponse
+from packages.schemas.auth import SignupRequest, LoginRequest, TokenResponse, CurrentUserResponse, LogoutResponse
 from packages.schemas.identity import UserResponse
 from packages.utils.crypto import hash_password, verify_password
 from packages.utils.password_policy import validate_password
-from packages.utils.jwt import create_access_token
+from packages.utils.jwt import create_access_token, decode_access_token
+from services.auth.token_revocation import revoke_token
 from config.settings import get_settings
 
 router = APIRouter(
@@ -190,3 +192,38 @@ async def get_me(
     Returns the currently authenticated user's safe identity profile.
     """
     return current_user
+
+
+@router.post(
+    "/logout",
+    response_model=LogoutResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Logout current user"
+)
+async def logout(
+    current_user: User = Depends(get_current_user),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: AsyncSession = Depends(get_db_session)
+):
+    """
+    Revokes the currently presented access token.
+    Safe and idempotent.
+    """
+    # The token is already cryptographically validated by get_current_user.
+    # We decode it again locally just to extract the payload fields.
+    from datetime import datetime, timezone
+    
+    payload = decode_access_token(credentials.credentials)
+    jti = payload.get("jti")
+    exp_timestamp = payload.get("exp")
+    
+    if not jti or not exp_timestamp:
+        # Failsafe; decode_access_token already enforced these claims exist
+        raise HTTPException(status_code=500, detail="Invalid token structure")
+        
+    # Convert timestamp to timezone-naive UTC datetime for the database
+    expires_at = datetime.fromtimestamp(exp_timestamp, tz=timezone.utc).replace(tzinfo=None)
+    
+    await revoke_token(db, jti, current_user.id, expires_at)
+    
+    return LogoutResponse(message="Successfully logged out")
