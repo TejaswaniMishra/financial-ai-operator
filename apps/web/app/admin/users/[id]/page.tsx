@@ -13,6 +13,7 @@ import {
   UserX,
   AlertTriangle,
   Users,
+  KeyRound,
 } from "lucide-react";
 import { cn, userInitials } from "@/lib/utils";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -25,6 +26,7 @@ import {
 } from "@/lib/api";
 import { ManageRolesModal } from "@/components/admin/manage-roles-modal";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
+import { ResetPasswordModal } from "@/components/admin/reset-password-modal";
 
 const ROLE_STYLES: Record<string, string> = {
   OPERATOR:
@@ -53,6 +55,7 @@ export default function AdminUserDetailPage({
   const [notFound, setNotFound] = useState(false);
 
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
+  const [resetPasswordOpen, setResetPasswordOpen] = useState(false);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
   const [activateOpen, setActivateOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -268,6 +271,17 @@ export default function AdminUserDetailPage({
               )}
             </>
           )}
+          {canManageUsers && !isSelf && (
+            <button
+              onClick={() => setResetPasswordOpen(true)}
+              disabled={busy}
+              className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-foreground bg-surface-muted hover:bg-surface-muted/80 rounded-md transition-colors border border-border"
+              title="Generate a one-time temporary password (signs the user out of all sessions)"
+            >
+              <KeyRound className="w-4 h-4 mr-2 text-amber-500" />
+              Reset Password
+            </button>
+          )}
           {canManageRoles && (
             <button
               onClick={() => setRolesModalOpen(true)}
@@ -396,7 +410,9 @@ export default function AdminUserDetailPage({
             <div className="space-y-3 text-xs text-muted-foreground">
               {isSelf && (
                 <p className="text-amber-600 dark:text-amber-400 font-medium">
-                  This is your own account. You cannot deactivate yourself.
+                  This is your own account. You cannot deactivate yourself or
+                  reset your own password here — use Settings &gt; Change
+                  Password.
                 </p>
               )}
               <p>
@@ -406,6 +422,10 @@ export default function AdminUserDetailPage({
               <p>
                 Role changes take effect on the user&apos;s next authenticated
                 request — no new token is required.
+              </p>
+              <p>
+                Reset Password signs the user out of every session and forces
+                a new password on next sign-in.
               </p>
             </div>
           </div>
@@ -443,6 +463,11 @@ export default function AdminUserDetailPage({
           onSaved={handleRolesSaved}
         />
       )}
+      <ResetPasswordModal
+        user={user}
+        open={resetPasswordOpen}
+        onClose={() => setResetPasswordOpen(false)}
+      />
     </div>
   );
 }
