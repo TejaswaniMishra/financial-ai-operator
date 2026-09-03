@@ -146,6 +146,70 @@ export async function logout(): Promise<void> {
   // Always continue: cookie will be cleared by the BFF route
 }
 
+// ─── Admin — User Management (M8.4) ────────────────────────────────────────
+// All calls go through the BFF catch-all proxy (/api/v1/admin/...) so the
+// HttpOnly session cookie is injected and the backend enforces
+// MANAGE_USERS / MANAGE_ROLES. Safe identity fields only.
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  display_name: string;
+  is_active: boolean;
+  roles: string[];
+  created_at: string;
+}
+
+export interface AdminUserDetail extends AdminUser {
+  updated_at: string;
+}
+
+async function adminErrorMessage(res: Response): Promise<string> {
+  const data = await res.json().catch(() => null);
+  if (typeof data?.detail === "string") {
+    return data.detail;
+  }
+  return `Request failed (${res.status})`;
+}
+
+export async function fetchAdminUsers(): Promise<AdminUser[]> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/admin/users`);
+  if (!res.ok) throw new Error(await adminErrorMessage(res));
+  return res.json();
+}
+
+export async function fetchAdminUser(id: string): Promise<AdminUserDetail> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/admin/users/${id}`);
+  if (!res.ok) throw new Error(await adminErrorMessage(res));
+  return res.json();
+}
+
+export async function activateAdminUser(id: string): Promise<AdminUserDetail> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/admin/users/${id}/activate`, {
+    method: "POST",
+  });
+  if (!res.ok) throw new Error(await adminErrorMessage(res));
+  return res.json();
+}
+
+export async function deactivateAdminUser(id: string): Promise<AdminUserDetail> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/admin/users/${id}/deactivate`, {
+    method: "POST",
+  });
+  if (!res.ok) throw new Error(await adminErrorMessage(res));
+  return res.json();
+}
+
+export async function updateAdminUserRoles(id: string, roles: string[]): Promise<AdminUserDetail> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/admin/users/${id}/roles`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ roles }),
+  });
+  if (!res.ok) throw new Error(await adminErrorMessage(res));
+  return res.json();
+}
+
 // ─── Health (no auth needed, direct backend call is safe) ──────────────────
 
 export interface DatabaseStatus {
