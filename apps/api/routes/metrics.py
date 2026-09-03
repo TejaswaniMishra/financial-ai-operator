@@ -3,8 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 
 from apps.api.auth import get_current_user
+from apps.api.authorization import require_permission
 from database.connection import get_async_db
 from database.models import Merchant, Payment, Settlement, BankTransaction
+from packages.rbac.permissions import Permission
 
 router = APIRouter(
     prefix="/metrics",
@@ -12,7 +14,7 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)]
 )
 
-@router.get("/overview")
+@router.get("/overview", dependencies=[Depends(require_permission(Permission.VIEW_DASHBOARD))])
 async def get_metrics_overview(
     session: AsyncSession = Depends(get_async_db)
 ):

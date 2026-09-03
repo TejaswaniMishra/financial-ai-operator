@@ -4,8 +4,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from apps.api.auth import get_current_user
+from apps.api.authorization import require_permission
 from database.connection import get_async_db
 from database.models import Payment
+from packages.rbac.permissions import Permission
 from packages.schemas.domain import PaymentSchema
 
 router = APIRouter(
@@ -14,7 +16,7 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)]
 )
 
-@router.get("/payments", response_model=list[PaymentSchema])
+@router.get("/payments", response_model=list[PaymentSchema], dependencies=[Depends(require_permission(Permission.VIEW_TRANSACTIONS))])
 async def list_payments(
     merchant_id: str | None = None,
     session: AsyncSession = Depends(get_async_db)
@@ -26,7 +28,7 @@ async def list_payments(
     payments = result.scalars().all()
     return payments
 
-@router.get("/payments/{payment_id}/lineage")
+@router.get("/payments/{payment_id}/lineage", dependencies=[Depends(require_permission(Permission.VIEW_TRANSACTIONS))])
 async def get_payment_lineage(
     payment_id: str,
     session: AsyncSession = Depends(get_async_db)

@@ -6,8 +6,10 @@ from datetime import datetime
 from pydantic import BaseModel
 
 from apps.api.auth import get_current_user
+from apps.api.authorization import require_permission
 from database.connection import get_async_db
 from database.models.reconciliation import ReconciliationRun, Discrepancy
+from packages.rbac.permissions import Permission
 from services.reconciliation.engine import ReconciliationEngine
 
 router = APIRouter(
@@ -39,7 +41,7 @@ class DiscrepancyResponse(BaseModel):
     class Config:
         from_attributes = True
 
-@router.post("/run", response_model=ReconciliationResultResponse)
+@router.post("/run", response_model=ReconciliationResultResponse, dependencies=[Depends(require_permission(Permission.VIEW_RECONCILIATION))])
 async def trigger_reconciliation(
     session: AsyncSession = Depends(get_async_db)
 ):
@@ -53,7 +55,7 @@ async def trigger_reconciliation(
     await session.commit()
     return result
 
-@router.get("/runs", response_model=List[ReconciliationResultResponse])
+@router.get("/runs", response_model=List[ReconciliationResultResponse], dependencies=[Depends(require_permission(Permission.VIEW_RECONCILIATION))])
 async def list_reconciliation_runs(
     session: AsyncSession = Depends(get_async_db)
 ):
@@ -72,7 +74,7 @@ async def list_reconciliation_runs(
         for r in runs
     ]
 
-@router.get("/discrepancies", response_model=List[DiscrepancyResponse])
+@router.get("/discrepancies", response_model=List[DiscrepancyResponse], dependencies=[Depends(require_permission(Permission.VIEW_DISCREPANCIES))])
 async def get_discrepancies(
     session: AsyncSession = Depends(get_async_db)
 ):

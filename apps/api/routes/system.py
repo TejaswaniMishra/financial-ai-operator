@@ -1,7 +1,9 @@
 import time
 from fastapi import APIRouter, Depends
 from config.settings import Settings, get_settings
+from apps.api.authorization import require_permission
 from database.connection import check_db_connectivity
+from packages.rbac.permissions import Permission
 from packages.schemas.system import ServiceStatus, SystemInfoResponse
 
 router = APIRouter(prefix="/system", tags=["System"])
@@ -13,6 +15,7 @@ _app_start_time = time.time()
     response_model=SystemInfoResponse,
     summary="System information and service status",
     description="Returns detailed platform status, active service modules, and uptime.",
+    dependencies=[Depends(require_permission(Permission.VIEW_SETTINGS))],
 )
 async def get_system_info(settings: Settings = Depends(get_settings)) -> SystemInfoResponse:
     db_status = await check_db_connectivity()

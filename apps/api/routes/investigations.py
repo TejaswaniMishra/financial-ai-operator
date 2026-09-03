@@ -7,9 +7,11 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
 from apps.api.auth import get_current_user
+from apps.api.authorization import require_permission
 from apps.api.dependencies import get_db_session
 from database.models.investigation import Investigation, InvestigationAttempt, InvestigationStatus
 from database.models.reconciliation import Discrepancy
+from packages.rbac.permissions import Permission
 from services.investigation.agent import InvestigationAgent
 
 router = APIRouter(
@@ -18,7 +20,7 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)]
 )
 
-@router.get("")
+@router.get("", dependencies=[Depends(require_permission(Permission.VIEW_INVESTIGATIONS))])
 async def list_investigations(
     db: AsyncSession = Depends(get_db_session)
 ):
@@ -33,7 +35,7 @@ async def list_investigations(
         "created_at": inv.created_at.isoformat() if inv.created_at else None
     } for inv in investigations]
 
-@router.post("/discrepancy/{discrepancy_id}/run")
+@router.post("/discrepancy/{discrepancy_id}/run", dependencies=[Depends(require_permission(Permission.RUN_INVESTIGATION))])
 async def run_investigation(
     discrepancy_id: str,
     db: AsyncSession = Depends(get_db_session)
@@ -56,7 +58,7 @@ async def run_investigation(
         "errors": attempt.validation_errors
     }
 
-@router.get("/{investigation_id}")
+@router.get("/{investigation_id}", dependencies=[Depends(require_permission(Permission.VIEW_INVESTIGATIONS))])
 async def get_investigation(
     investigation_id: str,
     db: AsyncSession = Depends(get_db_session)
@@ -74,7 +76,7 @@ async def get_investigation(
         "created_at": investigation.created_at.isoformat() if investigation.created_at else None
     }
 
-@router.get("/{investigation_id}/attempts")
+@router.get("/{investigation_id}/attempts", dependencies=[Depends(require_permission(Permission.VIEW_INVESTIGATIONS))])
 async def get_investigation_attempts(
     investigation_id: str,
     db: AsyncSession = Depends(get_db_session)
@@ -93,7 +95,7 @@ async def get_investigation_attempts(
         "created_at": a.created_at.isoformat() if a.created_at else None
     } for a in attempts]
 
-@router.get("/{investigation_id}/attempts/{attempt_id}")
+@router.get("/{investigation_id}/attempts/{attempt_id}", dependencies=[Depends(require_permission(Permission.VIEW_INVESTIGATIONS))])
 async def get_investigation_attempt(
     investigation_id: str,
     attempt_id: str,
@@ -116,7 +118,7 @@ async def get_investigation_attempt(
         "errors": attempt.validation_errors
     }
 
-@router.post("/{investigation_id}/approve")
+@router.post("/{investigation_id}/approve", dependencies=[Depends(require_permission(Permission.RUN_INVESTIGATION))])
 async def approve_investigation(
     investigation_id: str,
     db: AsyncSession = Depends(get_db_session)

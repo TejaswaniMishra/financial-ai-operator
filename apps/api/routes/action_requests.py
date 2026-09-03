@@ -4,7 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from apps.api.auth import get_current_user
+from apps.api.authorization import require_permission
 from apps.api.dependencies import get_db_session
+from packages.rbac.permissions import Permission
 from packages.schemas.action_request import (
     ActionRequestCreate,
     ActionRequestResponse,
@@ -21,7 +23,7 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)]
 )
 
-@router.post("", response_model=ActionRequestResponse)
+@router.post("", response_model=ActionRequestResponse, dependencies=[Depends(require_permission(Permission.VIEW_ACTION_REQUESTS))])
 async def create_action_request(
     request: ActionRequestCreate,
     db: AsyncSession = Depends(get_db_session)
@@ -36,7 +38,7 @@ async def create_action_request(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
-@router.get("", response_model=List[ActionRequestResponse])
+@router.get("", response_model=List[ActionRequestResponse], dependencies=[Depends(require_permission(Permission.VIEW_ACTION_REQUESTS))])
 async def list_action_requests(
     db: AsyncSession = Depends(get_db_session)
 ):
@@ -44,7 +46,7 @@ async def list_action_requests(
     results = (await db.execute(stmt)).scalars().all()
     return results
 
-@router.get("/{request_id}", response_model=ActionRequestResponse)
+@router.get("/{request_id}", response_model=ActionRequestResponse, dependencies=[Depends(require_permission(Permission.VIEW_ACTION_REQUESTS))])
 async def get_action_request(
     request_id: str,
     db: AsyncSession = Depends(get_db_session)
@@ -55,7 +57,7 @@ async def get_action_request(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
-@router.post("/{request_id}/approve", response_model=ActionRequestResponse)
+@router.post("/{request_id}/approve", response_model=ActionRequestResponse, dependencies=[Depends(require_permission(Permission.APPROVE_ACTION_REQUEST))])
 async def approve_action_request(
     request_id: str,
     payload: ActionRequestApprove,
@@ -69,7 +71,7 @@ async def approve_action_request(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
-@router.post("/{request_id}/reject", response_model=ActionRequestResponse)
+@router.post("/{request_id}/reject", response_model=ActionRequestResponse, dependencies=[Depends(require_permission(Permission.REJECT_ACTION_REQUEST))])
 async def reject_action_request(
     request_id: str,
     payload: ActionRequestReject,
@@ -83,7 +85,7 @@ async def reject_action_request(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
-@router.post("/{request_id}/cancel", response_model=ActionRequestResponse)
+@router.post("/{request_id}/cancel", response_model=ActionRequestResponse, dependencies=[Depends(require_permission(Permission.CANCEL_ACTION_REQUEST))])
 async def cancel_action_request(
     request_id: str,
     payload: ActionRequestCancel,
@@ -100,7 +102,7 @@ async def cancel_action_request(
 from packages.schemas.action_execution import ActionExecutionResponse, ActionExecutionRequest
 from services.action_execution.service import ActionExecutionService, ExecutionError
 
-@router.post("/{request_id}/execute", response_model=ActionExecutionResponse)
+@router.post("/{request_id}/execute", response_model=ActionExecutionResponse, dependencies=[Depends(require_permission(Permission.EXECUTE_ACTION))])
 async def execute_action_request(
     request_id: str,
     payload: ActionExecutionRequest,
@@ -118,7 +120,7 @@ async def execute_action_request(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
-@router.get("/{request_id}/executions", response_model=List[ActionExecutionResponse])
+@router.get("/{request_id}/executions", response_model=List[ActionExecutionResponse], dependencies=[Depends(require_permission(Permission.VIEW_ACTION_REQUESTS))])
 async def list_action_request_executions(
     request_id: str,
     db: AsyncSession = Depends(get_db_session)

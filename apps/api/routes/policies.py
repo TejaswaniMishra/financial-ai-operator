@@ -2,7 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from apps.api.auth import get_current_user
+from apps.api.authorization import require_permission
 from apps.api.dependencies import get_db_session
+from packages.rbac.permissions import Permission
 from packages.schemas.policy import PolicyEvaluationRequest, PolicyEvaluationResponse
 from services.policy.engine import PolicyEngine
 
@@ -12,7 +14,7 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)]
 )
 
-@router.post("/evaluate", response_model=PolicyEvaluationResponse)
+@router.post("/evaluate", response_model=PolicyEvaluationResponse, dependencies=[Depends(require_permission(Permission.RUN_INVESTIGATION))])
 async def evaluate_policy(
     request: PolicyEvaluationRequest,
     db: AsyncSession = Depends(get_db_session)

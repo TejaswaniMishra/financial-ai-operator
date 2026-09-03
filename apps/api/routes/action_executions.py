@@ -4,7 +4,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from apps.api.auth import get_current_user
+from apps.api.authorization import require_permission
 from apps.api.dependencies import get_db_session
+from packages.rbac.permissions import Permission
 from packages.schemas.action_execution import ActionExecutionResponse
 from database.models.action_execution import ActionExecution
 
@@ -14,7 +16,7 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)]
 )
 
-@router.get("", response_model=List[ActionExecutionResponse])
+@router.get("", response_model=List[ActionExecutionResponse], dependencies=[Depends(require_permission(Permission.VIEW_ACTION_REQUESTS))])
 async def list_action_executions(
     db: AsyncSession = Depends(get_db_session)
 ):
@@ -22,7 +24,7 @@ async def list_action_executions(
     results = (await db.execute(stmt)).scalars().all()
     return results
 
-@router.get("/{execution_id}", response_model=ActionExecutionResponse)
+@router.get("/{execution_id}", response_model=ActionExecutionResponse, dependencies=[Depends(require_permission(Permission.VIEW_ACTION_REQUESTS))])
 async def get_action_execution(
     execution_id: str,
     db: AsyncSession = Depends(get_db_session)
