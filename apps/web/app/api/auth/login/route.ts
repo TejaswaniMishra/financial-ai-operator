@@ -57,7 +57,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ detail: "Invalid backend response" }, { status: 502 });
   }
 
-  // Set the JWT in an HttpOnly cookie — it never reaches browser JavaScript
+  // Set the JWT in an HttpOnly cookie â€” it never reaches browser JavaScript
   const response = NextResponse.json({ ok: true }, { status: 200 });
   response.cookies.set(SESSION_COOKIE_NAME, data.access_token, {
     httpOnly: true,

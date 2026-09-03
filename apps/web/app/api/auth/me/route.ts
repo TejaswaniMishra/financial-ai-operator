@@ -28,11 +28,11 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
   }
 
   if (!backendRes.ok) {
-    // Token expired/revoked — tell the client session is gone
+    // Token expired/revoked â€” tell the client session is gone
     return NextResponse.json({ detail: "Not authenticated" }, { status: 401 });
   }
 
-  // Return ONLY the safe CurrentUser fields — never forward raw backend payloads
+  // Return ONLY the safe CurrentUser fields â€” never forward raw backend payloads
   let data: Record<string, unknown>;
   try {
     data = await backendRes.json();

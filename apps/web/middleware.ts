@@ -5,7 +5,7 @@ import { SESSION_COOKIE_NAME } from "@/lib/server/api-proxy";
 /**
  * Edge middleware: fast cookie-presence check before protected pages load.
  *
- * This is a FIRST LINE OF DEFENCE only — it checks the session cookie EXISTS.
+ * This is a FIRST LINE OF DEFENCE only â€” it checks the session cookie EXISTS.
  * It does NOT validate the token; the FastAPI backend is authoritative.
  *
  * Expired/revoked/invalid tokens are caught when the BFF proxy forwards the

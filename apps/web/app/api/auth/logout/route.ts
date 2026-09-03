@@ -27,7 +27,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   });
 
   if (!token) {
-    // No session to revoke — still return success so client clears state
+    // No session to revoke â€” still return success so client clears state
     return response;
   }
 
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       },
     });
   } catch {
-    // Backend unreachable — still clear local session
+    // Backend unreachable â€” still clear local session
     console.error("[logout] Backend logout call failed");
   }
 

@@ -3,7 +3,7 @@
  *
  * Rules:
  * - Must start with "/"
- * - Must NOT start with "//" (protocol-relative — could be external)
+ * - Must NOT start with "//" (protocol-relative â€” could be external)
  * - Must NOT contain a protocol (http:, https:, etc.)
  * - Must NOT be an auth path (prevents redirect loops)
  * - Only allows printable ASCII path characters

@@ -51,6 +51,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ detail }, { status: backendRes.status });
   }
 
-  // Return 201 Created with no token — client must then navigate to /login
+  // Return 201 Created with no token â€” client must then navigate to /login
   return NextResponse.json({ ok: true }, { status: 201 });
 }

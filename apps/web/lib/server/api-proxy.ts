@@ -34,7 +34,7 @@ export function checkCSRF(req: NextRequest): boolean {
   const referer = req.headers.get("referer");
 
   if (!origin && !referer) {
-    // No origin/referer — reject ambiguous mutating request
+    // No origin/referer â€” reject ambiguous mutating request
     return false;
   }
 
@@ -59,7 +59,7 @@ export function checkCSRF(req: NextRequest): boolean {
  * Next.js BFF routes to the FastAPI backend.
  *
  * Security guarantees:
- * - JWT is read from the HttpOnly cookie — never from request headers/body
+ * - JWT is read from the HttpOnly cookie â€” never from request headers/body
  * - Any client-supplied Authorization header is OVERWRITTEN
  * - Only safe request headers are forwarded
  * - Sensitive response headers are stripped
@@ -98,14 +98,14 @@ export async function proxyAuthenticatedRequest(
     targetUrl.searchParams.set(key, value);
   });
 
-  // Build clean request headers — never blindly forward all client headers
+  // Build clean request headers â€” never blindly forward all client headers
   const forwardHeaders = new Headers();
   for (const header of SAFE_FORWARD_HEADERS) {
     const value = req.headers.get(header);
     if (value) forwardHeaders.set(header, value);
   }
 
-  // Overwrite Authorization — the client NEVER controls this
+  // Overwrite Authorization â€” the client NEVER controls this
   if (token) {
     forwardHeaders.set("Authorization", `Bearer ${token}`);
   }
@@ -122,7 +122,7 @@ export async function proxyAuthenticatedRequest(
       body: body ?? undefined,
     });
 
-    // Build clean response headers — strip sensitive/internal headers
+    // Build clean response headers â€” strip sensitive/internal headers
     const responseHeaders = new Headers();
     backendResponse.headers.forEach((value, key) => {
       if (!STRIP_RESPONSE_HEADERS.has(key.toLowerCase())) {

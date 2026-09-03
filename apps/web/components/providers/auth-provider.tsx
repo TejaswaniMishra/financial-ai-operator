@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const u = await fetchCurrentUser();
       setUser(u);
     } catch {
-      // 401 or network error — user is not authenticated
+      // 401 or network error â€” user is not authenticated
       setUser(null);
     } finally {
       setIsLoading(false);
