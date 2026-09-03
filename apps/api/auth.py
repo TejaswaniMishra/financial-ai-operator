@@ -7,6 +7,7 @@ from sqlalchemy.orm import selectinload
 from apps.api.dependencies import get_db_session
 from database.models.identity import User, UserRole
 from packages.utils.jwt import decode_access_token, JWTError
+from services.auth.token_revocation import is_token_revoked
 
 # Standard HTTP Bearer scheme
 security = HTTPBearer()
@@ -16,8 +17,8 @@ async def get_current_user(
     db: AsyncSession = Depends(get_db_session)
 ) -> User:
     """
-    Validates Bearer token, extracts user ID, and verifies the user is active in the database.
-    This ensures that token access is dynamically validated against current database state.
+    Validates Bearer token, checks for revocation, extracts user ID, 
+    and verifies the user is active in the database.
     """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -28,9 +29,14 @@ async def get_current_user(
     try:
         payload = decode_access_token(credentials.credentials)
         user_id: str = payload.get("sub")
-        if not user_id:
+        jti: str = payload.get("jti")
+        if not user_id or not jti:
             raise credentials_exception
     except JWTError:
+        raise credentials_exception
+        
+    # Check revocation explicitly after cryptographic validation but before loading User
+    if await is_token_revoked(db, jti):
         raise credentials_exception
         
     # We query the user eagerly loading roles to support future RBAC
