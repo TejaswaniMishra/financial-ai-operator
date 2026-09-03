@@ -8,7 +8,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 import { cn } from "@/lib/utils";
 
 function LoginForm() {
-  const { login, isAuthenticated, isLoading } = useAuth();
+  const { login, user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextParam = searchParams.get("next");
@@ -19,12 +19,15 @@ function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // If already authenticated, redirect away
+  // If already authenticated, redirect away — EXCEPT when the backend has
+  // flagged a forced password change (admin reset): the AuthProvider routes
+  // those users to /password-change, so this effect must not yank them to "/"
+  // and race that redirect.
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
+    if (!isLoading && isAuthenticated && user && !user.must_change_password) {
       router.replace(nextParam ?? "/");
     }
-  }, [isLoading, isAuthenticated, router, nextParam]);
+  }, [isLoading, isAuthenticated, user, router, nextParam]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
