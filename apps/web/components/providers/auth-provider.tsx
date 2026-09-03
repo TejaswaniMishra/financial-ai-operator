@@ -35,6 +35,11 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 // Routes that are fully public and must NOT trigger auth redirect
 const PUBLIC_PATHS = new Set(["/login", "/signup"]);
 
+// Route the forced password-change screen lives on. A user flagged
+// must_change_password by the backend is routed here and may not reach any
+// other authenticated surface.
+const FORCED_PASSWORD_PATH = "/password-change";
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,11 +83,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener(UNAUTHORIZED_EVENT, handleUnauthorized);
   }, [pathname, router]);
 
+  // Forced password change gate (backend-controlled via /me). While the
+  // authenticated user is flagged must_change_password, every authenticated
+  // surface redirects to the forced password-change screen. The backend
+  // independently denies protected endpoints (403) — this is UX routing only.
+  useEffect(() => {
+    if (!user || !user.must_change_password || isLoading) return;
+    if (!PUBLIC_PATHS.has(pathname) && pathname !== FORCED_PASSWORD_PATH) {
+      router.replace(FORCED_PASSWORD_PATH);
+    }
+  }, [user, isLoading, pathname, router]);
+
   const login = useCallback(
     async (payload: LoginRequest, next?: string) => {
       await apiLogin(payload);
       const u = await fetchCurrentUser();
       setUser(u);
+      if (u.must_change_password) {
+        // Backend requires a new password before any protected access.
+        router.replace(FORCED_PASSWORD_PATH);
+        return;
+      }
       const destination = validateNextParam(next ?? null);
       router.replace(destination);
     },

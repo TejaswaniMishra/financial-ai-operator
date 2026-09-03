@@ -20,6 +20,8 @@ const PROTECTED_PATHS = [
   "/investigations",
   "/settings",
   "/action-requests",
+  "/admin",
+  "/password-change",
 ];
 
 function isProtectedPath(pathname: string): boolean {
