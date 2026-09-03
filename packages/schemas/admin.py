@@ -49,3 +49,23 @@ class UserStatusUpdateRequest(BaseModel):
     """Explicit, typed request for changing a user's active status."""
 
     is_active: bool = Field(..., description="Whether the user should be active")
+
+
+class AdminPasswordResetResponse(BaseModel):
+    """Result of an admin-initiated password reset.
+
+    `temporary_password` is the ONLY time the generated credential is ever
+    returned. It is a server-generated, one-time handoff value: the database
+    stores only its Argon2id hash, and the target user must change it before
+    any protected functionality becomes available (must_change_password).
+    """
+
+    message: str = Field(..., description="Human-readable success message")
+    temporary_password: str = Field(
+        ...,
+        description="One-time temporary password. Show it to the administrator once and instruct secure handoff.",
+    )
+    must_change_password: bool = Field(
+        default=True,
+        description="The target is now required to change this password before accessing protected functionality",
+    )

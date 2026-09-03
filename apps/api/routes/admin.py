@@ -18,6 +18,7 @@ from apps.api.dependencies import get_db_session
 from database.models.identity import User
 from packages.rbac.permissions import Permission
 from packages.schemas.admin import (
+    AdminPasswordResetResponse,
     AdminUserDetail,
     AdminUserListItem,
     UserRolesUpdateRequest,
@@ -26,6 +27,11 @@ from services.admin.user_management import (
     AdminUserManagementError,
     AdminUserNotFoundError,
     AdminUserService,
+)
+from services.auth.password_management import (
+    SelfResetNotAllowedError,
+    UserNotFoundError,
+    admin_reset_password,
 )
 
 router = APIRouter(
@@ -153,3 +159,44 @@ async def replace_user_roles(
     except (AdminUserNotFoundError, AdminUserManagementError) as exc:
         raise _map_service_errors(exc)
     return _to_detail(user)
+
+
+@router.post(
+    "/users/{user_id}/password-reset",
+    response_model=AdminPasswordResetResponse,
+    dependencies=[Depends(require_permission(Permission.MANAGE_USERS))],
+)
+async def reset_user_password(
+    user_id: str,
+    actor: User = Depends(require_permission(Permission.MANAGE_USERS)),
+    db=Depends(get_db_session),
+):
+    """ADMIN-only password reset (MANAGE_USERS).
+
+    Generates a secure one-time temporary password server-side, stores only
+    its Argon2id hash, marks the target `must_change_password`, and bumps the
+    target's credential version — invalidating all of the target's existing
+    sessions immediately. The temporary password is returned exactly once to
+    this caller for secure out-of-band handoff; it is never stored,
+    returned again, or logged.
+    """
+    try:
+        temporary_password = await admin_reset_password(db, actor, user_id)
+    except SelfResetNotAllowedError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)
+        )
+    except UserNotFoundError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)
+        )
+
+    return AdminPasswordResetResponse(
+        message=(
+            "Temporary password generated. The user's existing sessions have "
+            "been signed out and they must change this password before "
+            "accessing the platform again."
+        ),
+        temporary_password=temporary_password,
+        must_change_password=True,
+    )
