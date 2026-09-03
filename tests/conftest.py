@@ -33,7 +33,7 @@ async def db_session():
     from database.connection import async_engine, AsyncSessionLocal
     from database.base import Base
     import database.models  # Ensure all models are registered with Base.metadata
-    
+
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
         
@@ -80,3 +80,45 @@ async def auth_headers(db_session):
     # 4. Generate Token
     token = create_access_token(user_id=user.id)
     return {"Authorization": f"Bearer {token}"}
+
+
+# Alias async_client as client for compatibility with tests
+@pytest_asyncio.fixture
+async def client(async_client):
+    return async_client
+
+
+# Fixture providing a test user for token lifecycle tests
+@pytest_asyncio.fixture
+async def test_user(db_session):
+    from database.models.identity import User, UserCredential, Role, RoleName, UserRole
+    from packages.utils.crypto import hash_password
+    from sqlalchemy.future import select
+
+    # Ensure Operator role exists
+    stmt = select(Role).where(Role.name == RoleName.OPERATOR)
+    res = await db_session.execute(stmt)
+    role = res.scalar_one_or_none()
+    if not role:
+        role = Role(name=RoleName.OPERATOR, description="Operator")
+        db_session.add(role)
+        await db_session.flush()
+        await db_session.refresh(role)
+
+    # Create a new active user
+    user = User(
+        email="lifecycle_user@example.com",
+        display_name="Lifecycle User",
+        is_active=True
+    )
+    db_session.add(user)
+    await db_session.flush()
+
+    # Credential and role mapping
+    pwd_hash = hash_password("ValidPassword123!")
+    cred = UserCredential(user_id=user.id, password_hash=pwd_hash)
+    user_role = UserRole(user_id=user.id, role_id=role.id)
+    db_session.add_all([cred, user_role])
+    await db_session.commit()
+    await db_session.refresh(user)
+    return user

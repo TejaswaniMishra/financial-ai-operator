@@ -5,13 +5,39 @@ from sqlalchemy.future import select
 from database.models.policy import PolicyAction, PolicyDecision, PolicyEvaluation
 from database.models.investigation import Investigation, InvestigationStatus
 from services.policy.engine import PolicyEngine
+from database.models.reconciliation import Discrepancy, ReconciliationRun
+from packages.schemas.reconciliation import DiscrepancyType, Severity, ReconciliationRunStatus
 
 @pytest.fixture
 async def sample_investigation(db_session):
+    # 1. Create a Run
+    run_id = str(uuid.uuid4())
+    run = ReconciliationRun(
+        id=run_id,
+        status=ReconciliationRunStatus.COMPLETED
+    )
+    db_session.add(run)
+
+    # 2. Create a valid discrepancy
+    disc_id = str(uuid.uuid4())
+    discrepancy = Discrepancy(
+        id=disc_id,
+        run_id=run_id,
+        rule_code="TEST_RULE",
+        discrepancy_type=DiscrepancyType.MISSING_SETTLEMENT,
+        severity=Severity.HIGH,
+        source_entity_type="PAYMENT",
+        source_entity_id="pay_123",
+        expected_amount=100.0,
+        currency="USD"
+    )
+    db_session.add(discrepancy)
+    
+    # 3. Create the investigation linked to it
     inv_id = str(uuid.uuid4())
     inv = Investigation(
         id=inv_id,
-        discrepancy_id=str(uuid.uuid4()),
+        discrepancy_id=disc_id,
         status=InvestigationStatus.COMPLETED
     )
     db_session.add(inv)
