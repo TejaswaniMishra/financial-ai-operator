@@ -279,11 +279,25 @@ export async function deactivateAdminUser(id: string): Promise<AdminUserDetail> 
   return res.json();
 }
 
-export async function fetchSecurityEvents(eventType?: string): Promise<SecurityEvent[]> {
+export interface SecurityEventPaginatedResponse {
+  items: SecurityEvent[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export async function fetchSecurityEvents(
+  eventType?: string,
+  limit: number = 100,
+  offset: number = 0
+): Promise<SecurityEventPaginatedResponse> {
   const url = new URL(`${bffBase()}/api/v1/admin/security-events`);
   if (eventType) {
     url.searchParams.set("event_type", eventType);
   }
+  url.searchParams.set("limit", limit.toString());
+  url.searchParams.set("offset", offset.toString());
+  
   const res = await fetchAuthenticated(url.toString());
   if (!res.ok) throw new Error(await adminErrorMessage(res));
   return res.json();
