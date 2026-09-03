@@ -37,7 +37,20 @@ async def db_session():
 
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        
+
+    # Seed the fixed role vocabulary (idempotent) so tests always have the
+    # full OPERATOR / FINANCE_MANAGER / ADMIN set available.
+    from sqlalchemy.future import select as _select
+    from database.models.identity import Role, RoleName
+
+    async with AsyncSessionLocal() as session:
+        for role_name in RoleName:
+            stmt = _select(Role).where(Role.name == role_name)
+            existing = (await session.execute(stmt)).scalar_one_or_none()
+            if existing is None:
+                session.add(Role(name=role_name, description=f"{role_name.value} role"))
+        await session.commit()
+
     async with AsyncSessionLocal() as session:
         yield session
         
