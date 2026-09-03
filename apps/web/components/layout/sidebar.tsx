@@ -17,7 +17,8 @@ import {
   Menu,
   CheckSquare
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, userInitials } from "@/lib/utils";
+import { useAuth } from "@/components/providers/auth-provider";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: Activity },
@@ -34,6 +35,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, isLoading } = useAuth();
 
   const toggleCollapse = () => setCollapsed(!collapsed);
   const toggleMobile = () => setMobileOpen(!mobileOpen);
@@ -136,17 +138,38 @@ export function Sidebar() {
           </div>
         </nav>
 
-        {/* Bottom User Profile */}
+        {/* Bottom User Profile — identity comes from AuthProvider (backend /me), never hardcoded */}
         <div className="p-4 mt-auto shrink-0 border-t border-sidebar-border/50">
           <div className={cn("flex items-center", collapsed ? "justify-center" : "space-x-3")}>
-            <div className="w-9 h-9 rounded-full bg-sidebar-active/20 flex items-center justify-center shrink-0 border border-sidebar-active/30 text-sidebar-foreground font-semibold text-sm">
-              AR
-            </div>
-            {!collapsed && (
-              <div className="flex-1 overflow-hidden">
-                <div className="text-sm font-medium text-sidebar-foreground truncate">Arjun Rao</div>
-                <div className="text-xs text-sidebar-muted truncate">Finance Manager</div>
-              </div>
+            {isLoading || !user ? (
+              <>
+                <div className="w-9 h-9 rounded-full bg-sidebar-muted/20 animate-pulse shrink-0" />
+                {!collapsed && (
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3.5 w-24 rounded bg-sidebar-muted/20 animate-pulse" />
+                    <div className="h-3 w-32 rounded bg-sidebar-muted/20 animate-pulse" />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div
+                  className="w-9 h-9 rounded-full bg-sidebar-active/20 flex items-center justify-center shrink-0 border border-sidebar-active/30 text-sidebar-foreground font-semibold text-sm"
+                  title={user.email}
+                >
+                  {userInitials(user.display_name, user.email)}
+                </div>
+                {!collapsed && (
+                  <div className="flex-1 overflow-hidden">
+                    <div className="text-sm font-medium text-sidebar-foreground truncate">
+                      {user.display_name || user.email}
+                    </div>
+                    {user.display_name && (
+                      <div className="text-xs text-sidebar-muted truncate">{user.email}</div>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
           
