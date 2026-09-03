@@ -1,19 +1,22 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Bell, Sun, Moon, Laptop, User } from "lucide-react";
+import { Search, Bell, Sun, Moon, User, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/providers/auth-provider";
 
 export function TopNav() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { user, isLoading, logout } = useAuth();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,6 +44,21 @@ export function TopNav() {
     };
   }, [isProfileOpen]);
 
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    setIsProfileOpen(false);
+    try {
+      await logout();
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  // Display name: prefer display_name, fall back to email, then generic fallback
+  const displayName = user?.display_name || user?.email || "Operator";
+  // Sub-label: email if we have a display_name, otherwise just empty
+  const subLabel = user?.display_name ? user.email : null;
+
   return (
     <header className="h-16 border-b border-border bg-card sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 lg:px-8">
       {/* Search / Command Palette Trigger */}
@@ -48,7 +66,6 @@ export function TopNav() {
         <button
           className="w-full flex items-center px-4 py-2 text-[13px] text-muted-foreground bg-surface-muted/50 border border-border-subtle rounded-lg hover:bg-surface-muted hover:text-foreground transition-colors focus-ring"
           onClick={() => {
-            // Trigger command palette event
             document.dispatchEvent(
               new KeyboardEvent("keydown", { key: "k", metaKey: true }),
             );
@@ -109,12 +126,26 @@ export function TopNav() {
             className="flex items-center space-x-3 pl-1 sm:pl-2 rounded-md hover:bg-surface-muted p-1 -m-1 transition-colors focus-ring outline-none"
             aria-haspopup="true"
             aria-expanded={isProfileOpen}
+            aria-label="User menu"
           >
             <div className="hidden md:block text-right">
-              <p className="text-sm font-medium text-foreground leading-none">
-                Operator
-              </p>
-              <p className="text-[11px] text-muted-foreground mt-1.5">Admin</p>
+              {isLoading ? (
+                <>
+                  <div className="w-20 h-3 rounded bg-surface-muted animate-pulse mb-1.5" />
+                  <div className="w-14 h-2.5 rounded bg-surface-muted animate-pulse" />
+                </>
+              ) : (
+                <>
+                  <p className="text-sm font-medium text-foreground leading-none">
+                    {displayName}
+                  </p>
+                  {subLabel && (
+                    <p className="text-[11px] text-muted-foreground mt-1.5 truncate max-w-[140px]">
+                      {subLabel}
+                    </p>
+                  )}
+                </>
+              )}
             </div>
             <div
               className={cn(
@@ -131,10 +162,20 @@ export function TopNav() {
           {isProfileOpen && (
             <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-card border border-border overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="px-4 py-3 border-b border-border bg-surface-muted/30">
-                <p className="text-sm font-medium text-foreground">Arjun Rao</p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Finance Manager
-                </p>
+                {user ? (
+                  <>
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {displayName}
+                    </p>
+                    {subLabel && (
+                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                        {subLabel}
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Loading...</p>
+                )}
               </div>
               <div className="py-1">
                 <button
@@ -158,13 +199,12 @@ export function TopNav() {
               </div>
               <div className="border-t border-border py-1">
                 <button
-                  disabled
-                  className="w-full text-left px-4 py-2 text-sm text-destructive transition-colors flex items-center justify-between group opacity-75 cursor-default outline-none focus-visible:bg-destructive/10"
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                  className="w-full text-left px-4 py-2 text-sm text-destructive hover:bg-destructive/10 transition-colors flex items-center gap-2 outline-none focus-visible:bg-destructive/10 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span>Sign out</span>
-                  <span className="text-[10px] uppercase tracking-wider font-semibold bg-primary/20 text-primary-foreground px-1.5 py-0.5 rounded">
-                    Soon
-                  </span>
+                  <LogOut className="w-3.5 h-3.5" />
+                  {isLoggingOut ? "Signing out..." : "Sign out"}
                 </button>
               </div>
             </div>
