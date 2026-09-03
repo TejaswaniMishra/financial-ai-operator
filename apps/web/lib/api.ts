@@ -1,3 +1,139 @@
+// ─── Auth Types ────────────────────────────────────────────────────────────
+
+/** POST /api/auth/login */
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+/** POST /api/auth/signup */
+export interface SignupRequest {
+  display_name: string;
+  email: string;
+  password: string;
+}
+
+/**
+ * Authenticated user returned by GET /api/v1/auth/me (via BFF).
+ * Contains ONLY identity fields — no roles, no auth internals.
+ */
+export interface CurrentUser {
+  id: string;
+  email: string;
+  display_name: string | null;
+  is_active: boolean;
+}
+
+// ─── API Base resolution ────────────────────────────────────────────────────
+//
+// IMPORTANT: API_BASE strategy:
+//   - Direct backend URL is used ONLY for unauthenticated/server-safe calls
+//     (e.g. /health) that don't need cookie injection.
+//   - All authenticated business API calls go through the Next.js BFF proxy at
+//     a relative path (/api/v1/...) so the server-side route handler can read
+//     the HttpOnly cookie and inject the Authorization header.
+//   - When called from the browser, relative URLs resolve to the Next.js origin.
+//   - When called from server components, we must use an absolute URL.
+
+const DIRECT_API_BASE =
+  process.env.BACKEND_INTERNAL_URL ||
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  "http://localhost:8000";
+
+/**
+ * Returns the base URL for authenticated business API calls.
+ * Browser: relative path (Next.js BFF proxy handles auth injection).
+ * Server:  absolute URL to the internal backend.
+ */
+function bffBase(): string {
+  if (typeof window !== "undefined") {
+    // Browser — relative URL routes through the Next.js catch-all proxy
+    return "";
+  }
+  // Server-side — use the direct backend URL
+  return DIRECT_API_BASE;
+}
+
+// ─── 401 event (browser-only) ──────────────────────────────────────────────
+// Dispatched when an authenticated API call returns 401 so the AuthProvider
+// can react and clear session state without direct coupling.
+export const UNAUTHORIZED_EVENT = "fao:unauthorized";
+
+function dispatchUnauthorized(): void {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(UNAUTHORIZED_EVENT));
+  }
+}
+
+// ─── Core authenticated fetch ───────────────────────────────────────────────
+/**
+ * fetchAuthenticated wraps fetch for authenticated business API calls.
+ * - Uses relative BFF path from the browser
+ * - Dispatches UNAUTHORIZED_EVENT on 401 (except on auth routes)
+ */
+async function fetchAuthenticated(
+  url: string,
+  options: RequestInit = {}
+): Promise<Response> {
+  const res = await fetch(url, { cache: "no-store", ...options });
+
+  if (res.status === 401) {
+    // Avoid dispatching if the request itself was to an auth endpoint
+    const isAuthEndpoint = url.includes("/api/auth/");
+    if (!isAuthEndpoint) {
+      dispatchUnauthorized();
+    }
+  }
+
+  return res;
+}
+
+// ─── Auth API functions (call Next.js BFF, never raw backend) ─────────────
+
+export async function login(payload: LoginRequest): Promise<void> {
+  const res = await fetch("/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(
+      typeof data?.detail === "string" ? data.detail : "Invalid email or password"
+    );
+  }
+}
+
+export async function signup(payload: SignupRequest): Promise<void> {
+  const res = await fetch("/api/auth/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(
+      typeof data?.detail === "string" ? data.detail : "Registration failed"
+    );
+  }
+}
+
+export async function fetchCurrentUser(): Promise<CurrentUser> {
+  const res = await fetch("/api/auth/me", { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error("Not authenticated");
+  }
+  return res.json();
+}
+
+export async function logout(): Promise<void> {
+  // Call BFF — backend token revocation happens server-side
+  await fetch("/api/auth/logout", { method: "POST" });
+  // Always continue: cookie will be cleared by the BFF route
+}
+
+// ─── Health (no auth needed, direct backend call is safe) ──────────────────
+
 export interface DatabaseStatus {
   connected: boolean;
   engine: string;
@@ -13,6 +149,16 @@ export interface HealthResponse {
   database: DatabaseStatus;
 }
 
+export async function fetchHealth(): Promise<HealthResponse> {
+  const res = await fetch(`${DIRECT_API_BASE}/health`, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch health status: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+// ─── System Info (via BFF proxy for auth) ──────────────────────────────────
+
 export interface SystemInfoResponse {
   name: string;
   version: string;
@@ -22,23 +168,13 @@ export interface SystemInfoResponse {
   architecture_phase: string;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-
-export async function fetchHealth(): Promise<HealthResponse> {
-  const res = await fetch(`${API_BASE}/health`, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch health status: ${res.statusText}`);
-  }
-  return res.json();
-}
-
 export async function fetchSystemInfo(): Promise<SystemInfoResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/system/info`, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch system info: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/system/info`);
+  if (!res.ok) throw new Error(`Failed to fetch system info: ${res.statusText}`);
   return res.json();
 }
+
+// ─── Metrics ───────────────────────────────────────────────────────────────
 
 export interface MetricsOverviewResponse {
   merchants: number;
@@ -49,10 +185,8 @@ export interface MetricsOverviewResponse {
 }
 
 export async function fetchMetricsOverview(): Promise<MetricsOverviewResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/metrics/overview`, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch metrics overview: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/metrics/overview`);
+  if (!res.ok) throw new Error(`Failed to fetch metrics overview: ${res.statusText}`);
   return res.json();
 }
 
@@ -65,10 +199,8 @@ export interface ReconciliationRun {
 }
 
 export async function fetchReconciliationRuns(): Promise<ReconciliationRun[]> {
-  const res = await fetch(`${API_BASE}/api/v1/reconciliation/runs`, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch reconciliation runs: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/reconciliation/runs`);
+  if (!res.ok) throw new Error(`Failed to fetch reconciliation runs: ${res.statusText}`);
   return res.json();
 }
 
@@ -87,10 +219,8 @@ export interface DiscrepancyResponse {
 }
 
 export async function fetchReconciliationDiscrepancies(): Promise<DiscrepancyResponse[]> {
-  const res = await fetch(`${API_BASE}/api/v1/reconciliation/discrepancies`, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch reconciliation discrepancies: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/reconciliation/discrepancies`);
+  if (!res.ok) throw new Error(`Failed to fetch reconciliation discrepancies: ${res.statusText}`);
   return res.json();
 }
 
@@ -168,52 +298,38 @@ export interface InvestigationApprovalResponse {
 }
 
 export async function runInvestigation(discrepancyId: string): Promise<InvestigationRunResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/investigations/discrepancy/${discrepancyId}/run`, {
-    method: "POST"
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to run investigation: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(
+    `${bffBase()}/api/v1/investigations/discrepancy/${discrepancyId}/run`,
+    { method: "POST" }
+  );
+  if (!res.ok) throw new Error(`Failed to run investigation: ${res.statusText}`);
   return res.json();
 }
 
 export async function fetchInvestigations(): Promise<InvestigationListItem[]> {
-  const res = await fetch(`${API_BASE}/api/v1/investigations`, {
-    cache: "no-store"
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch investigations: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/investigations`);
+  if (!res.ok) throw new Error(`Failed to fetch investigations: ${res.statusText}`);
   return res.json();
 }
 
 export async function fetchInvestigation(investigationId: string): Promise<InvestigationResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/investigations/${investigationId}`, {
-    cache: "no-store"
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch investigation: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/investigations/${investigationId}`);
+  if (!res.ok) throw new Error(`Failed to fetch investigation: ${res.statusText}`);
   return res.json();
 }
 
 export async function fetchInvestigationAttempts(investigationId: string): Promise<InvestigationAttempt[]> {
-  const res = await fetch(`${API_BASE}/api/v1/investigations/${investigationId}/attempts`, {
-    cache: "no-store"
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch investigation attempts: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/investigations/${investigationId}/attempts`);
+  if (!res.ok) throw new Error(`Failed to fetch investigation attempts: ${res.statusText}`);
   return res.json();
 }
 
 export async function approveInvestigation(investigationId: string): Promise<InvestigationApprovalResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/investigations/${investigationId}/approve`, {
-    method: "POST"
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to approve investigation: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(
+    `${bffBase()}/api/v1/investigations/${investigationId}/approve`,
+    { method: "POST" }
+  );
+  if (!res.ok) throw new Error(`Failed to approve investigation: ${res.statusText}`);
   return res.json();
 }
 
@@ -230,12 +346,10 @@ export async function fetchInvestigationAttemptResult(
   investigationId: string,
   attemptId: string
 ): Promise<InvestigationAttemptResultResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/investigations/${investigationId}/attempts/${attemptId}`, {
-    cache: "no-store"
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch investigation attempt result: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(
+    `${bffBase()}/api/v1/investigations/${investigationId}/attempts/${attemptId}`
+  );
+  if (!res.ok) throw new Error(`Failed to fetch investigation attempt result: ${res.statusText}`);
   return res.json();
 }
 
@@ -257,30 +371,22 @@ export interface ActionRequestResponse {
 }
 
 export async function fetchActionRequests(): Promise<ActionRequestResponse[]> {
-  const res = await fetch(`${API_BASE}/api/v1/action-requests`, {
-    cache: "no-store"
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch action requests: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/action-requests`);
+  if (!res.ok) throw new Error(`Failed to fetch action requests: ${res.statusText}`);
   return res.json();
 }
 
 export async function fetchActionRequest(id: string): Promise<ActionRequestResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}`, {
-    cache: "no-store"
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch action request: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/action-requests/${id}`);
+  if (!res.ok) throw new Error(`Failed to fetch action request: ${res.statusText}`);
   return res.json();
 }
 
 export async function approveActionRequest(id: string, actor: string = "system"): Promise<ActionRequestResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}/approve`, {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/action-requests/${id}/approve`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ actor })
+    body: JSON.stringify({ actor }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => null);
@@ -290,10 +396,10 @@ export async function approveActionRequest(id: string, actor: string = "system")
 }
 
 export async function rejectActionRequest(id: string, reason: string, actor: string = "system"): Promise<ActionRequestResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}/reject`, {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/action-requests/${id}/reject`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ reason, actor })
+    body: JSON.stringify({ reason, actor }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => null);
@@ -303,10 +409,10 @@ export async function rejectActionRequest(id: string, reason: string, actor: str
 }
 
 export async function cancelActionRequest(id: string, reason: string, actor: string = "system"): Promise<ActionRequestResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}/cancel`, {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/action-requests/${id}/cancel`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ reason, actor })
+    body: JSON.stringify({ reason, actor }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => null);
@@ -345,20 +451,16 @@ export interface ActionExecutionResponse {
 }
 
 export async function fetchActionExecutions(id: string): Promise<ActionExecutionResponse[]> {
-  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}/executions`, {
-    cache: "no-store"
-  });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch action executions: ${res.statusText}`);
-  }
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/action-requests/${id}/executions`);
+  if (!res.ok) throw new Error(`Failed to fetch action executions: ${res.statusText}`);
   return res.json();
 }
 
 export async function executeActionRequest(id: string, idempotency_key?: string): Promise<ActionExecutionResponse> {
-  const res = await fetch(`${API_BASE}/api/v1/action-requests/${id}/execute`, {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/action-requests/${id}/execute`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ idempotency_key })
+    body: JSON.stringify({ idempotency_key }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => null);
