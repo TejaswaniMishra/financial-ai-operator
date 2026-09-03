@@ -164,9 +164,15 @@ export function Sidebar() {
                     <div className="text-sm font-medium text-sidebar-foreground truncate">
                       {user.display_name || user.email}
                     </div>
-                    {user.display_name && (
+                    {/* Authoritative roles come from the backend /me contract.
+                        Never hardcode or infer a role on the client. */}
+                    {user.roles.length > 0 ? (
+                      <div className="text-xs text-sidebar-muted truncate" title={user.roles.join(" · ")}>
+                        {user.roles.join(" · ")}
+                      </div>
+                    ) : user.display_name ? (
                       <div className="text-xs text-sidebar-muted truncate">{user.email}</div>
-                    )}
+                    ) : null}
                   </div>
                 )}
               </>

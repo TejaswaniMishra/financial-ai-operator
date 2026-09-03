@@ -16,6 +16,8 @@ import {
   BrainCircuit
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/providers/auth-provider";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 import { 
   fetchActionRequest, 
   approveActionRequest, 
@@ -29,6 +31,13 @@ import {
 
 export default function ActionRequestDetailPage({ params }: { params: { id: string } }) {
   const id = params.id;
+  // Authorization state comes from AuthProvider (backend-resolved). These
+  // checks are UX only — the backend independently enforces permissions.
+  const { user } = useAuth();
+  const canApprove = hasPermission(user, PERMISSIONS.APPROVE_ACTION_REQUEST);
+  const canReject = hasPermission(user, PERMISSIONS.REJECT_ACTION_REQUEST);
+  const canCancel = hasPermission(user, PERMISSIONS.CANCEL_ACTION_REQUEST);
+  const canExecute = hasPermission(user, PERMISSIONS.EXECUTE_ACTION);
   const [request, setRequest] = useState<ActionRequestResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -190,18 +199,25 @@ export default function ActionRequestDetailPage({ params }: { params: { id: stri
         
         {request?.status === "APPROVED" && (
           <div className="flex items-center gap-3">
-            <button
-              onClick={handleExecute}
-              disabled={executing}
-              className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors shadow-sm disabled:opacity-50"
-            >
-              {executing ? (
-                <div className="w-4 h-4 mr-2 border-2 border-white/60 border-t-white rounded-full animate-spin"></div>
-              ) : (
-                <BrainCircuit className="w-4 h-4 mr-2" />
-              )}
-              {executing ? "Executing..." : "Execute Action"}
-            </button>
+            {canExecute ? (
+              <button
+                onClick={handleExecute}
+                disabled={executing}
+                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors shadow-sm disabled:opacity-50"
+              >
+                {executing ? (
+                  <div className="w-4 h-4 mr-2 border-2 border-white/60 border-t-white rounded-full animate-spin"></div>
+                ) : (
+                  <BrainCircuit className="w-4 h-4 mr-2" />
+                )}
+                {executing ? "Executing..." : "Execute Action"}
+              </button>
+            ) : (
+              <div className="flex items-center gap-2 text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-2 rounded-md">
+                <ShieldCheck className="w-4 h-4 shrink-0" />
+                You do not have permission to execute this action.
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -475,27 +491,42 @@ export default function ActionRequestDetailPage({ params }: { params: { id: stri
                   <p className="text-xs text-muted-foreground mb-4">
                     Approval records a human decision. Financial execution is handled separately.
                   </p>
-                  <button
-                    onClick={() => openDialog("approve")}
-                    className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors shadow-sm"
-                  >
-                    <CheckCircle2 className="w-4 h-4 mr-2" />
-                    Approve Request
-                  </button>
-                  <button
-                    onClick={() => openDialog("reject")}
-                    className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-rose-600 bg-rose-500/10 hover:bg-rose-500/20 rounded-md transition-colors border border-rose-500/20"
-                  >
-                    <XCircle className="w-4 h-4 mr-2" />
-                    Reject
-                  </button>
-                  <button
-                    onClick={() => openDialog("cancel")}
-                    className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-surface-muted rounded-md transition-colors border border-border"
-                  >
-                    <XSquare className="w-4 h-4 mr-2" />
-                    Cancel Request
-                  </button>
+                  {!canApprove && !canReject && !canCancel ? (
+                    <div className="flex items-center gap-2 text-sm font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-2.5 rounded-md">
+                      <ShieldCheck className="w-4 h-4 shrink-0" />
+                      You do not have permission to make approval decisions.
+                    </div>
+                  ) : (
+                    <>
+                      {canApprove && (
+                        <button
+                          onClick={() => openDialog("approve")}
+                          className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors shadow-sm"
+                        >
+                          <CheckCircle2 className="w-4 h-4 mr-2" />
+                          Approve Request
+                        </button>
+                      )}
+                      {canReject && (
+                        <button
+                          onClick={() => openDialog("reject")}
+                          className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-rose-600 bg-rose-500/10 hover:bg-rose-500/20 rounded-md transition-colors border border-rose-500/20"
+                        >
+                          <XCircle className="w-4 h-4 mr-2" />
+                          Reject
+                        </button>
+                      )}
+                      {canCancel && (
+                        <button
+                          onClick={() => openDialog("cancel")}
+                          className="w-full inline-flex items-center justify-center px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-surface-muted rounded-md transition-colors border border-border"
+                        >
+                          <XSquare className="w-4 h-4 mr-2" />
+                          Cancel Request
+                        </button>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             )}
