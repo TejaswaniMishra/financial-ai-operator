@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { cn, userInitials } from "@/lib/utils";
 import { useAuth } from "@/components/providers/auth-provider";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: Activity },
@@ -36,6 +37,11 @@ export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, isLoading } = useAuth();
+  // Administration navigation appears only for users whose backend-resolved
+  // permissions include user/role management — never for a hardcoded role.
+  const canAdmin =
+    hasPermission(user, PERMISSIONS.MANAGE_USERS) ||
+    hasPermission(user, PERMISSIONS.MANAGE_ROLES);
 
   const toggleCollapse = () => setCollapsed(!collapsed);
   const toggleMobile = () => setMobileOpen(!mobileOpen);
@@ -116,6 +122,30 @@ export function Sidebar() {
               </Link>
             );
           })}
+
+          {canAdmin && (
+            <div className="pt-6 pb-2">
+              {!collapsed && (
+                <div className="px-3 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted/50 mb-2">Administration</div>
+              )}
+              <Link
+                href="/admin"
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center px-3 py-2.5 rounded-md transition-colors group",
+                  pathname?.startsWith("/admin")
+                    ? "bg-sidebar-active text-sidebar-activeForeground font-medium"
+                    : "text-sidebar-muted hover:bg-sidebar-muted/10 hover:text-sidebar-foreground"
+                )}
+                title={collapsed ? "User Management" : undefined}
+              >
+                <ShieldCheck className={cn("w-4 h-4 shrink-0", pathname?.startsWith("/admin") ? "text-sidebar-activeForeground" : "text-sidebar-muted group-hover:text-sidebar-foreground")} />
+                {!collapsed && (
+                  <span className="ml-3 text-sm flex-1">User Management</span>
+                )}
+              </Link>
+            </div>
+          )}
 
           <div className="pt-6 pb-2">
             {!collapsed && <div className="px-3 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted/50 mb-2">System</div>}
