@@ -6,6 +6,10 @@ import Link from "next/link";
 import { Eye, EyeOff, Lock, Mail, User, Shield, AlertCircle, CheckCircle } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { cn } from "@/lib/utils";
+import {
+  SIGNUP_MIN_PASSWORD_LENGTH,
+  SIGNUP_ERROR_MESSAGES,
+} from "@/lib/auth-errors";
 
 export default function SignupPage() {
   const { signup, isAuthenticated, isLoading } = useAuth();
@@ -40,8 +44,10 @@ export default function SignupPage() {
       setError("Passwords do not match.");
       return;
     }
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+    // Mirrors the backend password policy (packages/utils/password_policy.py)
+    // so the request never reaches FastAPI with an over-short password.
+    if (password.length < SIGNUP_MIN_PASSWORD_LENGTH) {
+      setError(SIGNUP_ERROR_MESSAGES.passwordPolicy);
       return;
     }
 
@@ -188,7 +194,7 @@ export default function SignupPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min. 8 characters"
+                  placeholder={`Min. ${SIGNUP_MIN_PASSWORD_LENGTH} characters`}
                   className={cn(
                     "w-full pl-10 pr-10 py-2.5 text-sm rounded-lg border bg-background text-foreground",
                     "placeholder:text-muted-foreground/60",
