@@ -291,14 +291,13 @@ export async function fetchSecurityEvents(
   limit: number = 100,
   offset: number = 0
 ): Promise<SecurityEventPaginatedResponse> {
-  const url = new URL(`${bffBase()}/api/v1/admin/security-events`);
-  if (eventType) {
-    url.searchParams.set("event_type", eventType);
-  }
-  url.searchParams.set("limit", limit.toString());
-  url.searchParams.set("offset", offset.toString());
-  
-  const res = await fetchAuthenticated(url.toString());
+  const url = buildApiUrl("/api/v1/admin/security-events", {
+    event_type: eventType,
+    limit,
+    offset,
+  });
+
+  const res = await fetchAuthenticated(url);
   if (!res.ok) throw new Error(await adminErrorMessage(res));
   return res.json();
 }
@@ -469,29 +468,44 @@ export interface TransactionLineageResponse {
   nodes: LineageNode[];
 }
 
+/**
+ * Build a BFF URL without `new URL`: relative browser paths are not accepted
+ * by every engine's `URL` constructor, and the BFF proxy only needs the
+ * path + query string.
+ */
+function buildApiUrl(
+  path: string,
+  params: Record<string, string | number | boolean | undefined> = {}
+): string {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== "") {
+      search.set(key, String(value));
+    }
+  }
+  const qs = search.toString();
+  return `${bffBase()}${path}${qs ? `?${qs}` : ""}`;
+}
+
 export async function fetchTransactions(
   params: TransactionListParams = {}
 ): Promise<TransactionListResponse> {
-  const url = new URL(`${bffBase()}/api/v1/transactions`);
-  const set = (key: string, value: string | number | boolean | undefined) => {
-    if (value !== undefined && value !== null && value !== "") {
-      url.searchParams.set(key, String(value));
-    }
-  };
-  set("record_type", params.record_type);
-  set("status", params.status);
-  set("currency", params.currency);
-  set("merchant_id", params.merchant_id);
-  set("date_from", params.date_from);
-  set("date_to", params.date_to);
-  set("min_amount", params.min_amount);
-  set("max_amount", params.max_amount);
-  set("reconciled", params.reconciled);
-  set("has_discrepancy", params.has_discrepancy);
-  set("search", params.search);
-  set("limit", params.limit ?? 50);
-  set("offset", params.offset ?? 0);
-  const res = await fetchAuthenticated(url.toString());
+  const url = buildApiUrl("/api/v1/transactions", {
+    record_type: params.record_type,
+    status: params.status,
+    currency: params.currency,
+    merchant_id: params.merchant_id,
+    date_from: params.date_from,
+    date_to: params.date_to,
+    min_amount: params.min_amount,
+    max_amount: params.max_amount,
+    reconciled: params.reconciled,
+    has_discrepancy: params.has_discrepancy,
+    search: params.search,
+    limit: params.limit ?? 50,
+    offset: params.offset ?? 0,
+  });
+  const res = await fetchAuthenticated(url);
   if (!res.ok) throw new Error(await adminErrorMessage(res));
   return res.json();
 }
