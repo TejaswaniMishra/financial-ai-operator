@@ -2,7 +2,7 @@ import uuid
 import enum
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Enum, UniqueConstraint
+from sqlalchemy import Column, String, Boolean, Integer, DateTime, ForeignKey, Enum, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from database.base import Base
@@ -19,7 +19,18 @@ class User(Base):
     email = Column(String(255), nullable=False, unique=True, index=True)
     display_name = Column(String(255), nullable=False)
     is_active = Column(Boolean, nullable=False, default=True)
-    
+
+    # Password security lifecycle (M8.5):
+    # - credential_version is embedded in every issued JWT (claim `cver`).
+    #   Changing/resetting a password increments it, which immediately
+    #   invalidates ALL previously issued tokens for this user — the auth
+    #   dependency rejects tokens whose cver does not match this column.
+    # - must_change_password is a backend-controlled flag set by an admin
+    #   password reset. The user may authenticate, but the backend denies
+    #   normal protected functionality until the password is changed.
+    credential_version = Column(Integer, nullable=False, default=1, server_default="1")
+    must_change_password = Column(Boolean, nullable=False, default=False, server_default="0")
+
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
 
