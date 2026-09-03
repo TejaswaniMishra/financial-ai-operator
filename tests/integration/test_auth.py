@@ -155,25 +155,30 @@ async def test_jwt_validation_failures():
 
 @pytest.mark.asyncio
 async def test_get_current_user_dependency(setup_test_user, db_session: AsyncSession):
+    # Minimal request stub: get_current_user only reads request.client and
+    # request.headers when emitting security events on rejected sessions.
+    from types import SimpleNamespace
+    req = SimpleNamespace(client=SimpleNamespace(host="127.0.0.1"), headers={})
+
     # 1. Valid token
     token = create_access_token(setup_test_user.id)
     creds = HTTPAuthorizationCredentials(scheme="Bearer", credentials=token)
     
-    user = await get_current_user(credentials=creds, db=db_session)
+    user = await get_current_user(request=req, credentials=creds, db=db_session)
     assert user.id == setup_test_user.id
     assert user.email == "loginuser@example.com"
     
     # 2. Invalid token raises 401
     bad_creds = HTTPAuthorizationCredentials(scheme="Bearer", credentials="bad.token.here")
     with pytest.raises(HTTPException) as exc:
-        await get_current_user(credentials=bad_creds, db=db_session)
+        await get_current_user(request=req, credentials=bad_creds, db=db_session)
     assert exc.value.status_code == 401
     
     # 3. Deleted/Non-existent user raises 401
     ghost_token = create_access_token("00000000-0000-0000-0000-000000000000")
     ghost_creds = HTTPAuthorizationCredentials(scheme="Bearer", credentials=ghost_token)
     with pytest.raises(HTTPException) as exc:
-        await get_current_user(credentials=ghost_creds, db=db_session)
+        await get_current_user(request=req, credentials=ghost_creds, db=db_session)
     assert exc.value.status_code == 401
 
 def test_production_secret_fails_fast():

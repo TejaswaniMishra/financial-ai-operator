@@ -7,7 +7,6 @@ no-leak guarantees (no password/hash/token material in responses).
 """
 
 import asyncio
-import logging
 import uuid
 
 import pytest
@@ -518,33 +517,45 @@ async def test_concurrent_admin_resets_keep_consistent_state(
 
 @pytest.mark.asyncio
 async def test_security_events_logged_without_passwords(
-    async_client: AsyncClient, make_role_user, caplog
+    async_client: AsyncClient, make_role_user, db_session: AsyncSession
 ):
-    with caplog.at_level(logging.INFO, logger="fao.security"):
-        user, headers = await make_role_user(RoleName.OPERATOR, "pw_events@example.com")
-        res = await async_client.post(
-            CHANGE_PASSWORD_URL,
-            json={"current_password": CURRENT_PW, "new_password": NEW_PW},
-            headers=headers,
-        )
-        assert res.status_code == 200
-        # The change invalidated the old token; log in again for a fresh one,
-        # then make a failed attempt (wrong current password) so the service
-        # layer emits PASSWORD_CHANGE_FAILED.
-        fresh = await _login(async_client, "pw_events@example.com", NEW_PW)
-        assert fresh is not None
-        await async_client.post(
-            CHANGE_PASSWORD_URL,
-            json={"current_password": "TotallyWrong999!", "new_password": NEW_PW},
-            headers=fresh,
-        )
+    from database.models.security import SecurityEvent
 
-    messages = "\n".join(r.getMessage() for r in caplog.records)
-    assert "PASSWORD_CHANGED" in messages
-    assert "PASSWORD_CHANGE_FAILED" in messages
-    # Never any password material in logs
-    assert CURRENT_PW not in messages
-    assert NEW_PW not in messages
+    user, headers = await make_role_user(RoleName.OPERATOR, "pw_events@example.com")
+    res = await async_client.post(
+        CHANGE_PASSWORD_URL,
+        json={"current_password": CURRENT_PW, "new_password": NEW_PW},
+        headers=headers,
+    )
+    assert res.status_code == 200
+    # The change invalidated the old token; log in again for a fresh one,
+    # then make a failed attempt (wrong current password) so the service
+    # layer persists the PASSWORD_CHANGED failure audit row.
+    fresh = await _login(async_client, "pw_events@example.com", NEW_PW)
+    assert fresh is not None
+    failed = await async_client.post(
+        CHANGE_PASSWORD_URL,
+        json={"current_password": "TotallyWrong999!", "new_password": NEW_PW},
+        headers=fresh,
+    )
+    assert failed.status_code == 400
+
+    # Audit events are DB-backed (M8.6): assert both the success and the
+    # failure rows exist for this user.
+    rows = list(
+        (
+            await db_session.execute(
+                select(SecurityEvent).where(SecurityEvent.user_id == user.id)
+            )
+        ).scalars()
+    )
+    assert any(r.event_type == "PASSWORD_CHANGED" and r.is_success is True for r in rows)
+    assert any(r.event_type == "PASSWORD_CHANGED" and r.is_success is False for r in rows)
+    # Never any password material in audit payloads
+    for r in rows:
+        payload = r.metadata_payload or {}
+        assert CURRENT_PW not in str(payload)
+        assert NEW_PW not in str(payload)
 
 
 # ─── Regression sanity (full suites cover these in depth) ──────────────────
