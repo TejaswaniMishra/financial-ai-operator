@@ -469,7 +469,11 @@ def test_permission_mapping_is_deterministic_and_correct():
     )
     assert ROLE_PERMISSIONS[RoleName.ADMIN] == (
         ROLE_PERMISSIONS[RoleName.FINANCE_MANAGER]
-        | frozenset({Permission.MANAGE_USERS, Permission.MANAGE_ROLES})
+        | frozenset({
+            Permission.MANAGE_USERS,
+            Permission.MANAGE_ROLES,
+            Permission.VIEW_AUDIT_LOGS,
+        })
     )
 
     # OPERATOR can never touch financial decisions or administration
