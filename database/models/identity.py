@@ -71,3 +71,16 @@ class UserCredential(Base):
 
     # Relationships
     user = relationship("User", back_populates="credentials")
+
+class TokenRevocation(Base):
+    __tablename__ = "token_revocations"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    jti = Column(String(36), unique=True, index=True, nullable=False)
+    user_id = Column(String(36), ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    expires_at = Column(DateTime, index=True, nullable=False)
+    revoked_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
+
+    # Optional relationship if needed
+    user = relationship("User")
