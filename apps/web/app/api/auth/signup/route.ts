@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkCSRF } from "@/lib/server/api-proxy";
+import { signupErrorMessage } from "@/lib/auth-errors";
 
 const BACKEND_URL =
   process.env.BACKEND_INTERNAL_URL ||
@@ -37,18 +38,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       body: JSON.stringify(body),
     });
   } catch {
-    return NextResponse.json({ detail: "Backend unavailable" }, { status: 503 });
+    // The BFF could not reach FastAPI. Never leak backend internals.
+    return NextResponse.json(
+      { detail: signupErrorMessage(503) },
+      { status: 503 }
+    );
   }
 
   if (!backendRes.ok) {
-    let detail = "Registration failed. Please try again.";
-    try {
-      const data = await backendRes.json();
-      if (typeof data?.detail === "string") {
-        detail = data.detail;
-      }
-    } catch {}
-    return NextResponse.json({ detail }, { status: backendRes.status });
+    // Map the backend failure to safe, useful copy while preserving the
+    // backend's HTTP status. FastAPI 422 bodies carry a `detail` array and 500
+    // bodies may carry internal text — neither is ever forwarded verbatim.
+    const data = await backendRes.json().catch(() => null);
+    return NextResponse.json(
+      { detail: signupErrorMessage(backendRes.status, data) },
+      { status: backendRes.status }
+    );
   }
 
   // Return 201 Created with no token — client must then navigate to /login

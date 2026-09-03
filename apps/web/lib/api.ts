@@ -1,3 +1,5 @@
+import { SIGNUP_ERROR_MESSAGES, signupErrorMessage } from "@/lib/auth-errors";
+
 // ─── Auth Types ────────────────────────────────────────────────────────────
 
 /** POST /api/auth/login */
@@ -105,16 +107,25 @@ export async function login(payload: LoginRequest): Promise<void> {
 }
 
 export async function signup(payload: SignupRequest): Promise<void> {
-  const res = await fetch("/api/auth/signup", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+  let res: Response;
+  try {
+    res = await fetch("/api/auth/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  } catch {
+    // The browser could not reach the Next.js BFF at all.
+    throw new Error(SIGNUP_ERROR_MESSAGES.network);
+  }
   if (!res.ok) {
+    // The BFF only ever returns our own safe copy in `detail`; map by status
+    // as a fallback for non-JSON error responses.
     const data = await res.json().catch(() => null);
-    throw new Error(
-      typeof data?.detail === "string" ? data.detail : "Registration failed"
-    );
+    if (typeof data?.detail === "string") {
+      throw new Error(data.detail);
+    }
+    throw new Error(signupErrorMessage(res.status));
   }
 }
 
