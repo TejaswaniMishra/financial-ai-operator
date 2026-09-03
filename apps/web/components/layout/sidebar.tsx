@@ -27,7 +27,7 @@ const navigation = [
   { name: "Discrepancies", href: "/discrepancies", icon: Search },
   { name: "Investigations", href: "/investigations", icon: ShieldCheck },
   { name: "Action Requests", href: "/action-requests", icon: CheckSquare },
-  { name: "Transactions", href: "/transactions", icon: Database, isComingSoon: true },
+  { name: "Transactions", href: "/transactions", icon: Database },
   { name: "Reports", href: "/reports", icon: BarChart3, isComingSoon: true },
   { name: "Exceptions", href: "/exceptions", icon: FileText, isComingSoon: true },
 ];

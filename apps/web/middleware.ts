@@ -20,6 +20,7 @@ const PROTECTED_PATHS = [
   "/investigations",
   "/settings",
   "/action-requests",
+  "/transactions",
   "/admin",
   "/password-change",
 ];
