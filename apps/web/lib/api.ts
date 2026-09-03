@@ -313,6 +313,201 @@ export async function updateAdminUserRoles(id: string, roles: string[]): Promise
   return res.json();
 }
 
+// ─── Transaction workspace (M9) ────────────────────────────────────────────
+
+export type TransactionRecordType =
+  | "PAYMENT"
+  | "REFUND"
+  | "FEE"
+  | "SETTLEMENT"
+  | "BANK_TRANSACTION";
+
+export interface TransactionRecord {
+  id: string;
+  record_type: TransactionRecordType;
+  external_id: string | null;
+  merchant_id: string;
+  merchant_name: string;
+  provider: string | null;
+  amount: string;
+  currency: string;
+  status: string;
+  created_at: string;
+  reconciled: boolean;
+  has_discrepancy: boolean;
+}
+
+export interface TransactionSummary {
+  PAYMENT: number;
+  REFUND: number;
+  FEE: number;
+  SETTLEMENT: number;
+  BANK_TRANSACTION: number;
+  total: number;
+}
+
+export interface TransactionListResponse {
+  items: TransactionRecord[];
+  total: number;
+  limit: number;
+  offset: number;
+  summary: TransactionSummary;
+}
+
+export interface TransactionListParams {
+  record_type?: TransactionRecordType;
+  status?: string;
+  currency?: string;
+  merchant_id?: string;
+  date_from?: string;
+  date_to?: string;
+  min_amount?: number;
+  max_amount?: number;
+  reconciled?: boolean;
+  has_discrepancy?: boolean;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}
+
+export interface ReconciliationContext {
+  relationship_id: string;
+  relationship_type: string;
+  relationship_status: string;
+  financial_status: string;
+  run_id: string;
+  run_status: string;
+  source_entity_type: string;
+  source_entity_id: string;
+  target_entity_type: string;
+  target_entity_id: string;
+}
+
+export interface DiscrepancyContext {
+  id: string;
+  rule_code: string;
+  discrepancy_type: string;
+  severity: string;
+  expected_amount: string | null;
+  actual_amount: string | null;
+  difference_amount: string | null;
+  currency: string | null;
+  run_id: string;
+}
+
+export interface InvestigationContext {
+  id: string;
+  discrepancy_id: string;
+  status: string;
+  created_at: string | null;
+}
+
+export interface ActionRequestContext {
+  id: string;
+  investigation_id: string;
+  discrepancy_id: string | null;
+  action: string;
+  status: string;
+  created_at: string | null;
+}
+
+export interface ActionExecutionContext {
+  id: string;
+  action_request_id: string;
+  status: string;
+  execution_type: string;
+  adapter: string;
+  requested_at: string | null;
+  error_code: string | null;
+}
+
+export interface RelatedRecord {
+  id: string;
+  record_type: TransactionRecordType;
+  amount: string | null;
+  currency: string | null;
+  status: string | null;
+  created_at: string | null;
+}
+
+export interface TransactionDetail {
+  id: string;
+  record_type: TransactionRecordType;
+  external_id: string | null;
+  merchant: { id: string; name: string };
+  provider: string | null;
+  amount: string;
+  currency: string;
+  status: string;
+  created_at: string;
+  updated_at: string | null;
+  order: { id: string; external_id: string | null; status: string; amount: string; currency: string } | null;
+  customer: { id: string; display_name: string } | null;
+  related: RelatedRecord[];
+  reconciliation: ReconciliationContext[];
+  discrepancies: DiscrepancyContext[];
+  investigation: InvestigationContext | null;
+  action_requests: ActionRequestContext[];
+  executions: ActionExecutionContext[];
+}
+
+export interface LineageNode {
+  kind: string;
+  role: "SOURCE" | "DERIVED";
+  id: string;
+  label: string;
+  status: string | null;
+  amount: string | null;
+  currency: string | null;
+  timestamp: string | null;
+  detail: Record<string, unknown>;
+}
+
+export interface TransactionLineageResponse {
+  record_type: TransactionRecordType;
+  record_id: string;
+  nodes: LineageNode[];
+}
+
+export async function fetchTransactions(
+  params: TransactionListParams = {}
+): Promise<TransactionListResponse> {
+  const url = new URL(`${bffBase()}/api/v1/transactions`);
+  const set = (key: string, value: string | number | boolean | undefined) => {
+    if (value !== undefined && value !== null && value !== "") {
+      url.searchParams.set(key, String(value));
+    }
+  };
+  set("record_type", params.record_type);
+  set("status", params.status);
+  set("currency", params.currency);
+  set("merchant_id", params.merchant_id);
+  set("date_from", params.date_from);
+  set("date_to", params.date_to);
+  set("min_amount", params.min_amount);
+  set("max_amount", params.max_amount);
+  set("reconciled", params.reconciled);
+  set("has_discrepancy", params.has_discrepancy);
+  set("search", params.search);
+  set("limit", params.limit ?? 50);
+  set("offset", params.offset ?? 0);
+  const res = await fetchAuthenticated(url.toString());
+  if (!res.ok) throw new Error(await adminErrorMessage(res));
+  return res.json();
+}
+
+export async function fetchTransactionDetail(id: string): Promise<TransactionDetail> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/transactions/${id}`);
+  if (!res.ok) throw new Error(await adminErrorMessage(res));
+  return res.json();
+}
+
+export async function fetchTransactionLineage(id: string): Promise<TransactionLineageResponse> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/transactions/${id}/lineage`);
+  if (!res.ok) throw new Error(await adminErrorMessage(res));
+  return res.json();
+}
+
 // ─── Health (no auth needed, direct backend call is safe) ──────────────────
 
 export interface DatabaseStatus {
