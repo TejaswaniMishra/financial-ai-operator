@@ -174,6 +174,16 @@ async def action_execution_failed(db: AsyncSession, actor_id: str, execution_id:
         db, SecurityEventType.ACTION_EXECUTION_FAILED, actor_id=actor_id, request=request, is_success=False, metadata_payload={"execution_id": execution_id, "error_category": error_category}
     )
 
+async def session_rejected(db: AsyncSession, user_id: Optional[str], reason: str, request: Optional[Request] = None) -> None:
+    await _log_event(
+        db, SecurityEventType.SESSION_REJECTED, user_id=user_id, request=request, is_success=False, metadata_payload={"reason": reason}
+    )
+
+async def token_revoked(db: AsyncSession, user_id: Optional[str], jti: str, request: Optional[Request] = None) -> None:
+    await _log_event(
+        db, SecurityEventType.TOKEN_REVOKED, user_id=user_id, request=request, metadata_payload={"jti": jti}
+    )
+
 def log_critical_credential_error(
     message: str, user_id: Optional[str] = None
 ) -> None:
