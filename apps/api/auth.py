@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -8,11 +8,13 @@ from apps.api.dependencies import get_db_session
 from database.models.identity import User, UserRole
 from packages.utils.jwt import decode_access_token, JWTError
 from services.auth.token_revocation import is_token_revoked
+from services.auth.security_events import session_rejected, token_revoked
 
 # Standard HTTP Bearer scheme
 security = HTTPBearer()
 
 async def get_current_user(
+    request: Request,
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: AsyncSession = Depends(get_db_session),
     allow_must_change_password: bool = False,
@@ -49,6 +51,8 @@ async def get_current_user(
         
     # Check revocation explicitly after cryptographic validation but before loading User
     if await is_token_revoked(db, jti):
+        # We know who they claim to be, we know the token was explicitly revoked
+        await token_revoked(db, user_id=user_id, jti=jti, request=request)
         raise credentials_exception
         
     # We query the user eagerly loading roles to support future RBAC
@@ -64,17 +68,21 @@ async def get_current_user(
         raise credentials_exception
         
     if not user.is_active:
+        # A valid token was presented for a deactivated user
+        await session_rejected(db, user_id=user_id, reason="account_deactivated", request=request)
         raise credentials_exception
 
     # Credential-version check: tokens issued under a previous password
     # lifecycle version are stale and must be rejected (401).
     token_version = payload.get("cver")
     if token_version is None or token_version != user.credential_version:
+        await session_rejected(db, user_id=user_id, reason="stale_credential_version", request=request)
         raise credentials_exception
 
     # Forced password change: authenticated but restricted until the user
     # changes their password (admin reset flow).
     if user.must_change_password and not allow_must_change_password:
+        await session_rejected(db, user_id=user_id, reason="password_change_required", request=request)
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Password change required before accessing this resource.",
@@ -84,6 +92,7 @@ async def get_current_user(
 
 
 async def get_current_user_allow_pending(
+    request: Request,
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: AsyncSession = Depends(get_db_session),
 ) -> User:
@@ -94,6 +103,7 @@ async def get_current_user_allow_pending(
     Version, revocation, existence, and active checks still apply.
     """
     return await get_current_user(
+        request=request,
         credentials=credentials,
         db=db,
         allow_must_change_password=True,

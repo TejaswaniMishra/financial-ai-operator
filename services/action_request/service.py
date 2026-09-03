@@ -8,6 +8,8 @@ from database.models.action_request import ActionRequest, ActionRequestAudit, Ac
 from database.models.policy import PolicyEvaluation, PolicyDecision
 from services.action_request.state_machine import ActionRequestStateMachine
 
+from services.auth.security_events import action_request_created, action_request_approved, action_request_rejected, action_request_cancelled
+
 class ActionRequestService:
     def __init__(self, db: AsyncSession):
         self.db = db
@@ -55,6 +57,8 @@ class ActionRequestService:
         try:
             await self.db.commit()
             await self.db.refresh(request)
+            # Log security event
+            await action_request_created(self.db, user_id=None, request_id=request.id)
             return request
         except (IntegrityError, InvalidRequestError):
             await self.db.rollback()
@@ -104,6 +108,7 @@ class ActionRequestService:
         request.approved_at = datetime.now(timezone.utc).replace(tzinfo=None)
         await self.db.commit()
         await self.db.refresh(request)
+        await action_request_approved(self.db, actor_id=actor, request_id=request.id)
         return request
 
     async def reject_action_request(self, request_id: str, reason: str = None, actor: str = None) -> ActionRequest:
@@ -111,10 +116,12 @@ class ActionRequestService:
         request.rejection_reason = reason
         await self.db.commit()
         await self.db.refresh(request)
+        await action_request_rejected(self.db, actor_id=actor, request_id=request.id)
         return request
 
     async def cancel_action_request(self, request_id: str, reason: str = None, actor: str = None) -> ActionRequest:
         request = await self._transition_state(request_id, ActionRequestStatus.CANCELLED, actor=actor, reason=reason)
         await self.db.commit()
         await self.db.refresh(request)
+        await action_request_cancelled(self.db, actor_id=actor, request_id=request.id)
         return request

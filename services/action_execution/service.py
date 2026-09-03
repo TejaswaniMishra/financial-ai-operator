@@ -15,12 +15,14 @@ class ExecutionError(Exception):
 
 from sqlalchemy.orm import selectinload
 
+from services.auth.security_events import action_execution_started, action_execution_succeeded, action_execution_failed
+
 class ActionExecutionService:
     def __init__(self, db: AsyncSession, adapter: ActionExecutionAdapter = None):
         self.db = db
         self.adapter = adapter or SimulatedExecutionAdapter()
 
-    async def execute_action_request(self, request_id: str, idempotency_key: str = None) -> ActionExecution:
+    async def execute_action_request(self, request_id: str, idempotency_key: str = None, actor_id: str = None) -> ActionExecution:
         """
         Safely execute an ActionRequest via the assigned adapter.
         """
@@ -96,6 +98,8 @@ class ActionExecutionService:
         self.db.add(attempt)
         await self.db.commit()
         
+        await action_execution_started(self.db, actor_id=actor_id, execution_id=execution.id)
+        
         # 6. Invoke Adapter
         try:
             # We don't hold the DB transaction open during external execution!
@@ -115,6 +119,12 @@ class ActionExecutionService:
             attempt.completed_at = datetime.now(timezone.utc).replace(tzinfo=None)
             
             await self.db.commit()
+            
+            if result.status == ActionExecutionStatus.SUCCEEDED:
+                await action_execution_succeeded(self.db, actor_id=actor_id, execution_id=execution.id)
+            elif result.status == ActionExecutionStatus.FAILED:
+                await action_execution_failed(self.db, actor_id=actor_id, execution_id=execution.id, error_category=result.error_code or "EXECUTION_FAILURE")
+                
             return await self._get_execution(execution.id)
             
         except Exception as e:
@@ -134,6 +144,7 @@ class ActionExecutionService:
             attempt.completed_at = datetime.now(timezone.utc).replace(tzinfo=None)
             
             await self.db.commit()
+            await action_execution_failed(self.db, actor_id=actor_id, execution_id=execution.id, error_category="UNEXPECTED_ERROR")
             return await self._get_execution(execution.id)
 
     async def _get_execution(self, id: str) -> ActionExecution:

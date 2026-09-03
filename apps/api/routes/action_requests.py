@@ -106,13 +106,15 @@ from services.action_execution.service import ActionExecutionService, ExecutionE
 async def execute_action_request(
     request_id: str,
     payload: ActionExecutionRequest,
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
+    current_user = Depends(get_current_user)
 ):
     service = ActionExecutionService(db)
     try:
         execution = await service.execute_action_request(
             request_id=request_id,
-            idempotency_key=payload.idempotency_key
+            idempotency_key=payload.idempotency_key,
+            actor_id=current_user.id
         )
         return execution
     except ExecutionError as e:
