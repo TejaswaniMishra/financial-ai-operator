@@ -113,6 +113,9 @@ async def change_own_password(
 
         if not verify_password(current_password, cred.password_hash):
             await security_events.password_change_failed(db, user.id, "wrong_current_password")
+            # Persist the failure audit row independently: the subsequent 400
+            # response would otherwise roll the session back and lose it.
+            await db.commit()
             raise WrongCurrentPasswordError("Current password is incorrect.")
 
         # New password must not equal the current one. Verifying against the
@@ -133,11 +136,13 @@ async def change_own_password(
         user.credential_version = (user.credential_version or 1) + 1
         user.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
 
-        await db.commit()
+        # Audit rows ride the same transaction as the credential change so
+        # they are never silently discarded by session close/rollback.
+        await security_events.password_changed(db, user.id)
+        if was_forced:
+            await security_events.forced_password_change_completed(db, user.id)
 
-    await security_events.password_changed(db, user.id)
-    if was_forced:
-        await security_events.forced_password_change_completed(db, user.id)
+        await db.commit()
 
 
 def generate_temporary_password() -> str:
@@ -185,7 +190,9 @@ async def admin_reset_password(
         target.credential_version = (target.credential_version or 1) + 1
         target.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
 
+        # Same transaction as the hash replacement; see change_own_password.
+        await security_events.admin_password_reset(db, actor.id, target.id)
+
         await db.commit()
 
-    await security_events.admin_password_reset(db, actor.id, target.id)
     return temporary_password
