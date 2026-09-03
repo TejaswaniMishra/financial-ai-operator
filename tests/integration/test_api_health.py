@@ -32,8 +32,9 @@ async def test_versioned_health_endpoint(async_client: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_system_info_endpoint(async_client: AsyncClient):
-    response = await async_client.get("/api/v1/system/info")
+async def test_system_info_endpoint(async_client: AsyncClient, auth_headers):
+    # M8.3: /system/info is now protected behind VIEW_SETTINGS (all roles have it)
+    response = await async_client.get("/api/v1/system/info", headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
     assert data["name"] == "Financial AI Operator"

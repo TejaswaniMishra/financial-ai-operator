@@ -134,11 +134,11 @@ async def sample_action_request(db_session, sample_evaluation_approval_required)
     return ar
 
 @pytest.mark.asyncio
-async def test_action_request_approve(async_client: AsyncClient, sample_action_request, db_session, auth_headers):
+async def test_action_request_approve(async_client: AsyncClient, sample_action_request, db_session, finance_manager_headers):
     response = await async_client.post(
         f"/api/v1/action-requests/{sample_action_request.id}/approve",
         json={"actor": "test_user"}
-    , headers=auth_headers)
+    , headers=finance_manager_headers)
     
     assert response.status_code == 200
     assert response.json()["status"] == "APPROVED"
@@ -155,27 +155,27 @@ async def test_action_request_approve(async_client: AsyncClient, sample_action_r
     response2 = await async_client.post(
         f"/api/v1/action-requests/{sample_action_request.id}/reject",
         json={"reason": "test"}
-    , headers=auth_headers)
+    , headers=finance_manager_headers)
     assert response2.status_code == 400
     assert "invalid state transition" in response2.json()["detail"].lower()
 
 @pytest.mark.asyncio
-async def test_action_request_reject(async_client: AsyncClient, sample_action_request, db_session, auth_headers):
+async def test_action_request_reject(async_client: AsyncClient, sample_action_request, db_session, finance_manager_headers):
     response = await async_client.post(
         f"/api/v1/action-requests/{sample_action_request.id}/reject",
         json={"reason": "bad data"}
-    , headers=auth_headers)
+    , headers=finance_manager_headers)
     
     assert response.status_code == 200
     assert response.json()["status"] == "REJECTED"
     assert response.json()["rejection_reason"] == "bad data"
 
 @pytest.mark.asyncio
-async def test_action_request_cancel(async_client: AsyncClient, sample_action_request, db_session, auth_headers):
+async def test_action_request_cancel(async_client: AsyncClient, sample_action_request, db_session, finance_manager_headers):
     response = await async_client.post(
         f"/api/v1/action-requests/{sample_action_request.id}/cancel",
         json={"reason": "mistake"}
-    , headers=auth_headers)
+    , headers=finance_manager_headers)
     
     assert response.status_code == 200
     assert response.json()["status"] == "CANCELLED"

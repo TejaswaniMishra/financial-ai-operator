@@ -13,6 +13,7 @@ os.environ["LLM_API_KEY"] = ""
 
 from apps.api.main import app
 from config.settings import get_settings
+from database.models.identity import RoleName
 
 
 @pytest.fixture(autouse=True)
@@ -80,6 +81,80 @@ async def auth_headers(db_session):
     # 4. Generate Token
     token = create_access_token(user_id=user.id)
     return {"Authorization": f"Bearer {token}"}
+
+
+async def _make_role_user(db_session, role: RoleName, email: str, display_name: str):
+    """Create (idempotently) a role row and a fresh user holding it."""
+    from database.models.identity import Role, User, UserCredential, UserRole
+    from packages.utils.crypto import hash_password
+    from packages.utils.jwt import create_access_token
+    from sqlalchemy.future import select
+
+    stmt = select(Role).where(Role.name == role)
+    res = await db_session.execute(stmt)
+    role_row = res.scalar_one_or_none()
+    if not role_row:
+        role_row = Role(name=role, description=role.value)
+        db_session.add(role_row)
+        await db_session.commit()
+        await db_session.refresh(role_row)
+
+    user = User(email=email, display_name=display_name, is_active=True)
+    db_session.add(user)
+    await db_session.flush()
+
+    pwd_hash = hash_password("ValidPassword123!")
+    cred = UserCredential(user_id=user.id, password_hash=pwd_hash)
+    user_role = UserRole(user_id=user.id, role_id=role_row.id)
+    db_session.add_all([cred, user_role])
+    await db_session.commit()
+
+    token = create_access_token(user_id=user.id)
+    return user, {"Authorization": f"Bearer {token}"}
+
+
+@pytest_asyncio.fixture
+async def finance_manager_headers(db_session):
+    """Authenticated FINANCE_MANAGER user with a valid Bearer token."""
+    from database.models.identity import RoleName
+
+    _, headers = await _make_role_user(
+        db_session, RoleName.FINANCE_MANAGER, "fm_rbac@example.com", "Finance Manager User"
+    )
+    return headers
+
+
+@pytest_asyncio.fixture
+async def admin_headers(db_session):
+    """Authenticated ADMIN user with a valid Bearer token."""
+    from database.models.identity import RoleName
+
+    _, headers = await _make_role_user(
+        db_session, RoleName.ADMIN, "admin_rbac@example.com", "Admin User"
+    )
+    return headers
+
+
+@pytest_asyncio.fixture
+async def operator_headers(db_session):
+    """Authenticated OPERATOR user with a valid Bearer token (dedicated user)."""
+    from database.models.identity import RoleName
+
+    _, headers = await _make_role_user(
+        db_session, RoleName.OPERATOR, "operator_rbac@example.com", "Operator User"
+    )
+    return headers
+
+
+@pytest_asyncio.fixture
+async def make_role_user(db_session):
+    """Factory: create a DB-backed user holding one role, return (user, headers)."""
+    from database.models.identity import RoleName
+
+    async def _make(role: RoleName, email: str, display_name: str = "Role User"):
+        return await _make_role_user(db_session, role, email, display_name)
+
+    return _make
 
 
 # Alias async_client as client for compatibility with tests

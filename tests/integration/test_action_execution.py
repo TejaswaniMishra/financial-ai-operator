@@ -39,36 +39,36 @@ async def create_unique_policy_eval(db_session, sample_investigation):
     await db_session.refresh(eval)
     return eval
 
-async def test_execute_pending_request_denied(async_client, db_session, sample_investigation, auth_headers):
+async def test_execute_pending_request_denied(async_client, db_session, sample_investigation, finance_manager_headers):
     eval1 = await create_unique_policy_eval(db_session, sample_investigation)
     # Create PENDING request
     response = await async_client.post("/api/v1/action-requests", json={
         "policy_evaluation_id": eval1.id,
         "requested_source": "test"
-    }, headers=auth_headers)
+    }, headers=finance_manager_headers)
     assert response.status_code == status.HTTP_200_OK
     request_id = response.json()["id"]
     
     # Try execute
-    exec_response = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_1"}, headers=auth_headers)
+    exec_response = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_1"}, headers=finance_manager_headers)
     assert exec_response.status_code == status.HTTP_400_BAD_REQUEST
     assert "cannot be executed. Status is PENDING_APPROVAL" in exec_response.json()["detail"]
 
-async def test_execute_approved_request_success(async_client, db_session, sample_investigation, auth_headers):
+async def test_execute_approved_request_success(async_client, db_session, sample_investigation, finance_manager_headers):
     eval2 = await create_unique_policy_eval(db_session, sample_investigation)
     # Create request
     response = await async_client.post("/api/v1/action-requests", json={
         "policy_evaluation_id": eval2.id,
         "requested_source": "test"
-    }, headers=auth_headers)
+    }, headers=finance_manager_headers)
     request_id = response.json()["id"]
     
     # Approve request
-    approve_resp = await async_client.post(f"/api/v1/action-requests/{request_id}/approve", json={"actor": "test"}, headers=auth_headers)
+    approve_resp = await async_client.post(f"/api/v1/action-requests/{request_id}/approve", json={"actor": "test"}, headers=finance_manager_headers)
     assert approve_resp.status_code == status.HTTP_200_OK
     
     # Execute request
-    exec_response = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_success"}, headers=auth_headers)
+    exec_response = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_success"}, headers=finance_manager_headers)
     assert exec_response.status_code == status.HTTP_200_OK
     
     data = exec_response.json()
@@ -79,18 +79,18 @@ async def test_execute_approved_request_success(async_client, db_session, sample
     assert data["attempts"][0]["status"] == "SUCCEEDED"
     assert data["result"]["outcome"] == "SUCCEEDED"
 
-async def test_execute_simulator_failure(async_client, db_session, sample_investigation, auth_headers):
+async def test_execute_simulator_failure(async_client, db_session, sample_investigation, finance_manager_headers):
     eval3 = await create_unique_policy_eval(db_session, sample_investigation)
     # Create and approve second request
     response = await async_client.post("/api/v1/action-requests", json={
         "policy_evaluation_id": eval3.id,
         "requested_source": "test"
-    }, headers=auth_headers)
+    }, headers=finance_manager_headers)
     request_id = response.json()["id"]
-    await async_client.post(f"/api/v1/action-requests/{request_id}/approve", json={"actor": "test"}, headers=auth_headers)
+    await async_client.post(f"/api/v1/action-requests/{request_id}/approve", json={"actor": "test"}, headers=finance_manager_headers)
     
     # Execute request with fail key
-    exec_response = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_simulate_fail"}, headers=auth_headers)
+    exec_response = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_simulate_fail"}, headers=finance_manager_headers)
     assert exec_response.status_code == status.HTTP_200_OK
     
     data = exec_response.json()
@@ -99,18 +99,18 @@ async def test_execute_simulator_failure(async_client, db_session, sample_invest
     assert len(data["attempts"]) == 1
     assert data["attempts"][0]["status"] == "FAILED"
 
-async def test_execute_simulator_unknown(async_client, db_session, sample_investigation, auth_headers):
+async def test_execute_simulator_unknown(async_client, db_session, sample_investigation, finance_manager_headers):
     eval4 = await create_unique_policy_eval(db_session, sample_investigation)
     # Create and approve third request
     response = await async_client.post("/api/v1/action-requests", json={
         "policy_evaluation_id": eval4.id,
         "requested_source": "test"
-    }, headers=auth_headers)
+    }, headers=finance_manager_headers)
     request_id = response.json()["id"]
-    await async_client.post(f"/api/v1/action-requests/{request_id}/approve", json={"actor": "test"}, headers=auth_headers)
+    await async_client.post(f"/api/v1/action-requests/{request_id}/approve", json={"actor": "test"}, headers=finance_manager_headers)
     
     # Execute request with unknown key
-    exec_response = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_simulate_unknown"}, headers=auth_headers)
+    exec_response = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_simulate_unknown"}, headers=finance_manager_headers)
     assert exec_response.status_code == status.HTTP_200_OK
     
     data = exec_response.json()
@@ -118,12 +118,12 @@ async def test_execute_simulator_unknown(async_client, db_session, sample_invest
     assert data["error_code"] == "SIMULATED_TIMEOUT"
     
     # Try to execute again (should be blocked from auto-retry because it's UNKNOWN, but idempotency returns the existing execution)
-    exec_response_2 = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_simulate_unknown"}, headers=auth_headers)
+    exec_response_2 = await async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": "test_simulate_unknown"}, headers=finance_manager_headers)
     assert exec_response_2.status_code == status.HTTP_200_OK
     data2 = exec_response_2.json()
     assert data2["status"] == "UNKNOWN"
 
-async def test_execution_concurrency_and_idempotency(async_client, db_session, sample_investigation, auth_headers):
+async def test_execution_concurrency_and_idempotency(async_client, db_session, sample_investigation, finance_manager_headers):
     eval5 = await create_unique_policy_eval(db_session, sample_investigation)
     """
     Test idempotency: two sequential execution attempts with the same idempotency key
@@ -132,16 +132,16 @@ async def test_execution_concurrency_and_idempotency(async_client, db_session, s
     response = await async_client.post("/api/v1/action-requests", json={
         "policy_evaluation_id": eval5.id,
         "requested_source": "test"
-    }, headers=auth_headers)
+    }, headers=finance_manager_headers)
     request_id = response.json()["id"]
-    await async_client.post(f"/api/v1/action-requests/{request_id}/approve", json={"actor": "test"}, headers=auth_headers)
+    await async_client.post(f"/api/v1/action-requests/{request_id}/approve", json={"actor": "test"}, headers=finance_manager_headers)
 
     idempotency_key = "concurrent_test_key"
 
     # Fire both requests concurrently
     req1, req2 = await asyncio.gather(
-        async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": idempotency_key}, headers=auth_headers),
-        async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": idempotency_key}, headers=auth_headers)
+        async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": idempotency_key}, headers=finance_manager_headers),
+        async_client.post(f"/api/v1/action-requests/{request_id}/execute", json={"idempotency_key": idempotency_key}, headers=finance_manager_headers)
     )
 
     assert req1.status_code == status.HTTP_200_OK
@@ -154,7 +154,7 @@ async def test_execution_concurrency_and_idempotency(async_client, db_session, s
     assert data1["status"] == "SUCCEEDED"
     
     # Verify exactly one execution in DB
-    executions_resp = await async_client.get(f"/api/v1/action-requests/{request_id}/executions", headers=auth_headers)
+    executions_resp = await async_client.get(f"/api/v1/action-requests/{request_id}/executions", headers=finance_manager_headers)
     executions = executions_resp.json()
     assert len(executions) == 1
     assert executions[0]["status"] == "SUCCEEDED"

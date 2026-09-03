@@ -199,7 +199,10 @@ async def test_get_me_success(async_client: AsyncClient, setup_test_user):
     assert data["email"] == setup_test_user.email
     assert data["display_name"] == setup_test_user.display_name
     assert data["is_active"] is True
-    assert "roles" not in data
+    # M8.3: roles/permissions are now part of the authoritative /me contract
+    assert data["roles"] == ["OPERATOR"]
+    assert "VIEW_DASHBOARD" in data["permissions"]
+    assert "APPROVE_ACTION_REQUEST" not in data["permissions"]
     assert "password_hash" not in data
     assert "token" not in data
 
