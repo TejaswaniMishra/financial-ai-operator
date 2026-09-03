@@ -11,6 +11,8 @@ Safety invariants enforced by this service:
   fixed RoleName vocabulary.
 """
 
+import asyncio
+import weakref
 from datetime import datetime, timezone
 from typing import List
 
@@ -19,6 +21,26 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
 from database.models.identity import RoleName, Role, User, UserRole
+
+
+# Serializes the read-check-commit critical sections of admin mutations so the
+# last-active-ADMIN invariant cannot be raced away by concurrent requests.
+# Correct for this single-process deployment; a multi-worker deployment would
+# additionally require a DB-level guarantee.
+#
+# The lock is cached per running event loop: in production all requests share
+# one loop (so all mutations serialize), while test runners that create a fresh
+# loop per test never reuse a loop-bound lock.
+_admin_mutation_locks: "weakref.WeakKeyDictionary[asyncio.AbstractEventLoop, asyncio.Lock]" = weakref.WeakKeyDictionary()
+
+
+def _admin_mutation_lock() -> asyncio.Lock:
+    loop = asyncio.get_running_loop()
+    lock = _admin_mutation_locks.get(loop)
+    if lock is None:
+        lock = asyncio.Lock()
+        _admin_mutation_locks[loop] = lock
+    return lock
 
 
 class AdminUserNotFoundError(Exception):
@@ -86,27 +108,28 @@ class AdminUserService:
     # ── Activation / deactivation ───────────────────────────────────────────
 
     async def set_user_active(self, user_id: str, is_active: bool, actor: User) -> User:
-        user = await self._load_user_with_roles(user_id)
+        async with _admin_mutation_lock():
+            user = await self._load_user_with_roles(user_id)
 
-        if is_active == user.is_active:
-            # Idempotent: nothing to change.
-            return user
+            if is_active == user.is_active:
+                # Idempotent: nothing to change.
+                return user
 
-        if not is_active:
-            if user.id == actor.id:
-                raise AdminUserManagementError(
-                    "You cannot deactivate your own account."
-                )
-            has_admin_role = RoleName.ADMIN.value in self._role_names(user)
-            if has_admin_role and await self._active_admin_count_excluding(user.id) == 0:
-                raise AdminUserManagementError(
-                    "Cannot deactivate the last active ADMIN user."
-                )
+            if not is_active:
+                if user.id == actor.id:
+                    raise AdminUserManagementError(
+                        "You cannot deactivate your own account."
+                    )
+                has_admin_role = RoleName.ADMIN.value in self._role_names(user)
+                if has_admin_role and await self._active_admin_count_excluding(user.id) == 0:
+                    raise AdminUserManagementError(
+                        "Cannot deactivate the last active ADMIN user."
+                    )
 
-        user.is_active = is_active
-        user.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
-        await self.db.commit()
-        return await self._load_user_with_roles(user.id)
+            user.is_active = is_active
+            user.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
+            await self.db.commit()
+            return await self._load_user_with_roles(user.id)
 
     async def activate_user(self, user_id: str, actor: User) -> User:
         return await self.set_user_active(user_id, True, actor)
@@ -119,60 +142,62 @@ class AdminUserService:
     async def replace_user_roles(
         self, user_id: str, roles: List[RoleName], actor: User
     ) -> User:
-        user = await self._load_user_with_roles(user_id)
+        async with _admin_mutation_lock():
+            user = await self._load_user_with_roles(user_id)
 
-        # Defensive: normalize each entry to the fixed enum vocabulary even if
-        # the schema layer was bypassed (route layer validates via pydantic).
-        normalized: List[RoleName] = []
-        for r in roles:
-            try:
-                normalized.append(r if isinstance(r, RoleName) else RoleName(r))
-            except (ValueError, KeyError):
+            # Defensive: normalize each entry to the fixed enum vocabulary even
+            # if the schema layer was bypassed (route validates via pydantic).
+            normalized: List[RoleName] = []
+            for r in roles:
+                try:
+                    normalized.append(r if isinstance(r, RoleName) else RoleName(r))
+                except (ValueError, KeyError):
+                    raise AdminUserManagementError(
+                        f"Invalid role '{r}'. Roles are limited to the fixed vocabulary."
+                    )
+
+            # Deterministic normalization: canonical fixed order, no duplicates.
+            canonical_order = [RoleName.OPERATOR, RoleName.FINANCE_MANAGER, RoleName.ADMIN]
+            unique_roles = [r for r in canonical_order if r in set(normalized)]
+            if not unique_roles:
                 raise AdminUserManagementError(
-                    f"Invalid role '{r}'. Roles are limited to the fixed vocabulary."
+                    "At least one valid role is required."
                 )
 
-        # Deterministic normalization: canonical fixed order, no duplicates.
-        canonical_order = [RoleName.OPERATOR, RoleName.FINANCE_MANAGER, RoleName.ADMIN]
-        unique_roles = [r for r in canonical_order if r in set(normalized)]
-        if not unique_roles:
-            raise AdminUserManagementError(
-                "At least one valid role is required."
-            )
+            user_has_admin = RoleName.ADMIN.value in self._role_names(user)
+            new_has_admin = RoleName.ADMIN in unique_roles
+            if user_has_admin and not new_has_admin and user.is_active:
+                # This change would strip ADMIN from an active admin — allowed
+                # only if at least one other active ADMIN remains.
+                if await self._active_admin_count_excluding(user.id) == 0:
+                    raise AdminUserManagementError(
+                        "Cannot remove ADMIN from the last active ADMIN user."
+                    )
 
-        user_has_admin = RoleName.ADMIN.value in self._role_names(user)
-        new_has_admin = RoleName.ADMIN in unique_roles
-        if user_has_admin and not new_has_admin and user.is_active:
-            # This change would strip ADMIN from an active admin — allowed only
-            # if at least one other active ADMIN remains.
-            if await self._active_admin_count_excluding(user.id) == 0:
-                raise AdminUserManagementError(
-                    "Cannot remove ADMIN from the last active ADMIN user."
+            # Resolve target Role rows (must already exist in the vocabulary).
+            role_rows = {}
+            for role_name in unique_roles:
+                stmt = select(Role).where(Role.name == role_name)
+                role_row = (await self.db.execute(stmt)).scalar_one_or_none()
+                if role_row is None:
+                    raise AdminUserManagementError(
+                        f"Role '{role_name.value}' is not configured. Seed roles first."
+                    )
+                role_rows[role_name] = role_row
+
+            # Atomic replacement through the ORM relationship (cascade delete-
+            # orphan). We flush the collection clear FIRST so the old
+            # assignments are deleted before the new rows are inserted —
+            # required because the (user_id, role_id) unique constraint would
+            # otherwise collide on the insert of a re-assigned role. Both steps
+            # run in the same transaction.
+            user.roles.clear()
+            await self.db.flush()
+            for role_name in unique_roles:
+                user.roles.append(
+                    UserRole(user_id=user.id, role_id=role_rows[role_name].id)
                 )
 
-        # Resolve target Role rows (must already exist in the seeded vocabulary).
-        role_rows = {}
-        for role_name in unique_roles:
-            stmt = select(Role).where(Role.name == role_name)
-            role_row = (await self.db.execute(stmt)).scalar_one_or_none()
-            if role_row is None:
-                raise AdminUserManagementError(
-                    f"Role '{role_name.value}' is not configured. Seed roles first."
-                )
-            role_rows[role_name] = role_row
-
-        # Atomic replacement through the ORM relationship (cascade delete-
-        # orphan). We flush the collection clear FIRST so the old assignments
-        # are deleted before the new rows are inserted — required because the
-        # (user_id, role_id) unique constraint would otherwise collide on the
-        # insert of a re-assigned role. Both steps run in the same transaction.
-        user.roles.clear()
-        await self.db.flush()
-        for role_name in unique_roles:
-            user.roles.append(
-                UserRole(user_id=user.id, role_id=role_rows[role_name].id)
-            )
-
-        user.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
-        await self.db.commit()
-        return await self._load_user_with_roles(user.id)
+            user.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
+            await self.db.commit()
+            return await self._load_user_with_roles(user.id)
