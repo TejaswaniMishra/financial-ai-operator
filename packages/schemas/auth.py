@@ -49,6 +49,19 @@ class CurrentUserResponse(BaseModel):
         default_factory=list,
         description="Permission codes resolved from the user's database roles",
     )
+    must_change_password: bool = Field(
+        default=False,
+        description="Backend-controlled flag: an admin password reset is pending and the user must change their password before accessing protected functionality",
+    )
+
+class ChangePasswordRequest(BaseModel):
+    """Self-service password change. The target is ALWAYS the authenticated
+    user — no user_id is accepted or consulted."""
+    current_password: str = Field(..., description="The user's current password")
+    new_password: str = Field(..., description="The new password (must satisfy the centralized password policy)")
+
+class ChangePasswordResponse(BaseModel):
+    message: str = Field(..., description="Success message")
 
 class LogoutResponse(BaseModel):
     message: str = Field(..., description="Success message")

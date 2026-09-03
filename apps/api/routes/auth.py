@@ -6,14 +6,20 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
 from apps.api.dependencies import get_db_session
-from apps.api.auth import get_current_user, security
+from apps.api.auth import get_current_user, get_current_user_allow_pending, security
 from database.models.identity import User, UserCredential, Role, RoleName, UserRole
-from packages.schemas.auth import SignupRequest, LoginRequest, TokenResponse, CurrentUserResponse, LogoutResponse
+from packages.schemas.auth import SignupRequest, LoginRequest, TokenResponse, CurrentUserResponse, LogoutResponse, ChangePasswordRequest, ChangePasswordResponse
 from packages.schemas.identity import UserResponse
 from packages.utils.crypto import hash_password, verify_password
 from packages.utils.password_policy import validate_password
 from packages.utils.jwt import create_access_token, decode_access_token
 from services.auth.token_revocation import revoke_token
+from services.auth.password_management import (
+    PasswordPolicyError,
+    SamePasswordError,
+    WrongCurrentPasswordError,
+    change_own_password,
+)
 from config.settings import get_settings
 
 router = APIRouter(
@@ -170,7 +176,10 @@ async def login(
         raise generic_error
         
     settings = get_settings()
-    token = create_access_token(user_id=user.id)
+    token = create_access_token(
+        user_id=user.id,
+        credential_version=user.credential_version or 1,
+    )
     
     return TokenResponse(
         access_token=token,
@@ -186,7 +195,7 @@ async def login(
     summary="Get current user"
 )
 async def get_me(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user_allow_pending),
 ):
     """
     Returns the currently authenticated user's safe identity profile plus the
@@ -195,6 +204,9 @@ async def get_me(
     The response is constructed explicitly so only safe fields are exposed:
     no password hashes, credentials, JWT internals, or authorization
     diagnostics. Roles are DB-authoritative; JWT carries identity only.
+    Uses the pending-tolerant dependency so a user flagged
+    `must_change_password` (admin reset) can still discover their state and
+    reach the forced password-change flow.
     """
     from packages.rbac.matrix import permissions_for_user
 
@@ -209,6 +221,7 @@ async def get_me(
         is_active=current_user.is_active,
         roles=roles,
         permissions=permissions,
+        must_change_password=bool(current_user.must_change_password),
     )
 
 
@@ -245,3 +258,49 @@ async def logout(
     await revoke_token(db, jti, current_user.id, expires_at)
     
     return LogoutResponse(message="Successfully logged out")
+
+
+@router.post(
+    "/change-password",
+    response_model=ChangePasswordResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Change the authenticated user's password"
+)
+async def change_password(
+    request: ChangePasswordRequest,
+    current_user: User = Depends(get_current_user_allow_pending),
+    db: AsyncSession = Depends(get_db_session),
+):
+    """
+    Changes the AUTHENTICATED user's password.
+
+    - current_password is verified against the stored Argon2id hash
+    - the centralized password policy applies to new_password
+    - the target is always the authenticated user (no user_id accepted)
+    - success increments the user's credential version, invalidating every
+      existing session/token for this user at once
+    - never returns or logs passwords/hashes
+    """
+    try:
+        await change_own_password(
+            db,
+            current_user,
+            request.current_password,
+            request.new_password,
+        )
+    except WrongCurrentPasswordError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)
+        )
+    except SamePasswordError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)
+        )
+    except PasswordPolicyError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc)
+        )
+
+    return ChangePasswordResponse(
+        message="Password changed successfully. All existing sessions have been signed out."
+    )
