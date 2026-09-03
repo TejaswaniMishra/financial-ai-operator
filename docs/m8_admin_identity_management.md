@@ -85,6 +85,16 @@ Admin identity management does not touch action-request approval/rejection,
 execution gates, the Policy Engine, or LLM/investigation behavior. M8.1–M8.3
 behavior is preserved (the full backend suite stays green).
 
+## BFF CSRF protection
+
+All mutating admin calls (activate, deactivate, role PUT) go through the
+Next.js BFF, which enforces the project-wide CSRF rule documented in
+`m8_authentication_frontend.md`: `POST`/`PUT`/`PATCH`/`DELETE` requests must
+carry a matching `Origin` (or `Referer`) header, or the BFF rejects them.
+Browser requests include this automatically; non-browser clients and tests
+must send `Origin: http://localhost:3000` (dev) explicitly. This protection
+is security behavior and must not be weakened.
+
 ## Frontend behavior
 
 - Navigation: the sidebar shows **Administration → User Management** only
