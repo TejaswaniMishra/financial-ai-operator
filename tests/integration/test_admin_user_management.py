@@ -6,6 +6,7 @@ the final-active-ADMIN safety rule, immediate DB-backed authorization
 effects, and privilege-escalation attempts.
 """
 
+import asyncio
 import uuid
 from datetime import datetime, timedelta, timezone
 
@@ -18,7 +19,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from config.settings import get_settings
-from database.models.identity import RoleName, User, UserRole
+from database.models.identity import Role, RoleName, User, UserRole
 
 settings = get_settings()
 
@@ -496,6 +497,73 @@ async def test_forged_jwt_role_claims_cannot_elevate(
     assert res.status_code == 403
 
 
+async def _count_active_admins(db_session: AsyncSession) -> int:
+    stmt = (
+        select(User.id)
+        .join(UserRole, UserRole.user_id == User.id)
+        .join(Role, Role.id == UserRole.role_id)
+        .where(User.is_active.is_(True), Role.name == RoleName.ADMIN)
+    )
+    return len((await db_session.execute(stmt)).scalars().all())
+
+
+# ─── Concurrency: last-active-ADMIN invariant under racing requests ────────
+
+@pytest.mark.asyncio
+async def test_concurrent_role_demotion_never_loses_last_admin(
+    async_client: AsyncClient, db_session: AsyncSession, make_role_user
+):
+    """Two active admins demote each other concurrently: exactly one may
+    succeed — the other must be denied and at least one active ADMIN kept."""
+    admin_a, headers_a = await make_role_user(RoleName.ADMIN, "conc_demote_a@example.com")
+    admin_b, headers_b = await make_role_user(RoleName.ADMIN, "conc_demote_b@example.com")
+
+    r1, r2 = await asyncio.gather(
+        async_client.put(
+            f"{ADMIN_USERS_URL}/{admin_b.id}/roles",
+            json={"roles": ["OPERATOR"]},
+            headers=headers_a,
+        ),
+        async_client.put(
+            f"{ADMIN_USERS_URL}/{admin_a.id}/roles",
+            json={"roles": ["OPERATOR"]},
+            headers=headers_b,
+        ),
+    )
+
+    statuses = {r1.status_code, r2.status_code}
+    assert 200 in statuses  # one demotion succeeds
+    # the other is denied (403 after losing MANAGE_ROLES, or 409 last-admin)
+    assert statuses & {401, 403, 409}
+    # System is never left without an active ADMIN
+    assert await _count_active_admins(db_session) >= 1
+
+
+@pytest.mark.asyncio
+async def test_concurrent_deactivation_never_loses_last_admin(
+    async_client: AsyncClient, db_session: AsyncSession, make_role_user
+):
+    """Two active admins deactivate each other concurrently: exactly one may
+    succeed — the other must be denied and at least one active ADMIN kept."""
+    admin_a, headers_a = await make_role_user(RoleName.ADMIN, "conc_deact_a@example.com")
+    admin_b, headers_b = await make_role_user(RoleName.ADMIN, "conc_deact_b@example.com")
+
+    r1, r2 = await asyncio.gather(
+        async_client.post(
+            f"{ADMIN_USERS_URL}/{admin_b.id}/deactivate", headers=headers_a
+        ),
+        async_client.post(
+            f"{ADMIN_USERS_URL}/{admin_a.id}/deactivate", headers=headers_b
+        ),
+    )
+
+    statuses = {r1.status_code, r2.status_code}
+    assert 200 in statuses  # one deactivation succeeds
+    # the other is denied (401 once inactive, or 403/409)
+    assert statuses & {401, 403, 409}
+    assert await _count_active_admins(db_session) == 1
+
+
 # ─── Service-level guarantees ──────────────────────────────────────────────
 
 @pytest.mark.asyncio
@@ -521,3 +589,7 @@ async def test_service_rejects_unknown_role_token(
 
     with pytest.raises(AdminUserManagementError):
         await service.replace_user_roles(target.id, ["SUPERUSER"], actor=admin)  # type: ignore[list-item]
+
+    # Failed operation rolls back — no partial mutation, roles unchanged
+    unchanged = await service.get_user(target.id)
+    assert [ur.role.name.value for ur in unchanged.roles if ur.role] == ["OPERATOR"]
