@@ -27,6 +27,73 @@ export interface CurrentUser {
   is_active: boolean;
   roles: string[];
   permissions: string[];
+  /** Backend-controlled: an admin password reset is pending and the user
+   * must change their password before protected functionality is allowed. */
+  must_change_password: boolean;
+}
+
+// ─── Password management (M8.5) ────────────────────────────────────────────
+
+/** POST /api/v1/auth/change-password (self-service; target is always the
+ * authenticated user — no user_id is accepted). */
+export interface ChangePasswordRequest {
+  current_password: string;
+  new_password: string;
+}
+
+export interface ChangePasswordResult {
+  message: string;
+}
+
+async function authErrorMessage(res: Response, fallback: string): Promise<string> {
+  const data = await res.json().catch(() => null);
+  if (typeof data?.detail === "string" && data.detail) {
+    return data.detail;
+  }
+  return fallback;
+}
+
+/**
+ * Changes the authenticated user's password through the BFF. On success the
+ * backend bumps the credential version, so the current session is invalid —
+ * the caller must obtain a fresh session via the login flow.
+ */
+export async function changePassword(payload: ChangePasswordRequest): Promise<ChangePasswordResult> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/auth/change-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    throw new Error(
+      await authErrorMessage(res, "Password change failed. Please try again.")
+    );
+  }
+  return res.json();
+}
+
+/**
+ * ADMIN-only (MANAGE_USERS): generate a one-time temporary password for a
+ * user. The temporary credential is returned exactly once and shown only to
+ * the administrator; the target must change it before accessing the platform.
+ */
+export interface AdminPasswordResetResult {
+  message: string;
+  temporary_password: string;
+  must_change_password: boolean;
+}
+
+export async function adminResetPassword(id: string): Promise<AdminPasswordResetResult> {
+  const res = await fetchAuthenticated(
+    `${bffBase()}/api/v1/admin/users/${id}/password-reset`,
+    { method: "POST" }
+  );
+  if (!res.ok) {
+    throw new Error(
+      await authErrorMessage(res, "Password reset failed. Please try again.")
+    );
+  }
+  return res.json();
 }
 
 // ─── API Base resolution ────────────────────────────────────────────────────

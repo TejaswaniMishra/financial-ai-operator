@@ -53,6 +53,9 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
     permissions: Array.isArray(data.permissions)
       ? data.permissions.filter((p): p is string => typeof p === "string")
       : [],
+    // Backend-controlled flag: an admin password reset is pending and the
+    // user must choose a new password before accessing the platform.
+    must_change_password: data.must_change_password === true,
   };
 
   return NextResponse.json(safeUser, { status: 200 });
