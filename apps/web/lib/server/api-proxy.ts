@@ -22,6 +22,12 @@ const BACKEND_URL =
  * Validates that the Origin/Referer header matches the expected host for
  * mutating requests (POST, PUT, PATCH, DELETE). Returns false if the
  * request appears cross-origin.
+ *
+ * Security note: In development (localhost), we compare only the *hostname*
+ * (not the port) because the Next.js dev server may bind to a different port
+ * than the browser's current address (e.g. fallback from :3000 to :3001).
+ * All localhost ports are equally trusted in local dev. In production, the
+ * app runs on a single origin and the full host comparison is used.
  */
 export function checkCSRF(req: NextRequest): boolean {
   const method = req.method.toUpperCase();
@@ -38,14 +44,29 @@ export function checkCSRF(req: NextRequest): boolean {
     return false;
   }
 
+  // Extract just the hostname for comparison.
+  // In production host === "yourdomain.com" so this is still an exact match.
+  // In development host may be "localhost:3000" or "localhost:3001" depending
+  // on port availability, so we compare only the hostname part.
+  const serverHostname = host.split(":")[0];
+  const isLocalhost = serverHostname === "localhost" || serverHostname === "127.0.0.1";
+
   try {
     if (origin) {
-      const originHost = new URL(origin).host;
-      return originHost === host;
+      const originUrl = new URL(origin);
+      if (isLocalhost) {
+        // Dev: match hostname only (ignore port)
+        return originUrl.hostname === serverHostname;
+      }
+      // Production: match full host (hostname + port if non-standard)
+      return originUrl.host === host;
     }
     if (referer) {
-      const refererHost = new URL(referer).host;
-      return refererHost === host;
+      const refererUrl = new URL(referer);
+      if (isLocalhost) {
+        return refererUrl.hostname === serverHostname;
+      }
+      return refererUrl.host === host;
     }
   } catch {
     return false;
