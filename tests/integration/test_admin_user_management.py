@@ -487,6 +487,9 @@ async def test_forged_jwt_role_claims_cannot_elevate(
         "iss": settings.JWT_ISSUER,
         "aud": settings.JWT_AUDIENCE,
         "jti": str(uuid.uuid4()),
+        # A forged role/permission claim rides on a token whose credential
+        # version is valid — authorization must STILL come from the DB.
+        "cver": operator.credential_version,
         "roles": ["ADMIN"],
         "permissions": ["MANAGE_USERS", "MANAGE_ROLES"],
     }

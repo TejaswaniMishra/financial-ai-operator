@@ -105,7 +105,7 @@ async def load_user_with_roles(db_session: AsyncSession, user_id: str) -> User:
     return (await db_session.execute(stmt)).scalar_one()
 
 
-def signed_token_with_claims(user_id: str, extra_claims: dict) -> str:
+def signed_token_with_claims(user_id: str, extra_claims: dict, credential_version: int = 1) -> str:
     now = datetime.now(timezone.utc)
     payload = {
         "sub": user_id,
@@ -114,6 +114,7 @@ def signed_token_with_claims(user_id: str, extra_claims: dict) -> str:
         "iss": settings.JWT_ISSUER,
         "aud": settings.JWT_AUDIENCE,
         "jti": str(uuid.uuid4()),
+        "cver": credential_version,
         **extra_claims,
     }
     return jwt.encode(payload, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
