@@ -32,6 +32,7 @@ class Permission(str, enum.Enum):
     # Administrative capabilities
     MANAGE_USERS = "MANAGE_USERS"
     MANAGE_ROLES = "MANAGE_ROLES"
+    VIEW_AUDIT_LOGS = "VIEW_AUDIT_LOGS"
 
 
 ALL_PERMISSIONS = frozenset(Permission)

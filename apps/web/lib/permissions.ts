@@ -19,6 +19,7 @@ export const PERMISSIONS = {
   EXECUTE_ACTION: "EXECUTE_ACTION",
   MANAGE_USERS: "MANAGE_USERS",
   MANAGE_ROLES: "MANAGE_ROLES",
+  VIEW_AUDIT_LOGS: "VIEW_AUDIT_LOGS",
 } as const;
 
 export type PermissionCode = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

@@ -133,15 +133,31 @@ export function Sidebar() {
                 onClick={() => setMobileOpen(false)}
                 className={cn(
                   "flex items-center px-3 py-2.5 rounded-md transition-colors group",
-                  pathname?.startsWith("/admin")
+                  pathname === "/admin" || pathname?.startsWith("/admin/users")
                     ? "bg-sidebar-active text-sidebar-activeForeground font-medium"
                     : "text-sidebar-muted hover:bg-sidebar-muted/10 hover:text-sidebar-foreground"
                 )}
                 title={collapsed ? "User Management" : undefined}
               >
-                <ShieldCheck className={cn("w-4 h-4 shrink-0", pathname?.startsWith("/admin") ? "text-sidebar-activeForeground" : "text-sidebar-muted group-hover:text-sidebar-foreground")} />
+                <ShieldCheck className={cn("w-4 h-4 shrink-0", pathname === "/admin" || pathname?.startsWith("/admin/users") ? "text-sidebar-activeForeground" : "text-sidebar-muted group-hover:text-sidebar-foreground")} />
                 {!collapsed && (
                   <span className="ml-3 text-sm flex-1">User Management</span>
+                )}
+              </Link>
+              <Link
+                href="/admin/security-events"
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center px-3 py-2.5 rounded-md transition-colors group mt-1.5",
+                  pathname?.startsWith("/admin/security-events")
+                    ? "bg-sidebar-active text-sidebar-activeForeground font-medium"
+                    : "text-sidebar-muted hover:bg-sidebar-muted/10 hover:text-sidebar-foreground"
+                )}
+                title={collapsed ? "Security Events" : undefined}
+              >
+                <ShieldCheck className={cn("w-4 h-4 shrink-0", pathname?.startsWith("/admin/security-events") ? "text-sidebar-activeForeground" : "text-sidebar-muted group-hover:text-sidebar-foreground")} />
+                {!collapsed && (
+                  <span className="ml-3 text-sm flex-1">Security Events</span>
                 )}
               </Link>
             </div>

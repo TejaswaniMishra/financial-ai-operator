@@ -219,12 +219,24 @@ export async function logout(): Promise<void> {
 // MANAGE_USERS / MANAGE_ROLES. Safe identity fields only.
 
 export interface AdminUser {
-  id: string;
-  email: string;
-  display_name: string;
-  is_active: boolean;
-  roles: string[];
-  created_at: string;
+  id: string
+  email: string
+  display_name: string
+  is_active: boolean
+  roles: string[]
+  created_at: string
+}
+
+export interface SecurityEvent {
+  id: string
+  event_type: string
+  user_id: string | null
+  actor_id: string | null
+  ip_address: string | null
+  user_agent: string | null
+  is_success: boolean
+  metadata_payload: any | null
+  created_at: string
 }
 
 export interface AdminUserDetail extends AdminUser {
@@ -263,6 +275,16 @@ export async function deactivateAdminUser(id: string): Promise<AdminUserDetail> 
   const res = await fetchAuthenticated(`${bffBase()}/api/v1/admin/users/${id}/deactivate`, {
     method: "POST",
   });
+  if (!res.ok) throw new Error(await adminErrorMessage(res));
+  return res.json();
+}
+
+export async function fetchSecurityEvents(eventType?: string): Promise<SecurityEvent[]> {
+  const url = new URL(`${bffBase()}/api/v1/admin/security-events`);
+  if (eventType) {
+    url.searchParams.set("event_type", eventType);
+  }
+  const res = await fetchAuthenticated(url.toString());
   if (!res.ok) throw new Error(await adminErrorMessage(res));
   return res.json();
 }

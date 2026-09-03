@@ -107,7 +107,7 @@ class AdminUserService:
 
     # ── Activation / deactivation ───────────────────────────────────────────
 
-    async def set_user_active(self, user_id: str, is_active: bool, actor: User) -> User:
+    async def set_user_active(self, user_id: str, is_active: bool, actor: User, request: "Optional[Request]" = None) -> User:
         async with _admin_mutation_lock():
             user = await self._load_user_with_roles(user_id)
 
@@ -129,18 +129,27 @@ class AdminUserService:
             user.is_active = is_active
             user.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
             await self.db.commit()
+            
+            # Note: We must import security_events locally or globally
+            from services.auth import security_events
+            if is_active:
+                await security_events.account_activated(self.db, actor.id, user.id, request)
+            else:
+                await security_events.account_deactivated(self.db, actor.id, user.id, request)
+            await self.db.commit()
+            
             return await self._load_user_with_roles(user.id)
 
-    async def activate_user(self, user_id: str, actor: User) -> User:
-        return await self.set_user_active(user_id, True, actor)
+    async def activate_user(self, user_id: str, actor: User, request: "Optional[Request]" = None) -> User:
+        return await self.set_user_active(user_id, True, actor, request)
 
-    async def deactivate_user(self, user_id: str, actor: User) -> User:
-        return await self.set_user_active(user_id, False, actor)
+    async def deactivate_user(self, user_id: str, actor: User, request: "Optional[Request]" = None) -> User:
+        return await self.set_user_active(user_id, False, actor, request)
 
     # ── Role assignment ─────────────────────────────────────────────────────
 
     async def replace_user_roles(
-        self, user_id: str, roles: List[RoleName], actor: User
+        self, user_id: str, roles: List[RoleName], actor: User, request: "Optional[Request]" = None
     ) -> User:
         async with _admin_mutation_lock():
             user = await self._load_user_with_roles(user_id)
@@ -200,4 +209,11 @@ class AdminUserService:
 
             user.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
             await self.db.commit()
+            
+            from services.auth import security_events
+            await security_events.role_changed(
+                self.db, actor.id, user.id, [r.value for r in unique_roles], request
+            )
+            await self.db.commit()
+            
             return await self._load_user_with_roles(user.id)

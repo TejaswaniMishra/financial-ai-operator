@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
@@ -14,6 +14,7 @@ from packages.utils.crypto import hash_password, verify_password
 from packages.utils.password_policy import validate_password
 from packages.utils.jwt import create_access_token, decode_access_token
 from services.auth.token_revocation import revoke_token
+from services.auth import security_events
 from services.auth.password_management import (
     PasswordPolicyError,
     SamePasswordError,
@@ -133,7 +134,8 @@ async def signup(
     summary="Login to get access token"
 )
 async def login(
-    request: LoginRequest,
+    payload: LoginRequest,
+    req: Request,
     db: AsyncSession = Depends(get_db_session)
 ):
     """
@@ -148,7 +150,7 @@ async def login(
         headers={"WWW-Authenticate": "Bearer"},
     )
     
-    normalized_email = request.normalize_email()
+    normalized_email = payload.normalize_email()
     
     # Lookup User
     stmt = select(User).where(User.email == normalized_email)
@@ -157,6 +159,8 @@ async def login(
     
     # Generic error if user missing or inactive
     if not user or not user.is_active:
+        await security_events.login_failure(db, req, email=normalized_email, reason="user_missing_or_inactive")
+        await db.commit()
         raise generic_error
         
     # Lookup Credential
@@ -165,14 +169,22 @@ async def login(
     cred = result_cred.scalar_one_or_none()
     
     if not cred:
+        await security_events.login_failure(db, req, email=normalized_email, reason="credential_missing")
+        await db.commit()
         raise generic_error
         
     # Verify Password
     try:
-        is_valid = verify_password(request.password, cred.password_hash)
+        is_valid = verify_password(payload.password, cred.password_hash)
         if not is_valid:
+            await security_events.login_failure(db, req, email=normalized_email, reason="invalid_password")
+            await db.commit()
             raise generic_error
-    except Exception:
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise
+        await security_events.login_failure(db, req, email=normalized_email, reason="verification_error")
+        await db.commit()
         raise generic_error
         
     settings = get_settings()
@@ -180,6 +192,9 @@ async def login(
         user_id=user.id,
         credential_version=user.credential_version or 1,
     )
+    
+    await security_events.login_success(db, user.id, req)
+    await db.commit()
     
     return TokenResponse(
         access_token=token,
@@ -232,6 +247,7 @@ async def get_me(
     summary="Logout current user"
 )
 async def logout(
+    req: Request,
     current_user: User = Depends(get_current_user),
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: AsyncSession = Depends(get_db_session)
@@ -257,6 +273,9 @@ async def logout(
     
     await revoke_token(db, jti, current_user.id, expires_at)
     
+    await security_events.logout(db, current_user.id, req)
+    await db.commit()
+    
     return LogoutResponse(message="Successfully logged out")
 
 
@@ -268,6 +287,7 @@ async def logout(
 )
 async def change_password(
     request: ChangePasswordRequest,
+    req: Request,
     current_user: User = Depends(get_current_user_allow_pending),
     db: AsyncSession = Depends(get_db_session),
 ):
@@ -287,6 +307,7 @@ async def change_password(
             current_user,
             request.current_password,
             request.new_password,
+            request=req
         )
     except WrongCurrentPasswordError as exc:
         raise HTTPException(

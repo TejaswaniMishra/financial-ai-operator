@@ -18,9 +18,11 @@ import asyncio
 import secrets
 import weakref
 from datetime import datetime, timezone
+from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from fastapi import Request
 
 from database.models.identity import User, UserCredential
 from packages.utils.crypto import hash_password, verify_password
@@ -84,6 +86,7 @@ async def change_own_password(
     user: User,
     current_password: str,
     new_password: str,
+    request: Optional[Request] = None,
 ) -> None:
     """Change the AUTHENTICATED user's password.
 
@@ -109,7 +112,7 @@ async def change_own_password(
         cred = await _load_credential(db, user.id)
 
         if not verify_password(current_password, cred.password_hash):
-            security_events.password_change_failed(user.id, "wrong_current_password")
+            await security_events.password_change_failed(db, user.id, "wrong_current_password")
             raise WrongCurrentPasswordError("Current password is incorrect.")
 
         # New password must not equal the current one. Verifying against the
@@ -132,9 +135,9 @@ async def change_own_password(
 
         await db.commit()
 
-    security_events.password_changed(user.id)
+    await security_events.password_changed(db, user.id)
     if was_forced:
-        security_events.forced_password_change_completed(user.id)
+        await security_events.forced_password_change_completed(db, user.id)
 
 
 def generate_temporary_password() -> str:
@@ -151,6 +154,7 @@ async def admin_reset_password(
     db: AsyncSession,
     actor: User,
     target_user_id: str,
+    request: Optional[Request] = None,
 ) -> str:
     """ADMIN-initiated password reset for another user (MANAGE_USERS).
 
@@ -183,5 +187,5 @@ async def admin_reset_password(
 
         await db.commit()
 
-    security_events.admin_password_reset(actor.id, target.id)
+    await security_events.admin_password_reset(db, actor.id, target.id)
     return temporary_password

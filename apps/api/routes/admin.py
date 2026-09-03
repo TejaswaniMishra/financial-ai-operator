@@ -10,7 +10,7 @@ and JWT claims are never consulted for privileges.
 
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 
 from apps.api.auth import get_current_user
 from apps.api.authorization import require_permission
@@ -108,13 +108,14 @@ async def get_user(
 )
 async def activate_user(
     user_id: str,
+    req: Request,
     actor: User = Depends(require_permission(Permission.MANAGE_USERS)),
     db=Depends(get_db_session),
 ):
     """Activate a user. Idempotent: activating an active user is a no-op."""
     service = AdminUserService(db)
     try:
-        user = await service.activate_user(user_id, actor)
+        user = await service.activate_user(user_id, actor, request=req)
     except (AdminUserNotFoundError, AdminUserManagementError) as exc:
         raise _map_service_errors(exc)
     return _to_detail(user)
@@ -127,6 +128,7 @@ async def activate_user(
 )
 async def deactivate_user(
     user_id: str,
+    req: Request,
     actor: User = Depends(require_permission(Permission.MANAGE_USERS)),
     db=Depends(get_db_session),
 ):
@@ -134,7 +136,7 @@ async def deactivate_user(
     leaves the system without an active ADMIN."""
     service = AdminUserService(db)
     try:
-        user = await service.deactivate_user(user_id, actor)
+        user = await service.deactivate_user(user_id, actor, request=req)
     except (AdminUserNotFoundError, AdminUserManagementError) as exc:
         raise _map_service_errors(exc)
     return _to_detail(user)
@@ -148,6 +150,7 @@ async def deactivate_user(
 async def replace_user_roles(
     user_id: str,
     payload: UserRolesUpdateRequest,
+    req: Request,
     actor: User = Depends(require_permission(Permission.MANAGE_ROLES)),
     db=Depends(get_db_session),
 ):
@@ -155,7 +158,7 @@ async def replace_user_roles(
     the final active ADMIN lose the ADMIN role."""
     service = AdminUserService(db)
     try:
-        user = await service.replace_user_roles(user_id, payload.roles, actor)
+        user = await service.replace_user_roles(user_id, payload.roles, actor, request=req)
     except (AdminUserNotFoundError, AdminUserManagementError) as exc:
         raise _map_service_errors(exc)
     return _to_detail(user)
@@ -168,6 +171,7 @@ async def replace_user_roles(
 )
 async def reset_user_password(
     user_id: str,
+    req: Request,
     actor: User = Depends(require_permission(Permission.MANAGE_USERS)),
     db=Depends(get_db_session),
 ):
@@ -181,7 +185,7 @@ async def reset_user_password(
     returned again, or logged.
     """
     try:
-        temporary_password = await admin_reset_password(db, actor, user_id)
+        temporary_password = await admin_reset_password(db, actor, user_id, request=req)
     except SelfResetNotAllowedError as exc:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)

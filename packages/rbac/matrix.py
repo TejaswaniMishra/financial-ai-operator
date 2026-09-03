@@ -31,6 +31,7 @@ FINANCE_MANAGER_PERMISSIONS = OPERATOR_PERMISSIONS | frozenset({
 ADMIN_PERMISSIONS = FINANCE_MANAGER_PERMISSIONS | frozenset({
     Permission.MANAGE_USERS,
     Permission.MANAGE_ROLES,
+    Permission.VIEW_AUDIT_LOGS,
 })
 
 ROLE_PERMISSIONS: dict[RoleName, frozenset[Permission]] = {
