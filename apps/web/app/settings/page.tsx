@@ -2,9 +2,19 @@
 
 import React, { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { Monitor, Moon, Sun, User, Shield, Info, Check } from "lucide-react";
+import {
+  Monitor,
+  Moon,
+  Sun,
+  User,
+  Shield,
+  Info,
+  Check,
+  KeyRound,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/auth-provider";
+import { PasswordChangeForm } from "@/components/auth/password-change-form";
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
@@ -145,7 +155,27 @@ export default function SettingsPage() {
           </div>
         </section>
 
-        {/* Section 4: Security / Authentication */}
+        {/* Section 4: Change password */}
+        <section className="space-y-4">
+          <h2 className="text-section-heading flex items-center gap-2 border-b border-border pb-2">
+            <KeyRound className="w-5 h-5 text-muted-foreground" />
+            Change Password
+          </h2>
+          <div className="bg-card border border-border rounded-xl p-5 shadow-sm max-w-xl">
+            <div className="mb-5">
+              <h3 className="text-sm font-medium text-foreground">
+                Update your password
+              </h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                Enter your current password and a new one. After a successful
+                change, all existing sessions are signed out for security.
+              </p>
+            </div>
+            <PasswordChangeForm mode="self" />
+          </div>
+        </section>
+
+        {/* Section 5: Security / Authentication */}
         <section className="space-y-4">
           <h2 className="text-section-heading flex items-center gap-2 border-b border-border pb-2">
             <Shield className="w-5 h-5 text-muted-foreground" />
