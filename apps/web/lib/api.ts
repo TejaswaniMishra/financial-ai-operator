@@ -147,6 +147,60 @@ export async function adminResetPassword(id: string): Promise<AdminPasswordReset
   return res.json();
 }
 
+// ─── Notifications ───────────────────────────────────────────────────────────
+
+/** GET /api/v1/notifications — one item of the authenticated user's feed. */
+export interface NotificationItem {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  is_read: boolean;
+  target_type: string | null;
+  target_id: string | null;
+  created_at: string;
+}
+
+export interface NotificationListResponse {
+  items: NotificationItem[];
+  total: number;
+  unread_count: number;
+}
+
+export async function fetchNotifications(
+  limit = 30,
+  offset = 0
+): Promise<NotificationListResponse> {
+  const url = buildApiUrl("/api/v1/notifications", { limit, offset });
+  const res = await fetchAuthenticated(url);
+  if (!res.ok) throw new Error(`Failed to fetch notifications: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchUnreadCount(): Promise<number> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/notifications/unread-count`);
+  if (!res.ok) throw new Error(`Failed to fetch unread count: ${res.statusText}`);
+  const data = await res.json();
+  return data.unread_count;
+}
+
+export async function markNotificationRead(id: string): Promise<void> {
+  const res = await fetchAuthenticated(
+    `${bffBase()}/api/v1/notifications/${id}/read`,
+    { method: "POST" }
+  );
+  if (!res.ok) throw new Error(`Failed to mark notification read: ${res.statusText}`);
+}
+
+export async function markAllNotificationsRead(): Promise<number> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/notifications/read-all`, {
+    method: "POST",
+  });
+  if (!res.ok) throw new Error(`Failed to mark notifications read: ${res.statusText}`);
+  const data = await res.json();
+  return data.updated;
+}
+
 // ─── API Base resolution ────────────────────────────────────────────────────
 //
 // IMPORTANT: API_BASE strategy:
