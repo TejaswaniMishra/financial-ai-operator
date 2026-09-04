@@ -34,7 +34,7 @@ export default function InvestigationsPage() {
   const totalInvestigations = investigations.length;
   const runningCount = investigations.filter(inv => inv.status === "PENDING").length;
   const completedValidCount = investigations.filter(inv => inv.status === "COMPLETED").length;
-  const failedInvalidCount = investigations.filter(inv => inv.status === "FAILED").length;
+  const failedInvalidCount = investigations.filter(inv => inv.status === "FAILED" || inv.status === "UNAVAILABLE").length;
 
   const uniqueStatuses = useMemo(() => Array.from(new Set(investigations.map(i => i.status))), [investigations]);
 
