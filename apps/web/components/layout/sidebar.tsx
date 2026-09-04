@@ -95,31 +95,19 @@ export function Sidebar() {
             return (
               <Link
                 key={item.name}
-                href={item.isComingSoon ? "#" : item.href}
+                href={item.href}
                 className={cn(
                   "flex items-center px-3 py-2.5 rounded-md transition-colors group relative",
                   isActive
                     ? "bg-sidebar-active text-sidebar-activeForeground font-medium"
-                    : "text-sidebar-muted hover:bg-sidebar-muted/10 hover:text-sidebar-foreground",
-                  item.isComingSoon && "opacity-75 cursor-default hover:bg-transparent"
+                    : "text-sidebar-muted hover:bg-sidebar-muted/10 hover:text-sidebar-foreground"
                 )}
                 title={collapsed ? item.name : undefined}
-                onClick={(e) => {
-                  if (item.isComingSoon) {
-                    e.preventDefault();
-                  } else {
-                    setMobileOpen(false);
-                  }
-                }}
+                onClick={() => setMobileOpen(false)}
               >
                 <item.icon className={cn("w-4 h-4 shrink-0", isActive ? "text-sidebar-activeForeground" : "text-sidebar-muted group-hover:text-sidebar-foreground")} />
                 {!collapsed && (
                   <span className="ml-3 text-sm flex-1">{item.name}</span>
-                )}
-                {!collapsed && item.isComingSoon && (
-                  <span className="bg-primary/20 text-primary-foreground text-[10px] px-1.5 py-0.5 rounded uppercase tracking-wider font-semibold">
-                    Soon
-                  </span>
                 )}
               </Link>
             );
