@@ -18,6 +18,7 @@ from database.models.action_execution import ActionExecution, ActionExecutionAtt
 from database.models.identity import User, Role, UserRole, RoleName, UserCredential, TokenRevocation
 from database.models.security import SecurityEvent
 from database.models.period import FinancialPeriod, PeriodCloseEvaluation
+from database.models.notification import Notification
 
 __all__ = [
     "Merchant",
@@ -53,4 +54,5 @@ __all__ = [
     "SecurityEvent",
     "FinancialPeriod",
     "PeriodCloseEvaluation",
+    "Notification",
 ]
