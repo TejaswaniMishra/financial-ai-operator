@@ -9,7 +9,7 @@ by these response models (raw provenance is stored internally for audit).
 from datetime import datetime
 from typing import Any, Optional
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from packages.schemas.enums import (
     IngestionRunRecordStatus,
@@ -107,6 +107,8 @@ class IngestionRunCreateResponse(BaseModel):
 
 class IngestionRunRecordSchema(BaseModel):
     """Row-level outcome inside a run (raw payload intentionally excluded)."""
+
+    model_config = ConfigDict(from_attributes=True)
 
     id: str
     run_id: str
