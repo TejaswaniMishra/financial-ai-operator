@@ -28,8 +28,8 @@ const navigation = [
   { name: "Investigations", href: "/investigations", icon: ShieldCheck },
   { name: "Action Requests", href: "/action-requests", icon: CheckSquare },
   { name: "Transactions", href: "/transactions", icon: Database },
+  { name: "Exceptions", href: "/exceptions", icon: FileText },
   { name: "Reports", href: "/reports", icon: BarChart3, isComingSoon: true },
-  { name: "Exceptions", href: "/exceptions", icon: FileText, isComingSoon: true },
 ];
 
 export function Sidebar() {
