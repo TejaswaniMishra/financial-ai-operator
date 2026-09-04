@@ -54,6 +54,9 @@ export default function ActionRequestDetailPage({ params }: { params: { id: stri
   const [executionsLoading, setExecutionsLoading] = useState(false);
   const [executing, setExecuting] = useState(false);
   const [executionError, setExecutionError] = useState<string | null>(null);
+  // A successful execution is terminal: the backend never executes twice, so the
+  // UI disables the CTA once one is recorded (retry stays possible after FAILED).
+  const hasSuccessfulExecution = executions.some((e) => e.status === "SUCCEEDED");
 
   const loadData = async () => {
     setLoading(true);
@@ -202,15 +205,21 @@ export default function ActionRequestDetailPage({ params }: { params: { id: stri
             {canExecute ? (
               <button
                 onClick={handleExecute}
-                disabled={executing}
-                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors shadow-sm disabled:opacity-50"
+                disabled={executing || hasSuccessfulExecution}
+                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-primary hover:bg-primary/90 rounded-md transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {executing ? (
                   <div className="w-4 h-4 mr-2 border-2 border-white/60 border-t-white rounded-full animate-spin"></div>
+                ) : hasSuccessfulExecution ? (
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
                 ) : (
                   <BrainCircuit className="w-4 h-4 mr-2" />
                 )}
-                {executing ? "Executing..." : "Execute Action"}
+                {executing
+                  ? "Executing..."
+                  : hasSuccessfulExecution
+                  ? "Executed"
+                  : "Execute Action"}
               </button>
             ) : (
               <div className="flex items-center gap-2 text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-2 rounded-md">
