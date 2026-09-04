@@ -2,7 +2,7 @@ import uuid
 import enum
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, String, Boolean, Integer, DateTime, ForeignKey, Enum, UniqueConstraint
+from sqlalchemy import Column, String, Boolean, Integer, DateTime, ForeignKey, Enum, UniqueConstraint, JSON
 from sqlalchemy.orm import relationship
 
 from database.base import Base
@@ -30,6 +30,11 @@ class User(Base):
     #   normal protected functionality until the password is changed.
     credential_version = Column(Integer, nullable=False, default=1, server_default="1")
     must_change_password = Column(Boolean, nullable=False, default=False, server_default="0")
+
+    # Account-level preferences (server-authoritative, e.g. {"theme": "dark"}).
+    # The client may read/write these only through the authenticated
+    # preferences endpoints — never via client-supplied roles or identity.
+    preferences = Column(JSON, nullable=False, default=dict)
 
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
     updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None), onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None))

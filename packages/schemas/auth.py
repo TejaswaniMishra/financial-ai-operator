@@ -1,6 +1,8 @@
-from typing import List
+from typing import Dict, List, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
+
+THEME_CHOICES = Literal["system", "light", "dark"]
 
 class SignupRequest(BaseModel):
     email: str = Field(
@@ -53,6 +55,34 @@ class CurrentUserResponse(BaseModel):
         default=False,
         description="Backend-controlled flag: an admin password reset is pending and the user must change their password before accessing protected functionality",
     )
+    preferences: Dict[str, str] = Field(
+        default_factory=dict,
+        description="Server-authoritative account preferences (e.g. theme choice). Never includes roles, identity, or secrets.",
+    )
+
+
+class UpdateProfileRequest(BaseModel):
+    """Self-service profile edit. Only safe personal fields are accepted:
+    display_name. Email ownership changes require a verified flow and roles
+    are DB-authoritative — neither is editable here."""
+    model_config = ConfigDict(extra="forbid")
+
+    display_name: str = Field(
+        ..., min_length=1, max_length=255, description="Updated display name"
+    )
+
+
+class UpdatePreferencesRequest(BaseModel):
+    """Server-persisted account preferences."""
+    model_config = ConfigDict(extra="forbid")
+
+    theme: THEME_CHOICES = Field(
+        default="system", description="Interface theme preference: system / light / dark"
+    )
+
+
+class PreferencesResponse(BaseModel):
+    theme: str = Field(default="system", description="Resolved theme preference")
 
 class ChangePasswordRequest(BaseModel):
     """Self-service password change. The target is ALWAYS the authenticated

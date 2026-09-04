@@ -8,7 +8,7 @@ from sqlalchemy.orm import selectinload
 from apps.api.dependencies import get_db_session
 from apps.api.auth import get_current_user, get_current_user_allow_pending, security
 from database.models.identity import User, UserCredential, Role, RoleName, UserRole
-from packages.schemas.auth import SignupRequest, LoginRequest, TokenResponse, CurrentUserResponse, LogoutResponse, ChangePasswordRequest, ChangePasswordResponse
+from packages.schemas.auth import SignupRequest, LoginRequest, TokenResponse, CurrentUserResponse, LogoutResponse, ChangePasswordRequest, ChangePasswordResponse, UpdateProfileRequest, UpdatePreferencesRequest, PreferencesResponse
 from packages.schemas.identity import UserResponse
 from packages.utils.crypto import hash_password, verify_password
 from packages.utils.password_policy import validate_password
@@ -203,6 +203,31 @@ async def login(
     )
 
 
+def _to_current_user_response(user: User) -> CurrentUserResponse:
+    """Build the safe /me-style response from a DB-loaded user.
+
+    Only safe fields are exposed: no password hashes, credentials, JWT
+    internals, or authorization diagnostics. Roles are DB-authoritative;
+    JWT carries identity only.
+    """
+    from packages.rbac.matrix import permissions_for_user
+
+    roles = [
+        ur.role.name.value for ur in user.roles if ur.role is not None
+    ]
+    permissions = sorted(p.value for p in permissions_for_user(user))
+    return CurrentUserResponse(
+        id=user.id,
+        email=user.email,
+        display_name=user.display_name,
+        is_active=user.is_active,
+        roles=roles,
+        permissions=permissions,
+        must_change_password=bool(user.must_change_password),
+        preferences=dict(user.preferences or {}),
+    )
+
+
 @router.get(
     "/me",
     response_model=CurrentUserResponse,
@@ -216,28 +241,75 @@ async def get_me(
     Returns the currently authenticated user's safe identity profile plus the
     authoritative roles and resolved permissions from the database.
 
-    The response is constructed explicitly so only safe fields are exposed:
-    no password hashes, credentials, JWT internals, or authorization
-    diagnostics. Roles are DB-authoritative; JWT carries identity only.
     Uses the pending-tolerant dependency so a user flagged
     `must_change_password` (admin reset) can still discover their state and
     reach the forced password-change flow.
     """
-    from packages.rbac.matrix import permissions_for_user
+    return _to_current_user_response(current_user)
 
-    roles = [
-        ur.role.name.value for ur in current_user.roles if ur.role is not None
-    ]
-    permissions = sorted(p.value for p in permissions_for_user(current_user))
-    return CurrentUserResponse(
-        id=current_user.id,
-        email=current_user.email,
-        display_name=current_user.display_name,
-        is_active=current_user.is_active,
-        roles=roles,
-        permissions=permissions,
-        must_change_password=bool(current_user.must_change_password),
-    )
+
+@router.patch(
+    "/profile",
+    response_model=CurrentUserResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Update the authenticated user's profile"
+)
+async def update_profile(
+    request: UpdateProfileRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db_session),
+):
+    """
+    Updates the AUTHENTICATED user's safe personal fields (display_name only).
+
+    - The target is always derived from the token — no user_id is accepted.
+    - Email ownership changes require a verified flow and are NOT supported.
+    - Roles/permissions are DB-authoritative and never editable here.
+    - The change is committed and observable from a separate request.
+    """
+    current_user.display_name = request.display_name.strip() or current_user.display_name
+    await db.commit()
+    await db.refresh(current_user)
+    return _to_current_user_response(current_user)
+
+
+@router.get(
+    "/preferences",
+    response_model=PreferencesResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get the authenticated user's persisted preferences"
+)
+async def get_preferences(
+    current_user: User = Depends(get_current_user),
+):
+    """Returns server-authoritative account preferences for the authenticated user."""
+    prefs = current_user.preferences or {}
+    return PreferencesResponse(theme=prefs.get("theme", "system"))
+
+
+@router.put(
+    "/preferences",
+    response_model=PreferencesResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Persist the authenticated user's preferences"
+)
+async def update_preferences(
+    request: UpdatePreferencesRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db_session),
+):
+    """
+    Persists account-level preferences server-side.
+
+    Only the authenticated user's own row is touched (no user_id accepted),
+    the value set is strictly validated, and the write is committed so it is
+    observable from a separate request/session.
+    """
+    prefs = dict(current_user.preferences or {})
+    prefs["theme"] = request.theme
+    current_user.preferences = prefs
+    await db.commit()
+    return PreferencesResponse(theme=request.theme)
 
 
 @router.post(
