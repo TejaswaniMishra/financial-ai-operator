@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional
 
-from database.dependencies import get_db_session
+from apps.api.dependencies import get_db_session
+from apps.api.auth import get_current_user
+from apps.api.authorization import require_permission
 from database.models.identity import User
-from apps.api.dependencies import get_current_user, require_permission
 from packages.rbac.permissions import Permission
 from packages.schemas.period import (
     PeriodResponse,

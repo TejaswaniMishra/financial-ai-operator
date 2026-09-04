@@ -369,7 +369,7 @@ async def close_period(db: AsyncSession, period: FinancialPeriod, actor: str) ->
     sec_event = SecurityEvent(
         id=str(uuid.uuid4()),
         event_type="PERIOD_CLOSED",
-        actor=actor,
+        actor_id=actor,
         ip_address="system",
         user_agent="system",
         metadata_payload=json.dumps({

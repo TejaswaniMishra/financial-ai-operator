@@ -15,7 +15,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
-  CheckSquare
+  CheckSquare,
+  Calendar
 } from "lucide-react";
 import { cn, userInitials } from "@/lib/utils";
 import { useAuth } from "@/components/providers/auth-provider";
@@ -29,6 +30,7 @@ const navigation = [
   { name: "Action Requests", href: "/action-requests", icon: CheckSquare },
   { name: "Transactions", href: "/transactions", icon: Database },
   { name: "Exceptions", href: "/exceptions", icon: FileText },
+  { name: "Periods", href: "/periods", icon: Calendar },
   { name: "Reports", href: "/reports", icon: BarChart3, isComingSoon: true },
 ];
 

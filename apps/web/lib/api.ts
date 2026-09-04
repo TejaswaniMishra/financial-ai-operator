@@ -937,6 +937,85 @@ export async function fetchExceptions(params?: {
   if (params?.state && params.state !== "ALL") url.searchParams.set("state", params.state);
   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
 
+
+export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+
+export interface ExceptionReadSummary {
+  id: string;
+  type: string;
+  severity: string;
+  overall_state: OverallExceptionState;
+  amount: number | null;
+  currency: string | null;
+  source_entity_type: string;
+  source_entity_id: string;
+  detected_at: string;
+  investigation_status: string | null;
+  policy_decision: string | null;
+  action_request_status: string | null;
+  execution_status: string | null;
+}
+
+export interface ExceptionListResponse {
+  items: ExceptionReadSummary[];
+  total: number;
+  page: number;
+  size: number;
+}
+
+export interface ExceptionDetail {
+  id: string;
+  type: string;
+  severity: string;
+  overall_state: OverallExceptionState;
+  amount: number | null;
+  expected_amount: number | null;
+  actual_amount: number | null;
+  difference_amount: number | null;
+  currency: string | null;
+  source_entity_type: string;
+  source_entity_id: string;
+  related_entity_type: string | null;
+  related_entity_id: string | null;
+  detected_at: string;
+  run_id: string;
+  rule_code: string;
+  
+  investigation_status: string | null;
+  investigation_id: string | null;
+  root_cause: string | null;
+  investigation_explanation: string | null;
+  
+  policy_decision: string | null;
+  policy_action: string | null;
+  policy_rule_code: string | null;
+  policy_reason: string | null;
+  
+  action_request_id: string | null;
+  action_request_status: string | null;
+  action_request_action: string | null;
+  
+  execution_id: string | null;
+  execution_status: string | null;
+  execution_error: string | null;
+}
+
+export async function fetchExceptions(params?: {
+  page?: number;
+  size?: number;
+  type?: string;
+  state?: string;
+  transaction_type?: string;
+}): Promise<ExceptionListResponse> {
+  const url = new URL(`${bffBase()}/api/v1/exceptions`);
+  if (params?.page && params?.size) {
+    url.searchParams.set("offset", String((params.page - 1) * params.size));
+    url.searchParams.set("limit", String(params.size));
+  }
+  if (params?.type && params.type !== "ALL") url.searchParams.set("type", params.type);
+  if (params?.state && params.state !== "ALL") url.searchParams.set("state", params.state);
+  if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+
   const res = await fetchAuthenticated(url.toString());
   if (!res.ok) throw new Error(`Failed to fetch exceptions: ${res.statusText}`);
   return res.json();
@@ -945,5 +1024,121 @@ export async function fetchExceptions(params?: {
 export async function fetchException(id: string): Promise<ExceptionDetail> {
   const res = await fetchAuthenticated(`${bffBase()}/api/v1/exceptions/${id}`);
   if (!res.ok) throw new Error(`Failed to fetch exception: ${res.statusText}`);
+  return res.json();
+}
+
+// ─── Financial Periods (M11) ──────────────────────────────────────────────
+
+export type PeriodStatus = "OPEN" | "CLOSING" | "CLOSED";
+export type ControlStatus = "NOT_EVALUATED" | "READY" | "BLOCKED";
+
+export interface PeriodMetrics {
+  total_payments: number;
+  total_settlements: number;
+  total_refunds: number;
+  total_fees: number;
+}
+
+export interface ControlDetail {
+  status: ControlStatus;
+  blocking_count: number;
+  message?: string;
+}
+
+export interface PeriodReadiness {
+  is_ready: boolean;
+  controls: {
+    unreconciled_transactions: ControlDetail;
+    unresolved_exceptions: ControlDetail;
+    pending_investigations: ControlDetail;
+    pending_action_requests: ControlDetail;
+    running_executions: ControlDetail;
+  };
+}
+
+export interface FinancialPeriod {
+  id: string;
+  period_name: string;
+  start_date: string;
+  end_date: string;
+  status: PeriodStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PeriodDetailResponse {
+  period: FinancialPeriod;
+  metrics: PeriodMetrics;
+  readiness: PeriodReadiness | null;
+}
+
+export interface PeriodListResponse {
+  items: FinancialPeriod[];
+  total: number;
+  page: number;
+  size: number;
+}
+
+export async function fetchPeriods(params?: {
+  page?: number;
+  size?: number;
+  status?: string;
+}): Promise<PeriodListResponse> {
+  const url = new URL(`${bffBase()}/api/v1/periods`);
+  if (params?.page && params?.size) {
+    url.searchParams.set("offset", String((params.page - 1) * params.size));
+    url.searchParams.set("limit", String(params.size));
+  }
+  if (params?.status && params.status !== "ALL") {
+    url.searchParams.set("status", params.status);
+  }
+
+  const res = await fetchAuthenticated(url.toString());
+  if (!res.ok) throw new Error(`Failed to fetch periods: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchPeriod(id: string): Promise<PeriodDetailResponse> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/periods/${id}`);
+  if (!res.ok) throw new Error(`Failed to fetch period: ${res.statusText}`);
+  return res.json();
+}
+
+export async function createPeriod(payload: {
+  period_name: string;
+  start_date: string;
+  end_date: string;
+}): Promise<FinancialPeriod> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/periods`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.detail || `Failed to create period: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function evaluatePeriodClose(id: string): Promise<PeriodReadiness> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/periods/${id}/evaluate`, {
+    method: "POST",
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.detail || `Failed to evaluate period close: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function closePeriod(id: string): Promise<FinancialPeriod> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/periods/${id}/close`, {
+    method: "POST",
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.detail || `Failed to close period: ${res.statusText}`);
+  }
   return res.json();
 }
