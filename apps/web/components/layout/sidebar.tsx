@@ -156,19 +156,19 @@ export function Sidebar() {
           <div className="pt-6 pb-2">
             {!collapsed && <div className="px-3 text-[11px] font-semibold uppercase tracking-wider text-sidebar-muted/50 mb-2">System</div>}
             <Link
-              href="/settings"
+              href="/profile"
               onClick={() => setMobileOpen(false)}
               className={cn(
                 "flex items-center px-3 py-2.5 rounded-md transition-colors group",
-                pathname?.startsWith("/settings")
+                pathname?.startsWith("/profile") || pathname?.startsWith("/preferences")
                   ? "bg-sidebar-active text-sidebar-activeForeground font-medium"
                   : "text-sidebar-muted hover:bg-sidebar-muted/10 hover:text-sidebar-foreground"
               )}
-              title={collapsed ? "Settings" : undefined}
+              title={collapsed ? "Profile & Settings" : undefined}
             >
-              <Settings className={cn("w-4 h-4 shrink-0", pathname?.startsWith("/settings") ? "text-sidebar-activeForeground" : "text-sidebar-muted group-hover:text-sidebar-foreground")} />
+              <Settings className={cn("w-4 h-4 shrink-0", pathname?.startsWith("/profile") || pathname?.startsWith("/preferences") ? "text-sidebar-activeForeground" : "text-sidebar-muted group-hover:text-sidebar-foreground")} />
               {!collapsed && (
-                <span className="ml-3 text-sm flex-1">Settings</span>
+                <span className="ml-3 text-sm flex-1">Profile & Settings</span>
               )}
             </Link>
           </div>

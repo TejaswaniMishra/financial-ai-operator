@@ -160,18 +160,6 @@ export default function PreferencesPage() {
         </div>
       </section>
 
-      {/* NOTIFICATIONS — honestly marked unavailable, no fake toggles */}
-      <section className="space-y-4">
-        <h2 className="text-section-heading flex items-center gap-2 border-b border-border pb-2">
-          <Bell className="w-5 h-5 text-muted-foreground" />
-          Notifications
-        </h2>
-        <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-          <p className="text-sm text-muted-foreground">
-            Email and in-app notification preferences are not yet available.
-          </p>
-        </div>
-      </section>
     </div>
   );
 }

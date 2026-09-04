@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-
+import { PasswordChangeForm } from "@/components/auth/password-change-form";
 export default function ProfilePage() {
   const { user, isLoading, refreshUser } = useAuth();
   const [displayName, setDisplayName] = useState("");
@@ -315,6 +315,19 @@ export default function ProfilePage() {
               Argon2id
             </span>
           </div>
+          {/* Change Password */}
+          <div className="border-t border-border px-5 py-5 space-y-4">
+            <div className="mb-2">
+              <h3 className="text-sm font-medium text-foreground">
+                Change password
+              </h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                Enter your current password and a new one. After a successful change, all existing sessions will be signed out for security.
+              </p>
+            </div>
+            <PasswordChangeForm mode="self" />
+          </div>
+
           {/* MFA */}
           <div className="border-t border-border px-5 py-4 space-y-3">
             <div className="flex items-center justify-between gap-3">
