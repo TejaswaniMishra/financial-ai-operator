@@ -31,7 +31,7 @@ const navigation = [
   { name: "Transactions", href: "/transactions", icon: Database },
   { name: "Exceptions", href: "/exceptions", icon: FileText },
   { name: "Periods", href: "/periods", icon: Calendar },
-  { name: "Reports", href: "/reports", icon: BarChart3, isComingSoon: true },
+  { name: "Reports", href: "/reports", icon: BarChart3 },
 ];
 
 export function Sidebar() {
