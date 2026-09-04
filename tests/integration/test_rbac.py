@@ -457,14 +457,23 @@ def test_permission_mapping_is_deterministic_and_correct():
         Permission.VIEW_ACTION_REQUESTS,
         Permission.VIEW_TRANSACTIONS,
         Permission.VIEW_SETTINGS,
+        Permission.VIEW_PERIODS,
+        Permission.CREATE_PERIOD,
+        Permission.EVALUATE_PERIOD_CLOSE,
     })
     assert ROLE_PERMISSIONS[RoleName.FINANCE_MANAGER] == (
         ROLE_PERMISSIONS[RoleName.OPERATOR]
         | frozenset({
+            Permission.VIEW_SETTINGS,
+            Permission.VIEW_PERIODS,
+            Permission.CREATE_PERIOD,
+            Permission.EVALUATE_PERIOD_CLOSE,
             Permission.APPROVE_ACTION_REQUEST,
             Permission.REJECT_ACTION_REQUEST,
             Permission.CANCEL_ACTION_REQUEST,
             Permission.EXECUTE_ACTION,
+            Permission.APPROVE_PERIOD_CLOSE,
+            Permission.CLOSE_PERIOD,
         })
     )
     assert ROLE_PERMISSIONS[RoleName.ADMIN] == (
