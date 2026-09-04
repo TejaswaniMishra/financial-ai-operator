@@ -475,7 +475,7 @@ export interface TransactionLineageResponse {
  */
 function buildApiUrl(
   path: string,
-  params: Record<string, string | number | boolean | undefined> = {}
+  params: Record<string, string | number | boolean | undefined | null> = {}
 ): string {
   const search = new URLSearchParams();
   for (const [key, value] of Object.entries(params)) {
@@ -929,16 +929,18 @@ export async function fetchExceptions(params?: {
   currency?: string;
   transaction_type?: string;
 }): Promise<ExceptionListResponse> {
-  const url = new URL(`${bffBase()}/api/v1/exceptions`);
-  if (params?.page && params?.size) {
-    url.searchParams.set("offset", String((params.page - 1) * params.size));
-    url.searchParams.set("limit", String(params.size));
-  }
-  if (params?.type && params.type !== "ALL") url.searchParams.set("type", params.type);
-  if (params?.state && params.state !== "ALL") url.searchParams.set("state", params.state);
-  if (params?.currency && params.currency !== "ALL") url.searchParams.set("currency", params.currency);
-  if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
-  const res = await fetchAuthenticated(url.toString());
+  const url = buildApiUrl("/api/v1/exceptions", {
+    offset: params?.page && params?.size ? String((params.page - 1) * params.size) : undefined,
+    limit: params?.size ? String(params.size) : undefined,
+    type: params?.type && params.type !== "ALL" ? params.type : undefined,
+    state: params?.state && params.state !== "ALL" ? params.state : undefined,
+    currency: params?.currency && params.currency !== "ALL" ? params.currency : undefined,
+    transaction_type:
+      params?.transaction_type && params.transaction_type !== "ALL"
+        ? params.transaction_type
+        : undefined,
+  });
+  const res = await fetchAuthenticated(url);
   if (!res.ok) throw new Error(`Failed to fetch exceptions: ${res.statusText}`);
   return res.json();
 }
@@ -1006,16 +1008,13 @@ export async function fetchPeriods(params?: {
   size?: number;
   status?: string;
 }): Promise<PeriodListResponse> {
-  const url = new URL(`${bffBase()}/api/v1/periods`);
-  if (params?.page && params?.size) {
-    url.searchParams.set("offset", String((params.page - 1) * params.size));
-    url.searchParams.set("limit", String(params.size));
-  }
-  if (params?.status && params.status !== "ALL") {
-    url.searchParams.set("status", params.status);
-  }
+  const url = buildApiUrl("/api/v1/periods", {
+    offset: params?.page && params?.size ? String((params.page - 1) * params.size) : undefined,
+    limit: params?.size ? String(params.size) : undefined,
+    status: params?.status && params.status !== "ALL" ? params.status : undefined,
+  });
 
-  const res = await fetchAuthenticated(url.toString());
+  const res = await fetchAuthenticated(url);
   if (!res.ok) throw new Error(`Failed to fetch periods: ${res.statusText}`);
   return res.json();
 }
@@ -1219,11 +1218,9 @@ export type BreakdownDimension = "provider" | "payment_method" | "merchant_id";
 type ReportUrlParams = Record<string, string | undefined | null>;
 
 function buildReportUrl(path: string, params: ReportUrlParams): string {
-  const url = new URL(`${bffBase()}/api/v1/reports/${path}`);
-  for (const [k, v] of Object.entries(params)) {
-    if (v != null && v !== "") url.searchParams.set(k, v);
-  }
-  return url.toString();
+  // buildApiUrl prefixes the BFF base and never relies on `new URL` with a
+  // relative path, which throws in the browser where bffBase() is "".
+  return buildApiUrl(`/api/v1/reports/${path}`, params);
 }
 
 export async function fetchReportSummary(params?: {
@@ -1294,10 +1291,11 @@ export async function fetchReportPeriods(params?: {
   limit?: number;
   offset?: number;
 }): Promise<PeriodAnalyticsResponse> {
-  const url = new URL(`${bffBase()}/api/v1/reports/periods`);
-  if (params?.limit) url.searchParams.set("limit", String(params.limit));
-  if (params?.offset) url.searchParams.set("offset", String(params.offset));
-  const res = await fetchAuthenticated(url.toString());
+  const url = buildApiUrl("/api/v1/reports/periods", {
+    limit: params?.limit ? String(params.limit) : undefined,
+    offset: params?.offset ? String(params.offset) : undefined,
+  });
+  const res = await fetchAuthenticated(url);
   if (!res.ok) throw new Error(`Failed to fetch period analytics: ${res.statusText}`);
   return res.json();
 }
