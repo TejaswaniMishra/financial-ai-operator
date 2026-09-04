@@ -332,7 +332,21 @@ async def create_run(
             target_id=run.id,
         )
 
-    await db.commit()
+    try:
+        await db.commit()
+    except IntegrityError:
+        # A concurrent submission of the identical logical batch committed
+        # first (our flush saw no conflict, the commit lost the race).
+        # Resolve to the winning run — no duplicate financial facts.
+        await db.rollback()
+        existing = (
+            await db.execute(
+                select(IngestionRun).where(IngestionRun.batch_fingerprint == batch_fp)
+            )
+        ).scalar_one_or_none()
+        if existing is not None:
+            return await _run_summary(existing), True
+        raise
     return await _run_summary(run), False
 
 
