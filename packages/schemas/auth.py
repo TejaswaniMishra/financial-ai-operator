@@ -55,6 +55,10 @@ class CurrentUserResponse(BaseModel):
         default=False,
         description="Backend-controlled flag: an admin password reset is pending and the user must change their password before accessing protected functionality",
     )
+    mfa_enabled: bool = Field(
+        default=False,
+        description="Whether the user has completed TOTP enrollment. Never exposes the secret.",
+    )
     preferences: Dict[str, str] = Field(
         default_factory=dict,
         description="Server-authoritative account preferences (e.g. theme choice). Never includes roles, identity, or secrets.",

@@ -6,7 +6,11 @@ from sqlalchemy.orm import selectinload
 
 from apps.api.dependencies import get_db_session
 from database.models.identity import User, UserRole
-from packages.utils.jwt import decode_access_token, JWTError
+from packages.utils.jwt import (
+    decode_access_token,
+    JWTError,
+    MFA_CHALLENGE_SCOPE,
+)
 from services.auth.token_revocation import is_token_revoked
 from services.auth.security_events import session_rejected, token_revoked
 
@@ -47,6 +51,11 @@ async def get_current_user(
         if not user_id or not jti:
             raise credentials_exception
     except JWTError:
+        raise credentials_exception
+
+    # MFA challenge tokens (scope="mfa:verify") are NOT sessions: they may
+    # only be exchanged at /auth/mfa/verify. Reject them everywhere else.
+    if payload.get("scope") == MFA_CHALLENGE_SCOPE:
         raise credentials_exception
         
     # Check revocation explicitly after cryptographic validation but before loading User

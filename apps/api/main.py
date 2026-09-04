@@ -57,6 +57,7 @@ def create_app() -> FastAPI:
     from apps.api.routes.periods import router as periods_router
     from apps.api.routes.reports import router as reports_router
     from apps.api.routes.notifications import router as notifications_router
+    from apps.api.routes.mfa import router as mfa_router
     
     application.include_router(transactions_router, prefix=settings.API_V1_PREFIX)
     application.include_router(metrics_router, prefix=settings.API_V1_PREFIX)
@@ -73,6 +74,7 @@ def create_app() -> FastAPI:
     application.include_router(periods_router, prefix=settings.API_V1_PREFIX)
     application.include_router(reports_router, prefix=settings.API_V1_PREFIX)
     application.include_router(notifications_router, prefix=settings.API_V1_PREFIX)
+    application.include_router(mfa_router, prefix=settings.API_V1_PREFIX)
 
     @application.get("/", tags=["Root"])
     async def root():

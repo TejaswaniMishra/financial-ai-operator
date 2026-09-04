@@ -9,10 +9,16 @@ from apps.api.dependencies import get_db_session
 from apps.api.auth import get_current_user, get_current_user_allow_pending, security
 from database.models.identity import User, UserCredential, Role, RoleName, UserRole
 from packages.schemas.auth import SignupRequest, LoginRequest, TokenResponse, CurrentUserResponse, LogoutResponse, ChangePasswordRequest, ChangePasswordResponse, UpdateProfileRequest, UpdatePreferencesRequest, PreferencesResponse
+from packages.schemas.mfa import LoginResultResponse
 from packages.schemas.identity import UserResponse
 from packages.utils.crypto import hash_password, verify_password
 from packages.utils.password_policy import validate_password
-from packages.utils.jwt import create_access_token, decode_access_token
+from packages.utils.jwt import (
+    create_access_token,
+    create_mfa_challenge_token,
+    decode_access_token,
+    MFA_CHALLENGE_EXPIRE_MINUTES,
+)
 from services.auth.token_revocation import revoke_token
 from services.auth import security_events
 from services.auth.password_management import (
@@ -129,9 +135,9 @@ async def signup(
 
 @router.post(
     "/login",
-    response_model=TokenResponse,
+    response_model=LoginResultResponse,
     status_code=status.HTTP_200_OK,
-    summary="Login to get access token"
+    summary="Login to get access token (or an MFA challenge)"
 )
 async def login(
     payload: LoginRequest,
@@ -188,6 +194,24 @@ async def login(
         raise generic_error
         
     settings = get_settings()
+
+    # MFA-enabled users only receive a restricted challenge token here. No
+    # privileged session exists until a valid TOTP/recovery code is verified.
+    if user.mfa_enabled:
+        challenge = create_mfa_challenge_token(
+            user_id=user.id,
+            credential_version=user.credential_version or 1,
+        )
+        await security_events.mfa_challenge_issued(db, user.id, req)
+        await db.commit()
+        return LoginResultResponse(
+            access_token=None,
+            token_type="mfa",
+            expires_in=MFA_CHALLENGE_EXPIRE_MINUTES * 60,
+            mfa_required=True,
+            mfa_token=challenge,
+        )
+
     token = create_access_token(
         user_id=user.id,
         credential_version=user.credential_version or 1,
@@ -196,7 +220,7 @@ async def login(
     await security_events.login_success(db, user.id, req)
     await db.commit()
     
-    return TokenResponse(
+    return LoginResultResponse(
         access_token=token,
         token_type="bearer",
         expires_in=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
@@ -224,6 +248,7 @@ def _to_current_user_response(user: User) -> CurrentUserResponse:
         roles=roles,
         permissions=permissions,
         must_change_password=bool(user.must_change_password),
+        mfa_enabled=bool(user.mfa_enabled),
         preferences=dict(user.preferences or {}),
     )
 
