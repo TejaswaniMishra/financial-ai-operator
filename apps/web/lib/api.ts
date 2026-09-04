@@ -1142,3 +1142,270 @@ export async function closePeriod(id: string): Promise<FinancialPeriod> {
   }
   return res.json();
 }
+
+// ─── Financial Reports (M12) ──────────────────────────────────────────────────
+
+export interface AmountByCurrency {
+  currency: string;
+  count: number;
+  total_amount: string; // Decimal comes as string from JSON
+}
+
+export interface ExecutiveSummary {
+  period_start: string | null;
+  period_end: string | null;
+  period_id: string | null;
+  payment_volume: AmountByCurrency[];
+  refund_volume: AmountByCurrency[];
+  fee_volume: AmountByCurrency[];
+  settlement_volume: AmountByCurrency[];
+  bank_transaction_volume: AmountByCurrency[];
+  total_payment_count: number;
+  total_refund_count: number;
+  total_fee_count: number;
+  total_settlement_count: number;
+  total_bank_transaction_count: number;
+  reconciled_count: number;
+  unreconciled_count: number;
+  discrepancy_count: number;
+  unresolved_exception_count: number;
+  investigation_count: number;
+  pending_action_request_count: number;
+  failed_execution_count: number;
+  unknown_execution_count: number;
+}
+
+export interface FinancialFlowStage {
+  stage: string;
+  currency: string;
+  count: number;
+  total_amount: string;
+}
+
+export interface FinancialFlowSummary {
+  period_start: string | null;
+  period_end: string | null;
+  stages: FinancialFlowStage[];
+}
+
+export interface ReconciliationAnalytics {
+  period_start: string | null;
+  period_end: string | null;
+  total_payments_eligible: number;
+  reconciled_count: number;
+  unreconciled_count: number;
+  reconciliation_rate: number | null;
+  discrepancy_count: number;
+  discrepancy_amount_by_currency: AmountByCurrency[];
+  relationship_reconciled: number;
+  relationship_discrepancy: number;
+  relationship_unresolved: number;
+}
+
+export interface ExceptionStateCount {
+  state: string;
+  count: number;
+}
+
+export interface ExceptionTypeCount {
+  type: string;
+  count: number;
+}
+
+export interface RootCauseCount {
+  root_cause: string;
+  count: number;
+}
+
+export interface ExceptionAnalytics {
+  period_start: string | null;
+  period_end: string | null;
+  total_exceptions: number;
+  by_state: ExceptionStateCount[];
+  by_type: ExceptionTypeCount[];
+  by_root_cause: RootCauseCount[];
+  unresolved_amount_by_currency: AmountByCurrency[];
+}
+
+export interface OperationalRiskSummary {
+  unresolved_exceptions: number;
+  pending_investigations: number;
+  failed_investigations: number;
+  pending_action_requests: number;
+  failed_executions: number;
+  unknown_executions: number;
+  unreconciled_transaction_count: number;
+  open_periods: number;
+  closing_periods: number;
+  blocked_periods: number;
+}
+
+export interface PeriodReportRow {
+  id: string;
+  period_name: string;
+  start_date: string;
+  end_date: string;
+  status: string;
+  last_readiness: boolean | null;
+  last_blocker_count: number | null;
+  last_evaluated_at: string | null;
+  payment_count: number;
+  settlement_count: number;
+  exception_count: number;
+}
+
+export interface PeriodAnalyticsResponse {
+  items: PeriodReportRow[];
+  total: number;
+}
+
+export interface TrendPoint {
+  bucket: string;
+  currency: string | null;
+  metric: string;
+  value: string;
+}
+
+export interface TrendResponse {
+  metric: string;
+  granularity: string;
+  timezone: string;
+  data: TrendPoint[];
+}
+
+export interface BreakdownItem {
+  dimension: string;
+  currency: string;
+  payment_count: number;
+  payment_volume: string;
+  refund_count: number;
+  refund_volume: string;
+  exception_count: number;
+}
+
+export type ReportGranularity = "day" | "week" | "month";
+export type TrendMetric =
+  | "payment_count"
+  | "payment_volume"
+  | "refund_count"
+  | "refund_volume"
+  | "settlement_count"
+  | "settlement_volume"
+  | "exception_count";
+export type BreakdownDimension = "provider" | "payment_method" | "merchant_id";
+
+function buildReportUrl(path: string, params: Record<string, string | undefined | null>): string {
+  const url = new URL(`${bffBase()}/api/v1/reports/${path}`);
+  for (const [k, v] of Object.entries(params)) {
+    if (v != null && v !== "") url.searchParams.set(k, v);
+  }
+  return url.toString();
+}
+
+export async function fetchReportSummary(params?: {
+  start_date?: string;
+  end_date?: string;
+  period_id?: string;
+  currency?: string;
+}): Promise<ExecutiveSummary> {
+  const res = await fetchAuthenticated(buildReportUrl("summary", {
+    start_date: params?.start_date,
+    end_date: params?.end_date,
+    period_id: params?.period_id,
+    currency: params?.currency,
+  }));
+  if (!res.ok) throw new Error(`Failed to fetch report summary: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchFinancialFlow(params?: {
+  start_date?: string;
+  end_date?: string;
+  period_id?: string;
+}): Promise<FinancialFlowSummary> {
+  const res = await fetchAuthenticated(buildReportUrl("financial-flow", {
+    start_date: params?.start_date,
+    end_date: params?.end_date,
+    period_id: params?.period_id,
+  }));
+  if (!res.ok) throw new Error(`Failed to fetch financial flow: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchReconciliationAnalytics(params?: {
+  start_date?: string;
+  end_date?: string;
+  period_id?: string;
+}): Promise<ReconciliationAnalytics> {
+  const res = await fetchAuthenticated(buildReportUrl("reconciliation", {
+    start_date: params?.start_date,
+    end_date: params?.end_date,
+    period_id: params?.period_id,
+  }));
+  if (!res.ok) throw new Error(`Failed to fetch reconciliation analytics: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchExceptionAnalytics(params?: {
+  start_date?: string;
+  end_date?: string;
+  period_id?: string;
+}): Promise<ExceptionAnalytics> {
+  const res = await fetchAuthenticated(buildReportUrl("exceptions", {
+    start_date: params?.start_date,
+    end_date: params?.end_date,
+    period_id: params?.period_id,
+  }));
+  if (!res.ok) throw new Error(`Failed to fetch exception analytics: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchOperationalRisk(): Promise<OperationalRiskSummary> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/reports/operations`);
+  if (!res.ok) throw new Error(`Failed to fetch operational risk: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchReportPeriods(params?: {
+  limit?: number;
+  offset?: number;
+}): Promise<PeriodAnalyticsResponse> {
+  const url = new URL(`${bffBase()}/api/v1/reports/periods`);
+  if (params?.limit) url.searchParams.set("limit", String(params.limit));
+  if (params?.offset) url.searchParams.set("offset", String(params.offset));
+  const res = await fetchAuthenticated(url.toString());
+  if (!res.ok) throw new Error(`Failed to fetch period analytics: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchTrends(params: {
+  metric: TrendMetric;
+  granularity?: ReportGranularity;
+  start_date?: string;
+  end_date?: string;
+}): Promise<TrendResponse> {
+  const res = await fetchAuthenticated(buildReportUrl("trends", {
+    metric: params.metric,
+    granularity: params.granularity ?? "day",
+    start_date: params.start_date,
+    end_date: params.end_date,
+  }));
+  if (!res.ok) throw new Error(`Failed to fetch trends: ${res.statusText}`);
+  return res.json();
+}
+
+export async function fetchBreakdowns(params: {
+  dimension: BreakdownDimension;
+  start_date?: string;
+  end_date?: string;
+  period_id?: string;
+}): Promise<BreakdownItem[]> {
+  const res = await fetchAuthenticated(buildReportUrl("breakdowns", {
+    dimension: params.dimension,
+    start_date: params.start_date,
+    end_date: params.end_date,
+    period_id: params.period_id,
+  }));
+  if (!res.ok) throw new Error(`Failed to fetch breakdowns: ${res.statusText}`);
+  return res.json();
+}
