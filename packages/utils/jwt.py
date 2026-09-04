@@ -43,6 +43,38 @@ def create_access_token(user_id: str, credential_version: int = 1) -> str:
     )
     return token
 
+MFA_CHALLENGE_SCOPE = "mfa:verify"
+MFA_CHALLENGE_EXPIRE_MINUTES = 5
+
+
+def create_mfa_challenge_token(
+    user_id: str, credential_version: int = 1, ttl_minutes: int = MFA_CHALLENGE_EXPIRE_MINUTES
+) -> str:
+    """Short-lived, single-purpose token issued when a password check passes
+    but the user must still complete a TOTP challenge.
+
+    Carries scope="mfa:verify" so `get_current_user` can reject it everywhere
+    except the MFA verification endpoint. Identity claims mirror access
+    tokens (sub/jti/cver) so revocation and credential-version checks apply.
+    """
+    now = datetime.now(timezone.utc)
+    payload = {
+        "sub": user_id,
+        "iat": now,
+        "exp": now + timedelta(minutes=ttl_minutes),
+        "iss": settings.JWT_ISSUER,
+        "aud": settings.JWT_AUDIENCE,
+        "jti": str(uuid.uuid4()),
+        "cver": credential_version,
+        "scope": MFA_CHALLENGE_SCOPE,
+    }
+    return jwt.encode(
+        payload,
+        settings.JWT_SECRET_KEY,
+        algorithm=settings.JWT_ALGORITHM,
+    )
+
+
 def decode_access_token(token: str) -> Dict[str, Any]:
     """
     Decode and strictly validate a JWT access token.

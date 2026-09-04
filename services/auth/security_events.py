@@ -192,3 +192,39 @@ def log_critical_credential_error(
         security_logger.error("%s user_id=%s", message, user_id)
     else:
         security_logger.error("%s", message)
+
+
+# ─── MFA events ───────────────────────────────────────────────────────────────
+# Only event codes + user/actor IDs are recorded. TOTP secrets, recovery-code
+# plaintext, and codes are NEVER logged.
+
+async def mfa_enrollment_started(db: AsyncSession, user_id: str, request: Optional[Request] = None) -> None:
+    await _log_event(db, SecurityEventType.MFA_ENROLLMENT_STARTED, user_id=user_id, request=request)
+
+async def mfa_enabled(db: AsyncSession, user_id: str, request: Optional[Request] = None) -> None:
+    await _log_event(db, SecurityEventType.MFA_ENABLED, user_id=user_id, request=request)
+
+async def mfa_disabled(db: AsyncSession, user_id: str, request: Optional[Request] = None) -> None:
+    await _log_event(db, SecurityEventType.MFA_DISABLED, user_id=user_id, request=request)
+
+async def mfa_verification_success(db: AsyncSession, user_id: str, request: Optional[Request] = None) -> None:
+    await _log_event(db, SecurityEventType.MFA_VERIFICATION_SUCCESS, user_id=user_id, request=request)
+
+async def mfa_verification_failed(db: AsyncSession, user_id: str, reason: str = "invalid_code", request: Optional[Request] = None) -> None:
+    await _log_event(
+        db,
+        SecurityEventType.MFA_VERIFICATION_FAILED,
+        user_id=user_id,
+        request=request,
+        is_success=False,
+        metadata_payload={"reason": reason},
+    )
+
+async def mfa_challenge_issued(db: AsyncSession, user_id: str, request: Optional[Request] = None) -> None:
+    await _log_event(db, SecurityEventType.MFA_CHALLENGE_ISSUED, user_id=user_id, request=request)
+
+async def recovery_code_used(db: AsyncSession, user_id: str, request: Optional[Request] = None) -> None:
+    await _log_event(db, SecurityEventType.RECOVERY_CODE_USED, user_id=user_id, request=request)
+
+async def recovery_codes_regenerated(db: AsyncSession, user_id: str, request: Optional[Request] = None) -> None:
+    await _log_event(db, SecurityEventType.RECOVERY_CODES_REGENERATED, user_id=user_id, request=request)
