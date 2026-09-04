@@ -28,6 +28,8 @@ interface AuthContextValue {
   login: (payload: LoginRequest, next?: string) => Promise<void>;
   signup: (payload: SignupRequest) => Promise<void>;
   logout: () => Promise<void>;
+  /** Re-fetch the authoritative /me identity (e.g. after a profile save). */
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -122,6 +124,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     router.replace("/login");
   }, [router]);
 
+  const refreshUser = useCallback(async () => {
+    try {
+      const u = await fetchCurrentUser();
+      setUser(u);
+    } catch {
+      // Session may have expired mid-session; the UNAUTHORIZED_EVENT listener
+      // handles redirect. Leave the current user state untouched here.
+    }
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -131,6 +143,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         signup,
         logout,
+        refreshUser,
       }}
     >
       {children}

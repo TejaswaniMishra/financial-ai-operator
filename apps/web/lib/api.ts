@@ -30,6 +30,57 @@ export interface CurrentUser {
   /** Backend-controlled: an admin password reset is pending and the user
    * must change their password before protected functionality is allowed. */
   must_change_password: boolean;
+  /** Server-authoritative account preferences (e.g. {"theme": "dark"}).
+   * Written only through the authenticated preferences endpoints. */
+  preferences: Record<string, string>;
+}
+
+// ─── Self-service Profile & Preferences ─────────────────────────────────────
+
+/** PATCH /api/v1/auth/profile — only display_name is editable; email ownership
+ * and roles are never client-editable. */
+export interface UpdateProfileRequest {
+  display_name: string;
+}
+
+export interface PreferencesResponse {
+  theme: "system" | "light" | "dark";
+}
+
+export async function updateProfile(
+  payload: UpdateProfileRequest
+): Promise<CurrentUser> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/auth/profile`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.detail || `Failed to update profile: ${res.statusText}`);
+  }
+  return res.json();
+}
+
+export async function fetchPreferences(): Promise<PreferencesResponse> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/auth/preferences`);
+  if (!res.ok) throw new Error(`Failed to fetch preferences: ${res.statusText}`);
+  return res.json();
+}
+
+export async function updatePreferences(
+  payload: PreferencesResponse
+): Promise<PreferencesResponse> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/auth/preferences`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error(data?.detail || `Failed to save preferences: ${res.statusText}`);
+  }
+  return res.json();
 }
 
 // ─── Password management (M8.5) ────────────────────────────────────────────

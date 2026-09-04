@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { Search, Bell, Sun, Moon, User, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
@@ -58,6 +59,17 @@ export function TopNav() {
   const displayName = user?.display_name || user?.email || "Operator";
   // Sub-label: email if we have a display_name, otherwise just empty
   const subLabel = user?.display_name ? user.email : null;
+
+  // Apply the server-authoritative theme preference once identity loads
+  // (covers fresh sessions on new devices where localStorage has no value).
+  useEffect(() => {
+    if (!mounted || !user?.preferences?.theme) return;
+    const t = user.preferences.theme;
+    if (t === "system" || t === "light" || t === "dark") {
+      if (resolvedTheme !== t) setTheme(t);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted, user]);
 
   return (
     <header className="h-16 border-b border-border bg-card sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -178,24 +190,20 @@ export function TopNav() {
                 )}
               </div>
               <div className="py-1">
-                <button
-                  disabled
-                  className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-surface-muted transition-colors flex items-center justify-between group opacity-75 cursor-default hover:bg-transparent outline-none focus-visible:bg-surface-muted"
+                <Link
+                  href="/profile"
+                  onClick={() => setIsProfileOpen(false)}
+                  className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-surface-muted transition-colors flex items-center justify-between group focus-visible:bg-surface-muted"
                 >
                   <span>Profile</span>
-                  <span className="text-[10px] uppercase tracking-wider font-semibold bg-primary/20 text-primary-foreground px-1.5 py-0.5 rounded">
-                    Soon
-                  </span>
-                </button>
-                <button
-                  disabled
-                  className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-surface-muted transition-colors flex items-center justify-between group opacity-75 cursor-default hover:bg-transparent outline-none focus-visible:bg-surface-muted"
+                </Link>
+                <Link
+                  href="/preferences"
+                  onClick={() => setIsProfileOpen(false)}
+                  className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-surface-muted transition-colors flex items-center justify-between group focus-visible:bg-surface-muted"
                 >
                   <span>Preferences</span>
-                  <span className="text-[10px] uppercase tracking-wider font-semibold bg-primary/20 text-primary-foreground px-1.5 py-0.5 rounded">
-                    Soon
-                  </span>
-                </button>
+                </Link>
               </div>
               <div className="border-t border-border py-1">
                 <button
