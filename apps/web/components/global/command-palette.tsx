@@ -90,11 +90,11 @@ export function CommandPalette() {
                 <span>Transactions</span>
               </Command.Item>
               <Command.Item 
-                onSelect={() => runCommand(() => router.push("/settings"))}
+                onSelect={() => runCommand(() => router.push("/profile"))}
                 className="flex items-center px-2 py-2 text-sm rounded-md aria-selected:bg-muted aria-selected:text-foreground cursor-pointer text-foreground transition-colors"
               >
                 <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+                <span>Profile & Settings</span>
               </Command.Item>
             </Command.Group>
             
