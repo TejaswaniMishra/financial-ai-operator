@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Search, Bell, Sun, Moon, User, LogOut } from "lucide-react";
+import { Search, Sun, Moon, User, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/providers/auth-provider";
+import { NotificationCenter } from "@/components/layout/notification-center";
 
 export function TopNav() {
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -94,10 +95,7 @@ export function TopNav() {
 
       <div className="flex items-center ml-auto space-x-2 sm:space-x-4">
         {/* Notifications */}
-        <button className="relative p-2 text-muted-foreground hover:text-foreground rounded-full hover:bg-surface-muted transition-colors focus-ring">
-          <Bell className="w-[18px] h-[18px]" />
-          <span className="absolute top-1.5 right-2 w-1.5 h-1.5 rounded-full bg-error ring-2 ring-card"></span>
-        </button>
+        <NotificationCenter />
 
         {/* Theme Toggle */}
         {mounted && (
