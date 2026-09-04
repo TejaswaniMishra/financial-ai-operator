@@ -46,7 +46,7 @@ Cookie attributes:
 - `secure: true` (production only)
 - `sameSite: "lax"` — CSRF protection for cross-site navigation
 - `path: "/"` — scoped to entire application
-- `maxAge`: aligned with backend JWT lifetime (15 minutes / 900 seconds)
+- `maxAge`: aligned with the backend JWT lifetime (read from the token's `exp` claim; `ACCESS_TOKEN_EXPIRE_MINUTES` backend default is 20 minutes)
 
 ---
 

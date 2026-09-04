@@ -6,9 +6,25 @@ const BACKEND_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   "http://localhost:8000";
 
-// JWT lifetime from the backend is 15 minutes (900 seconds).
-// We match the cookie max-age to the access token lifetime.
-const TOKEN_MAX_AGE_SECONDS = 15 * 60;
+// The cookie max-age is matched to the backend access-token lifetime by
+// reading the token's `exp` claim, so a deployer can change
+// ACCESS_TOKEN_EXPIRE_MINUTES without a stale hardcoded value here.
+// (Fallback of 15 minutes applies only if the claim cannot be read.)
+const FALLBACK_TOKEN_MAX_AGE_SECONDS = 15 * 60;
+
+function tokenMaxAgeSeconds(accessToken: string): number {
+  try {
+    const payload = JSON.parse(
+      Buffer.from(accessToken.split(".")[1] ?? "", "base64url").toString("utf8")
+    );
+    if (typeof payload?.exp === "number" && payload.exp > 0) {
+      return Math.max(30, payload.exp - Math.floor(Date.now() / 1000));
+    }
+  } catch {
+    // Unreadable payload — fall through to the safe fallback below.
+  }
+  return FALLBACK_TOKEN_MAX_AGE_SECONDS;
+}
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!checkCSRF(req)) {
@@ -77,7 +93,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: TOKEN_MAX_AGE_SECONDS,
+    maxAge: tokenMaxAgeSeconds(data.access_token),
   });
 
   return response;
