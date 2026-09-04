@@ -81,7 +81,7 @@ function KpiCard({
 
 function AlertCard({ message }: { message: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+    <div className="flex items-center gap-3 rounded-lg border border-error/30 bg-error/5 p-4 text-sm text-error">
       <AlertCircle className="h-4 w-4 shrink-0" />
       {message}
     </div>
