@@ -9,7 +9,7 @@ never create arbitrary roles.
 """
 
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -27,13 +27,19 @@ class AdminUserListItem(BaseModel):
         default_factory=list,
         description="Role names currently assigned to the user",
     )
-    created_at: datetime = Field(..., description="When the user was created")
+    # Optional because legacy/seed rows may predate timestamp columns; a single
+    # malformed row must never 500 the whole admin listing.
+    created_at: Optional[datetime] = Field(
+        default=None, description="When the user was created"
+    )
 
 
 class AdminUserDetail(AdminUserListItem):
     """Full safe identity profile for a single user."""
 
-    updated_at: datetime = Field(..., description="When the user was last updated")
+    updated_at: Optional[datetime] = Field(
+        default=None, description="When the user was last updated"
+    )
 
 
 class UserRolesUpdateRequest(BaseModel):

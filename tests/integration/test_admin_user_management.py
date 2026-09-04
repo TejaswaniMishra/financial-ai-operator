@@ -162,6 +162,37 @@ async def test_user_listing_returns_roles(
     assert target_entry["roles"] == ["FINANCE_MANAGER"]
 
 
+@pytest.mark.asyncio
+async def test_user_listing_tolerates_null_timestamps(
+    async_client: AsyncClient, db_session: AsyncSession, make_role_user
+):
+    """A legacy user row with NULL created_at/updated_at must not 500 the
+    admin listing or detail — the whole management UI depends on it."""
+    admin, headers = await make_role_user(RoleName.ADMIN, "null_ts_admin@example.com")
+    target, _ = await make_role_user(RoleName.OPERATOR, "legacy_null_ts@example.com")
+
+    # Simulate a pre-timestamp seed row: erase the timestamps at the DB layer.
+    await db_session.execute(
+        update(User)
+        .where(User.id == target.id)
+        .values(created_at=None, updated_at=None)
+    )
+    await db_session.commit()
+
+    res = await async_client.get(ADMIN_USERS_URL, headers=headers)
+    assert res.status_code == 200
+    data = res.json()
+    entry = next(u for u in data if u["id"] == target.id)
+    assert entry["created_at"] is None
+
+    detail = await async_client.get(
+        f"{ADMIN_USERS_URL}/{target.id}", headers=headers
+    )
+    assert detail.status_code == 200
+    assert detail.json()["created_at"] is None
+    assert detail.json()["updated_at"] is None
+
+
 # ─── User detail ───────────────────────────────────────────────────────────
 
 @pytest.mark.asyncio
