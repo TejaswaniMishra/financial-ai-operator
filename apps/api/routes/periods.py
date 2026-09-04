@@ -115,6 +115,20 @@ async def api_evaluate_period_close(
     # Persist the deterministic evaluation snapshot as an audit record so
     # period/close analytics can show outcomes and blocker counts.
     await record_period_evaluation(db, period, readiness, actor=user.email)
+
+    # Notify approvers when a deterministic close evaluation is blocked.
+    if readiness.overall_status.value == "BLOCKED":
+        from services.notifications.service import notify_approvers, PERIOD_BLOCKED
+        blocking_count = sum(1 for c in readiness.controls if c.status.value == "BLOCKED")
+        await notify_approvers(
+            db,
+            PERIOD_BLOCKED,
+            "Period blocked from closing",
+            f"Period {period.name} has {blocking_count} blocker(s) preventing close.",
+            target_type="period",
+            target_id=period.id,
+        )
+        await db.commit()
     return readiness
 
 @router.post("/{period_id}/close", response_model=PeriodResponse)

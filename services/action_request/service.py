@@ -9,6 +9,13 @@ from database.models.policy import PolicyEvaluation, PolicyDecision
 from services.action_request.state_machine import ActionRequestStateMachine
 
 from services.auth.security_events import action_request_created, action_request_approved, action_request_rejected, action_request_cancelled
+from services.notifications.service import (
+    notify_approvers,
+    ACTION_REQUEST_PENDING,
+    ACTION_REQUEST_APPROVED,
+    ACTION_REQUEST_REJECTED,
+    ACTION_REQUEST_CANCELLED,
+)
 
 class ActionRequestService:
     def __init__(self, db: AsyncSession):
@@ -59,6 +66,16 @@ class ActionRequestService:
             await self.db.refresh(request)
             # Log security event
             await action_request_created(self.db, user_id=None, request_id=request.id)
+            # Notify every user authorized to decide (FINANCE_MANAGER / ADMIN)
+            await notify_approvers(
+                self.db,
+                ACTION_REQUEST_PENDING,
+                "Action request awaiting approval",
+                f"Action {request.action.replace('_', ' ').lower()} on {request.investigation_id[:8]} is awaiting your decision.",
+                target_type="action_request",
+                target_id=request.id,
+            )
+            await self.db.commit()
             return request
         except (IntegrityError, InvalidRequestError):
             await self.db.rollback()
@@ -109,6 +126,15 @@ class ActionRequestService:
         await self.db.commit()
         await self.db.refresh(request)
         await action_request_approved(self.db, actor_id=actor, request_id=request.id)
+        await notify_approvers(
+            self.db,
+            ACTION_REQUEST_APPROVED,
+            "Action request approved",
+            f"Action request {request.id[:8]} ({request.action.replace('_', ' ').lower()}) was approved.",
+            target_type="action_request",
+            target_id=request.id,
+        )
+        await self.db.commit()
         return request
 
     async def reject_action_request(self, request_id: str, reason: str = None, actor: str = None) -> ActionRequest:
@@ -117,6 +143,15 @@ class ActionRequestService:
         await self.db.commit()
         await self.db.refresh(request)
         await action_request_rejected(self.db, actor_id=actor, request_id=request.id)
+        await notify_approvers(
+            self.db,
+            ACTION_REQUEST_REJECTED,
+            "Action request rejected",
+            f"Action request {request.id[:8]} ({request.action.replace('_', ' ').lower()}) was rejected.",
+            target_type="action_request",
+            target_id=request.id,
+        )
+        await self.db.commit()
         return request
 
     async def cancel_action_request(self, request_id: str, reason: str = None, actor: str = None) -> ActionRequest:
@@ -124,4 +159,13 @@ class ActionRequestService:
         await self.db.commit()
         await self.db.refresh(request)
         await action_request_cancelled(self.db, actor_id=actor, request_id=request.id)
+        await notify_approvers(
+            self.db,
+            ACTION_REQUEST_CANCELLED,
+            "Action request cancelled",
+            f"Action request {request.id[:8]} ({request.action.replace('_', ' ').lower()}) was cancelled.",
+            target_type="action_request",
+            target_id=request.id,
+        )
+        await self.db.commit()
         return request

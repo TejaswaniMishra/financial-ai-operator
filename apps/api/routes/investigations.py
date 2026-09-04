@@ -11,6 +11,7 @@ from apps.api.authorization import require_permission
 from apps.api.dependencies import get_db_session
 from database.models.investigation import Investigation, InvestigationAttempt, InvestigationStatus
 from database.models.reconciliation import Discrepancy
+from database.models.identity import User
 from packages.rbac.permissions import Permission
 from services.investigation.agent import InvestigationAgent
 
@@ -38,7 +39,8 @@ async def list_investigations(
 @router.post("/discrepancy/{discrepancy_id}/run", dependencies=[Depends(require_permission(Permission.RUN_INVESTIGATION))])
 async def run_investigation(
     discrepancy_id: str,
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
+    current_user: User = Depends(get_current_user),
 ):
     # Verify discrepancy exists
     stmt = select(Discrepancy).where(Discrepancy.id == discrepancy_id)
@@ -48,7 +50,35 @@ async def run_investigation(
         
     agent = InvestigationAgent(db)
     attempt = await agent.run_investigation(discrepancy_id)
-    
+
+    # Notify the acting user of the real investigation outcome.
+    from services.notifications.service import (
+        notify_user,
+        INVESTIGATION_COMPLETED,
+        INVESTIGATION_FAILED,
+    )
+    if attempt.is_valid:
+        await notify_user(
+            db,
+            current_user.id,
+            INVESTIGATION_COMPLETED,
+            "Investigation completed",
+            f"Investigation for discrepancy {discrepancy_id[:8]} completed successfully.",
+            target_type="investigation",
+            target_id=attempt.investigation_id,
+        )
+    else:
+        await notify_user(
+            db,
+            current_user.id,
+            INVESTIGATION_FAILED,
+            "Investigation failed",
+            f"Investigation for discrepancy {discrepancy_id[:8]} could not be validated.",
+            target_type="investigation",
+            target_id=attempt.investigation_id,
+        )
+    await db.commit()
+
     return {
         "investigation_id": attempt.investigation_id,
         "attempt_id": attempt.id,
