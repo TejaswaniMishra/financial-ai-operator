@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { fetchException, ExceptionDetail, runInvestigation, approveActionRequest, rejectActionRequest, executeActionRequest } from "../../../lib/api";
@@ -31,6 +31,9 @@ export default function ExceptionDetailPage() {
   const [error, setError] = useState<string | null>(null);
 
   const [actionLoading, setActionLoading] = useState(false);
+  // Guards against duplicate requests from rapid repeated clicks before React
+  // has committed the disabled state.
+  const actionInFlightRef = useRef(false);
 
   useEffect(() => {
     load();
@@ -51,10 +54,13 @@ export default function ExceptionDetailPage() {
   }
 
   async function handleInvestigate() {
+    if (actionInFlightRef.current) return;
+    actionInFlightRef.current = true;
     try {
       setActionLoading(true);
       // Create the investigation through the real backend, then navigate to
-      // its detail workspace — never a fake local transition.
+      // its detail workspace — never a fake local transition. Navigation only
+      // happens after the backend run actually returns.
       const result = await runInvestigation(id);
       if (result && result.investigation_id) {
         router.push(`/investigations/${result.investigation_id}`);
@@ -64,6 +70,7 @@ export default function ExceptionDetailPage() {
     } catch(err: any) {
       alert("Failed to investigate: " + err.message);
     } finally {
+      actionInFlightRef.current = false;
       setActionLoading(false);
     }
   }
@@ -199,7 +206,17 @@ export default function ExceptionDetailPage() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Status</span>
-                  <Badge tone={data.investigation_status === "COMPLETED" ? "emerald" : "blue"}>
+                  <Badge
+                    tone={
+                      data.investigation_status === "COMPLETED"
+                        ? "emerald"
+                        : data.investigation_status === "FAILED" || data.investigation_status === "UNAVAILABLE"
+                          ? "red"
+                          : data.investigation_status === "PENDING"
+                            ? "blue"
+                            : "neutral"
+                    }
+                  >
                     {data.investigation_status}
                   </Badge>
                 </div>
@@ -218,15 +235,31 @@ export default function ExceptionDetailPage() {
                   </div>
                 )}
 
-                {data.investigation_status === "FAILED" && (
+                {(data.investigation_status === "FAILED" ||
+                  data.investigation_status === "UNAVAILABLE") && (
                   <Button
                     onClick={handleInvestigate}
                     disabled={actionLoading}
                     variant="outline"
                     className="mt-4 w-full"
                   >
-                    Retry Investigation
+                    {actionLoading ? "Starting..." : "Retry Investigation"}
                   </Button>
+                )}
+
+                {data.investigation_status === "UNAVAILABLE" && (
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+                    The AI provider was unavailable when this investigation ran. Retrying starts a new attempt.
+                  </p>
+                )}
+
+                {data.investigation_id && (
+                  <Link
+                    href={`/investigations/${data.investigation_id}`}
+                    className="mt-3 inline-flex w-full items-center justify-center gap-2 px-4 py-2 rounded-md border border-input bg-background text-foreground text-sm hover:bg-surface transition-colors"
+                  >
+                    View Investigation Detail
+                  </Link>
                 )}
               </div>
             )}

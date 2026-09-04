@@ -17,6 +17,39 @@ def generate_fingerprint(payload: dict) -> str:
     return hashlib.sha256(serialized.encode('utf-8')).hexdigest()
 
 
+# ─── Deterministic domain validation rules (M2) ─────────────────────────────
+# These module functions are the single source of truth for the financial
+# domain rules. The IngestionService methods below delegate to them so the
+# original M2 API and the M13 batch pipeline share identical semantics.
+
+
+def validate_refund_domain_rules(
+    refund_amount: Decimal,
+    payment_amount: Decimal,
+    refund_currency: str,
+    payment_currency: str,
+) -> None:
+    """A refund can never exceed its parent payment or change currency."""
+    if refund_amount > payment_amount:
+        raise ValueError(f"Refund amount {refund_amount} exceeds payment amount {payment_amount}")
+    if refund_currency != payment_currency:
+        raise ValueError(f"Refund currency {refund_currency} does not match payment currency {payment_currency}")
+
+
+def validate_settlement_totals(
+    gross: Decimal,
+    fee: Decimal,
+    adjustment: Decimal,
+    expected_net: Decimal,
+) -> None:
+    """gross - fee + adjustment must equal the expected net amount."""
+    calculated_net = gross - fee + adjustment
+    if expected_net != calculated_net:
+        raise ValueError(
+            f"Settlement totals invalid: {gross} - {fee} + {adjustment} != {expected_net}"
+        )
+
+
 class IngestionService:
     """
     Base service for deterministic ingestion of financial records.
@@ -66,15 +99,12 @@ class IngestionService:
         return record
 
     async def validate_refund_domain_rules(self, refund_amount: Decimal, payment_amount: Decimal, refund_currency: str, payment_currency: str):
-        if refund_amount > payment_amount:
-            raise ValueError(f"Refund amount {refund_amount} exceeds payment amount {payment_amount}")
-        if refund_currency != payment_currency:
-            raise ValueError(f"Refund currency {refund_currency} does not match payment currency {payment_currency}")
+        return validate_refund_domain_rules(
+            refund_amount, payment_amount, refund_currency, payment_currency
+        )
 
     async def validate_settlement_totals(self, gross: Decimal, fee: Decimal, adj: Decimal, expected_net: Decimal):
-        calculated_net = gross - fee + adj
-        if expected_net != calculated_net:
-            raise ValueError(f"Settlement totals invalid: {gross} - {fee} + {adj} != {expected_net}")
+        return validate_settlement_totals(gross, fee, adj, expected_net)
 
     async def create_ingestion_exception(
         self, exception_id: str, ingestion_record_id: str, error_message: str

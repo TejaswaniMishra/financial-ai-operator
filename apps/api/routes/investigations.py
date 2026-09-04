@@ -57,6 +57,11 @@ async def run_investigation(
         INVESTIGATION_COMPLETED,
         INVESTIGATION_FAILED,
     )
+    inv_status = (
+        attempt.investigation.status.value
+        if hasattr(attempt.investigation.status, "value")
+        else str(attempt.investigation.status)
+    )
     if attempt.is_valid:
         await notify_user(
             db,
@@ -67,13 +72,23 @@ async def run_investigation(
             target_type="investigation",
             target_id=attempt.investigation_id,
         )
+    elif inv_status == "UNAVAILABLE":
+        await notify_user(
+            db,
+            current_user.id,
+            INVESTIGATION_FAILED,
+            "Investigation unavailable",
+            f"Investigation for discrepancy {discrepancy_id[:8]} could not be completed because the AI provider is unavailable. Please retry.",
+            target_type="investigation",
+            target_id=attempt.investigation_id,
+        )
     else:
         await notify_user(
             db,
             current_user.id,
             INVESTIGATION_FAILED,
-            "Investigation failed",
-            f"Investigation for discrepancy {discrepancy_id[:8]} could not be validated.",
+            "Investigation failed validation",
+            f"Investigation for discrepancy {discrepancy_id[:8]} could not be validated against the deterministic evidence.",
             target_type="investigation",
             target_id=attempt.investigation_id,
         )
@@ -82,7 +97,7 @@ async def run_investigation(
     return {
         "investigation_id": attempt.investigation_id,
         "attempt_id": attempt.id,
-        "status": attempt.investigation.status.value if hasattr(attempt.investigation.status, 'value') else str(attempt.investigation.status),
+        "status": inv_status,
         "is_valid": attempt.is_valid,
         "result": attempt.validated_output if attempt.is_valid else None,
         "errors": attempt.validation_errors

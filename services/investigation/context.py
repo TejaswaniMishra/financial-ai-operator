@@ -47,7 +47,11 @@ class ContextBuilder:
                 "currency_verified": True,
             },
             "historical_statistics": historical_stats,
-            "lineage": lineage
+            "lineage": lineage,
+            # The ONLY entity IDs an LLM is allowed to cite. This allowlist is
+            # derived deterministically from the lineage so a model can never
+            # "reason" its way to an id that is not in the provided context.
+            "citable_entities": self._build_citable_entities(discrepancy, lineage),
         }
 
         # Canonical JSON string (sorted keys, no spaces)
@@ -55,6 +59,45 @@ class ContextBuilder:
         context_hash = hashlib.sha256(context_snapshot.encode('utf-8')).hexdigest()
 
         return context_dict, context_snapshot, context_hash
+
+    def _build_citable_entities(self, discrepancy: Discrepancy, lineage: Dict[str, Any]) -> list:
+        """Deterministic allowlist of entity ids the LLM may cite as evidence.
+
+        Order is stable: discrepancy first, then reconciliation relationship,
+        then each lineage entity by type. Only ids that actually exist in the
+        context are listed — the model is forbidden from citing anything else.
+        """
+        registry = [
+            {
+                "id": discrepancy.id,
+                "entity_type": "DISCREPANCY",
+                "label": "Reconciliation discrepancy",
+            }
+        ]
+        relationship = lineage.get("relationship")
+        if relationship and relationship.get("id"):
+            registry.append(
+                {
+                    "id": relationship["id"],
+                    "entity_type": "RECONCILIATION_RELATIONSHIP",
+                    "label": "Reconciliation relationship",
+                }
+            )
+        for key, entity_type, label in (
+            ("payment", "PAYMENT", "Payment"),
+            ("settlement", "SETTLEMENT", "Settlement"),
+            ("bank_transaction", "BANK_TRANSACTION", "Bank transaction"),
+        ):
+            entity = lineage.get(key)
+            if entity and entity.get("id"):
+                registry.append(
+                    {
+                        "id": entity["id"],
+                        "entity_type": entity_type,
+                        "label": label,
+                    }
+                )
+        return registry
 
     async def _get_discrepancy(self, discrepancy_id: str) -> Discrepancy:
         stmt = select(Discrepancy).where(Discrepancy.id == discrepancy_id)

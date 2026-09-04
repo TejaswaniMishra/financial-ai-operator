@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -77,6 +77,9 @@ export default function DiscrepanciesPage() {
   const [investigationError, setInvestigationError] = useState<string | null>(
     null,
   );
+  // Ref mirror of in-flight runs: guards against duplicate requests from rapid
+  // repeated clicks before React has committed the disabled state.
+  const investigatingRef = useRef<Set<string>>(new Set());
 
   const loadData = async () => {
     setLoading(true);
@@ -96,7 +99,8 @@ export default function DiscrepanciesPage() {
   }, []);
 
   const handleInvestigate = async (id: string) => {
-    if (investigatingIds.has(id)) return;
+    if (investigatingIds.has(id) || investigatingRef.current.has(id)) return;
+    investigatingRef.current.add(id);
 
     setInvestigatingIds((prev) => {
       const next = new Set(prev);
@@ -110,6 +114,7 @@ export default function DiscrepanciesPage() {
       router.push(`/investigations/${result.investigation_id}`);
     } catch (err: any) {
       setInvestigationError(err.message || "Failed to start investigation");
+      investigatingRef.current.delete(id);
       setInvestigatingIds((prev) => {
         const next = new Set(prev);
         next.delete(id);

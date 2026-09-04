@@ -96,14 +96,19 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
     }
   };
 
+  // Display the active attempt's result. For legacy records created before the
+  // active_attempt_id persistence fix, fall back to the newest attempt so a
+  // completed/failed investigation never masquerades as "no results yet".
+  const selectedAttemptId =
+    investigation?.active_attempt_id ??
+    (attempts && attempts.length > 0 ? attempts[0].id : null);
+
   useEffect(() => {
-    if (investigation?.active_attempt_id && attempts && attempts.length > 0) {
-      const activeAttemptExists = attempts.some(a => a.id === investigation.active_attempt_id);
-      if (activeAttemptExists) {
-        loadAttemptResult(investigation.id, investigation.active_attempt_id);
-      }
+    if (investigation && selectedAttemptId) {
+      setAttemptResult(null);
+      loadAttemptResult(investigation.id, selectedAttemptId);
     }
-  }, [investigation?.active_attempt_id, attempts, investigation?.id]);
+  }, [investigation?.id, selectedAttemptId]);
 
   const handleApprove = async () => {
     if (!investigation || investigation.status !== "COMPLETED") return;
@@ -324,7 +329,7 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
                 <h3 className="text-sm font-medium text-foreground mb-1">Failed to load result</h3>
                 <p className="text-sm text-muted-foreground mb-4">{resultError}</p>
                 <button
-                  onClick={() => investigation?.active_attempt_id && loadAttemptResult(investigation.id, investigation.active_attempt_id)}
+                  onClick={() => selectedAttemptId && loadAttemptResult(investigation!.id, selectedAttemptId)}
                   className="text-xs font-medium px-4 py-2 bg-destructive/10 hover:bg-destructive/20 text-destructive rounded-md transition-colors"
                 >
                   Retry
@@ -332,22 +337,50 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
               </div>
             ) : attemptResult ? (
               attemptResult.is_valid === false ? (
-                <div className="flex-1 p-6">
-                  <div className="bg-rose-500/10 border border-rose-500/20 rounded-md p-4 mb-4">
-                    <h3 className="text-sm font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-2 mb-2">
-                      <AlertTriangle className="w-4 h-4" /> Validation Failed
-                    </h3>
-                    <p className="text-sm text-rose-600/80 dark:text-rose-400/80">The AI response did not pass schema validation.</p>
-                  </div>
-                  {attemptResult.errors != null && (
-                    <div className="mt-4">
-                      <h4 className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">Validation Errors</h4>
-                      <pre className="text-xs bg-surface-muted p-3 rounded-md overflow-x-auto text-foreground whitespace-pre-wrap">
-                        {JSON.stringify(attemptResult.errors, null, 2)}
-                      </pre>
+                (() => {
+                  const errors = (attemptResult.errors ?? {}) as Record<string, unknown>;
+                  const summary =
+                    typeof errors.summary === "string"
+                      ? errors.summary
+                      : investigation?.status === "UNAVAILABLE"
+                        ? "The AI provider could not complete this investigation. No result was generated and no financial action was taken."
+                        : "The AI response did not pass evidence-grounding validation. No result was accepted.";
+                  const headline =
+                    investigation?.status === "UNAVAILABLE"
+                      ? "Investigation Unavailable"
+                      : investigation?.status === "FAILED"
+                        ? "Investigation Failed Validation"
+                        : "Validation Failed";
+                  const detailEntries = Object.entries(errors).filter(
+                    ([key]) => key !== "summary"
+                  );
+                  return (
+                    <div className="flex-1 p-6">
+                      <div className="bg-rose-500/10 border border-rose-500/20 rounded-md p-4">
+                        <h3 className="text-sm font-semibold text-rose-600 dark:text-rose-400 flex items-center gap-2 mb-2">
+                          <AlertTriangle className="w-4 h-4" /> {headline}
+                        </h3>
+                        <p className="text-sm text-rose-600/80 dark:text-rose-400/80 leading-relaxed">{summary}</p>
+                        {investigation?.status === "UNAVAILABLE" && (
+                          <p className="text-xs text-muted-foreground mt-3">
+                            You can retry from the exception workspace. A new attempt will be created and the
+                            investigation status updated.
+                          </p>
+                        )}
+                        {detailEntries.length > 0 && (
+                          <div className="mt-4">
+                            <h4 className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wider">
+                              Validation Details
+                            </h4>
+                            <pre className="text-xs bg-background/60 p-3 rounded-md overflow-x-auto text-foreground whitespace-pre-wrap border border-border/60">
+                              {JSON.stringify(Object.fromEntries(detailEntries), null, 2)}
+                            </pre>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
+                  );
+                })()
               ) : attemptResult.result ? (
                 <div className="flex-1 p-0 divide-y divide-border">
                   {(() => {
@@ -443,6 +476,32 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
                   </p>
                 </div>
               )
+            ) : investigation?.status === "FAILED" || investigation?.status === "UNAVAILABLE" ? (
+              <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center mb-4">
+                  <AlertTriangle className="w-6 h-6 text-rose-500" />
+                </div>
+                <h3 className="text-sm font-medium text-foreground mb-1">
+                  {investigation.status === "UNAVAILABLE"
+                    ? "Investigation Unavailable"
+                    : "Investigation Failed"}
+                </h3>
+                <p className="text-sm text-muted-foreground max-w-sm">
+                  {investigation.status === "UNAVAILABLE"
+                    ? "The AI provider could not complete this investigation. Retry from the exception workspace to start a new attempt."
+                    : "This investigation did not produce a validated result. Retry from the exception workspace to start a new attempt."}
+                </p>
+              </div>
+            ) : investigation?.status === "COMPLETED" && attempts && attempts.length === 0 ? (
+              <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
+                <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center mb-4">
+                  <FileText className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <h3 className="text-sm font-medium text-foreground mb-1">Result Unavailable</h3>
+                <p className="text-sm text-muted-foreground max-w-sm">
+                  The completed investigation has no retrievable attempt result.
+                </p>
+              </div>
             ) : (
               <div className="flex-1 p-8 flex flex-col items-center justify-center text-center">
                 <div className="w-12 h-12 rounded-full bg-surface-muted flex items-center justify-center mb-4">
@@ -450,7 +509,7 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
                 </div>
                 <h3 className="text-sm font-medium text-foreground mb-1">No results available yet</h3>
                 <p className="text-sm text-muted-foreground max-w-sm">
-                  Investigation results, resolution paths, and agent reasoning will be displayed here once an attempt completes.
+                  Investigation results, resolution paths, and findings will be displayed here once an attempt completes.
                 </p>
               </div>
             )}

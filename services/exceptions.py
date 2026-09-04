@@ -216,18 +216,13 @@ async def get_exception_detail(session: AsyncSession, exception_id: str) -> Opti
     explanation = None
     
     if inv:
-        if inv.active_attempt:
-            # We would need to load this
-            attempt_stmt = select(Investigation.active_attempt).where(Investigation.id == inv.id) # it's a relationship
-            # just read from validated_output if it exists
-            # Wait, active_attempt is a relationship
-            pass
-            
-        # We can just check attempts
-        for attempt in inv.attempts:
+        # Surface the newest validated attempt's findings. The validated
+        # output schema stores root cause under root_cause_category and the
+        # narrative under summary (legacy code read non-existent keys).
+        for attempt in sorted(inv.attempts, key=lambda a: a.created_at or datetime.min, reverse=True):
             if attempt.is_valid and attempt.validated_output:
-                root_cause = attempt.validated_output.get("root_cause")
-                explanation = attempt.validated_output.get("explanation")
+                root_cause = attempt.validated_output.get("root_cause_category")
+                explanation = attempt.validated_output.get("summary")
                 break
                 
     return ExceptionDetail(

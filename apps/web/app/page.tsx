@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Activity,
@@ -48,6 +48,9 @@ export default function DashboardPage() {
 
   const [investigatingIds, setInvestigatingIds] = useState<Set<string>>(new Set());
   const [investigationError, setInvestigationError] = useState<string | null>(null);
+  // Ref mirror of in-flight runs: guards against duplicate requests from rapid
+  // repeated clicks before React has committed the disabled state.
+  const investigatingRef = useRef<Set<string>>(new Set());
 
   const router = useRouter();
 
@@ -98,7 +101,8 @@ export default function DashboardPage() {
   };
 
   const handleInvestigate = async (discrepancyId: string) => {
-    if (investigatingIds.has(discrepancyId)) return;
+    if (investigatingIds.has(discrepancyId) || investigatingRef.current.has(discrepancyId)) return;
+    investigatingRef.current.add(discrepancyId);
 
     setInvestigatingIds((prev) => {
       const next = new Set(prev);
@@ -112,6 +116,7 @@ export default function DashboardPage() {
       router.push(`/investigations/${result.investigation_id}`);
     } catch (err: any) {
       setInvestigationError(err.message || "Failed to start investigation");
+      investigatingRef.current.delete(discrepancyId);
       setInvestigatingIds((prev) => {
         const next = new Set(prev);
         next.delete(discrepancyId);
