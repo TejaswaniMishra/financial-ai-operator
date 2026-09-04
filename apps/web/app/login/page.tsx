@@ -3,12 +3,12 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, Lock, Mail, Shield, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, KeyRound, Lock, Mail, Shield, AlertCircle } from "lucide-react";
 import { useAuth } from "@/components/providers/auth-provider";
 import { cn } from "@/lib/utils";
 
 function LoginForm() {
-  const { login, user, isAuthenticated, isLoading } = useAuth();
+  const { login, completeMfaLogin, user, isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextParam = searchParams.get("next");
@@ -18,6 +18,11 @@ function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // MFA second stage — a challenge token, held in React state only. It is
+  // short-lived (15 min), single-use, and grants access to nothing by itself.
+  const [mfaToken, setMfaToken] = useState<string | null>(null);
+  const [code, setCode] = useState("");
+  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
 
   // If already authenticated, redirect away — EXCEPT when the backend has
   // flagged a forced password change (admin reset): the AuthProvider routes
@@ -40,13 +45,40 @@ function LoginForm() {
 
     setIsSubmitting(true);
     try {
-      await login({ email: email.trim(), password }, nextParam ?? undefined);
+      const outcome = await login(
+        { email: email.trim(), password },
+        nextParam ?? undefined
+      );
+      if (outcome.mfa_required && outcome.mfa_token) {
+        setMfaToken(outcome.mfa_token);
+      }
     } catch (err: unknown) {
       const msg =
         err instanceof Error ? err.message : "Invalid email or password";
       setError(msg);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleCodeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (!mfaToken || !code.trim()) {
+      setError("Enter the code from your authenticator app.");
+      return;
+    }
+    setIsVerifyingCode(true);
+    try {
+      await completeMfaLogin(mfaToken, code.trim(), nextParam ?? undefined);
+    } catch (err: unknown) {
+      // The backend challenge token stays valid after a wrong code (it is
+      // revoked only on success), so the user can retry without re-entering
+      // credentials.
+      const msg = err instanceof Error ? err.message : "Invalid code.";
+      setError(msg);
+    } finally {
+      setIsVerifyingCode(false);
     }
   };
 
@@ -94,10 +126,12 @@ function LoginForm() {
               <span className="font-semibold text-foreground">Financial AI Operator</span>
             </div>
             <h1 className="text-2xl font-bold text-foreground tracking-tight">
-              Sign in
+              {mfaToken ? "Two-factor authentication" : "Sign in"}
             </h1>
             <p className="text-sm text-muted-foreground">
-              Enter your credentials to access the platform.
+              {mfaToken
+                ? `Enter the 6-digit code from your authenticator app for ${email.trim()}.`
+                : "Enter your credentials to access the platform."}
             </p>
           </div>
 
@@ -109,8 +143,75 @@ function LoginForm() {
             </div>
           )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+          {/* Form — credentials step, or MFA code step after a challenge */}
+          {mfaToken ? (
+            <form onSubmit={handleCodeSubmit} className="space-y-5" noValidate>
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="mfa-code"
+                  className="text-sm font-medium text-foreground"
+                >
+                  Authenticator code
+                </label>
+                <div className="relative">
+                  <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                  <input
+                    id="mfa-code"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    required
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="000000"
+                    className={cn(
+                      "w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border bg-background text-foreground",
+                      "placeholder:text-muted-foreground/60",
+                      "border-border focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary",
+                      "transition-colors"
+                    )}
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Lost your authenticator? Enter one of your one-time recovery
+                  codes instead.
+                </p>
+              </div>
+
+              <button
+                id="mfa-submit"
+                type="submit"
+                disabled={isVerifyingCode}
+                className={cn(
+                  "w-full py-2.5 px-4 rounded-lg text-sm font-semibold text-white transition-all",
+                  "bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50",
+                  "disabled:opacity-50 disabled:cursor-not-allowed"
+                )}
+              >
+                {isVerifyingCode ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Verifying...
+                  </span>
+                ) : (
+                  "Verify & sign in"
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMfaToken(null);
+                  setCode("");
+                  setError(null);
+                }}
+                className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Back to sign in
+              </button>
+            </form>
+          ) : (
+            <>
+            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
             <div className="space-y-1.5">
               <label
                 htmlFor="email"
@@ -196,17 +297,19 @@ function LoginForm() {
                 "Sign in"
               )}
             </button>
-          </form>
+            </form>
 
-          <p className="text-sm text-center text-muted-foreground">
-            No account?{" "}
-            <Link
-              href="/signup"
-              className="text-primary font-medium hover:underline underline-offset-2"
-            >
-              Create account
-            </Link>
-          </p>
+            <p className="text-sm text-center text-muted-foreground">
+              No account?{" "}
+              <Link
+                href="/signup"
+                className="text-primary font-medium hover:underline underline-offset-2"
+              >
+                Create account
+              </Link>
+            </p>
+            </>
+          )}
         </div>
       </div>
     </div>
