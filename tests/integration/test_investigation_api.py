@@ -3,8 +3,12 @@ from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import uuid4
 from decimal import Decimal
+from datetime import datetime, timezone
 
-from database.models.reconciliation import ReconciliationRun, Discrepancy
+from database.models.reconciliation import ReconciliationRun, Discrepancy, ReconciliationRelationship
+from packages.schemas.reconciliation import RelationshipStatus, FinancialEvaluationStatus
+from database.models.merchant import Merchant
+from database.models.transaction import Settlement, BankTransaction
 
 @pytest.fixture
 async def seeded_discrepancy(db_session: AsyncSession):
@@ -29,6 +33,94 @@ async def seeded_discrepancy(db_session: AsyncSession):
     db_session.add(disc)
     await db_session.commit()
     return disc_id
+
+@pytest.mark.asyncio
+async def test_investigation_api_run_with_bank_transaction_lineage(
+    async_client: AsyncClient,
+    db_session: AsyncSession,
+    auth_headers,
+):
+    """Regression: investigation of a SETTLEMENT discrepancy linked to a
+    BANK_TRANSACTION must not 500. The investigation context builder once
+    referenced BankTransaction.posted_date, which does not exist (the model
+    field is transaction_date), crashing every such run."""
+    merchant = Merchant(
+        id=str(uuid4()),
+        external_id=f"m-{uuid4().hex[:8]}",
+        name="Regression Merchant",
+        default_currency="USD",
+        status="ACTIVE",
+    )
+    db_session.add(merchant)
+
+    run = ReconciliationRun(id=str(uuid4()))
+    db_session.add(run)
+
+    settlement = Settlement(
+        id=str(uuid4()),
+        external_id=f"set-{uuid4().hex[:8]}",
+        merchant_id=merchant.id,
+        provider="MockPaymentGateway",
+        gross_amount=Decimal("100.00"),
+        fee_amount=Decimal("2.00"),
+        adjustment_amount=Decimal("0.00"),
+        expected_net_amount=Decimal("98.00"),
+        actual_settled_amount=Decimal("97.00"),
+        currency="USD",
+        settlement_date=datetime.now(timezone.utc).replace(tzinfo=None),
+        status="DISCREPANT",
+    )
+    db_session.add(settlement)
+
+    bank_tx = BankTransaction(
+        id=str(uuid4()),
+        external_id=f"btx-{uuid4().hex[:8]}",
+        merchant_id=merchant.id,
+        bank_provider="MockBank",
+        amount=Decimal("97.00"),
+        currency="USD",
+        transaction_type="CREDIT",
+        transaction_date=datetime.now(timezone.utc).replace(tzinfo=None),
+        status="POSTED",
+    )
+    db_session.add(bank_tx)
+
+    relationship = ReconciliationRelationship(
+        id=str(uuid4()),
+        run_id=run.id,
+        source_entity_type="SETTLEMENT",
+        source_entity_id=settlement.id,
+        target_entity_type="BANK_TRANSACTION",
+        target_entity_id=bank_tx.id,
+        relationship_type="SETTLEMENT_TO_BANK",
+        relationship_status=RelationshipStatus.UNRESOLVED,
+        financial_status=FinancialEvaluationStatus.DISCREPANCY,
+        evidence={"note": "regression fixture"},
+    )
+    db_session.add(relationship)
+
+    disc = Discrepancy(
+        id=str(uuid4()),
+        run_id=run.id,
+        rule_code="REGRESSION_BANK_TX_001",
+        discrepancy_type="CURRENCY_MISMATCH",
+        severity="HIGH",
+        source_entity_type="SETTLEMENT",
+        source_entity_id=settlement.id,
+        expected_amount=Decimal("98.00"),
+        actual_amount=Decimal("97.00"),
+        difference_amount=Decimal("1.00"),
+        currency="USD"
+    )
+    db_session.add(disc)
+    await db_session.commit()
+
+    response = await async_client.post(
+        f"/api/v1/investigations/discrepancy/{disc.id}/run", headers=auth_headers
+    )
+    assert response.status_code == 200, response.text
+    assert response.json()["status"] == "COMPLETED"
+
 
 @pytest.mark.asyncio
 async def test_investigation_api_run(async_client: AsyncClient, seeded_discrepancy: str, auth_headers):
