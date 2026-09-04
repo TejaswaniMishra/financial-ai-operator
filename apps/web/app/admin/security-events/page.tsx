@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react"
 import { useAuth } from "@/components/providers/auth-provider"
 import { fetchSecurityEvents, SecurityEvent, SecurityEventPaginatedResponse } from "@/lib/api"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 export default function SecurityEventsPage() {
   const { user } = useAuth()
@@ -22,6 +24,7 @@ export default function SecurityEventsPage() {
     }
 
     loadEvents()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, filterType, offset])
 
   async function loadEvents() {
@@ -40,9 +43,9 @@ export default function SecurityEventsPage() {
   const renderMetadata = (payload: any) => {
     if (!payload || Object.keys(payload).length === 0) return "-"
     return (
-      <details className="text-xs text-slate-400">
-        <summary className="cursor-pointer text-blue-400 hover:text-blue-300">View Metadata</summary>
-        <pre className="mt-2 p-2 bg-slate-950 rounded border border-slate-800 whitespace-pre-wrap break-all">
+      <details className="text-xs text-muted-foreground">
+        <summary className="cursor-pointer text-primary hover:text-primary/80">View Metadata</summary>
+        <pre className="mt-2 p-2 bg-surface-muted rounded border border-border whitespace-pre-wrap break-all text-foreground">
           {JSON.stringify(payload, null, 2)}
         </pre>
       </details>
@@ -52,7 +55,7 @@ export default function SecurityEventsPage() {
   if (error) {
     return (
       <div className="p-8">
-        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-md">
+        <div className="bg-error/10 border border-error/20 text-error p-4 rounded-md">
           {error}
         </div>
       </div>
@@ -67,21 +70,21 @@ export default function SecurityEventsPage() {
   return (
     <div className="p-8 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-50">Security Audit Logs</h1>
+        <h1 className="text-page-title">Security Audit Logs</h1>
       </div>
 
-      <Card className="bg-slate-900 border-slate-800">
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-slate-100">Event History</CardTitle>
+          <CardTitle>Event History</CardTitle>
           <div className="flex gap-4 items-center">
-            <span className="text-sm text-slate-400">Total: {total}</span>
+            <span className="text-sm text-muted-foreground">Total: {total}</span>
             <select
               value={filterType}
               onChange={(e) => {
                 setFilterType(e.target.value)
                 setOffset(0) // Reset pagination on filter change
               }}
-              className="bg-slate-800 text-sm text-slate-200 rounded border border-slate-700 p-2"
+              className="h-10 bg-background text-sm text-foreground rounded-md border border-input px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             >
               <option value="">All Events</option>
               <option value="LOGIN_SUCCESS">LOGIN_SUCCESS</option>
@@ -107,12 +110,12 @@ export default function SecurityEventsPage() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="text-slate-400 py-4">Loading audit logs...</div>
+            <div className="text-muted-foreground py-4">Loading audit logs...</div>
           ) : (
             <div className="space-y-4">
-              <div className="rounded-md border border-slate-800 overflow-x-auto">
+              <div className="rounded-md border border-border overflow-x-auto">
                 <table className="w-full text-sm text-left">
-                  <thead className="text-xs text-slate-400 bg-slate-900/50 uppercase border-b border-slate-800">
+                  <thead className="text-xs text-muted-foreground bg-surface-muted uppercase border-b border-border">
                     <tr>
                       <th className="px-4 py-3">Timestamp</th>
                       <th className="px-4 py-3">Event Type</th>
@@ -126,30 +129,30 @@ export default function SecurityEventsPage() {
                   <tbody>
                     {events.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="px-4 py-8 text-center text-slate-500">
+                        <td colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                           No security events found.
                         </td>
                       </tr>
                     ) : (
                       events.map((evt) => (
-                        <tr key={evt.id} className="border-b border-slate-800/50 text-slate-300 hover:bg-slate-800/30 transition-colors">
+                        <tr key={evt.id} className="border-b border-border text-foreground hover:bg-surface-muted/50 transition-colors">
                           <td className="px-4 py-3 whitespace-nowrap text-xs">
                             {new Date(evt.created_at + "Z").toLocaleString()}
                           </td>
                           <td className="px-4 py-3 font-medium text-xs">
                             {evt.event_type}
                           </td>
-                          <td className="px-4 py-3 font-mono text-xs text-slate-400">
+                          <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
                             {evt.user_id || "-"}
                           </td>
-                          <td className="px-4 py-3 font-mono text-xs text-slate-400">
+                          <td className="px-4 py-3 font-mono text-xs text-muted-foreground">
                             {evt.actor_id || "-"}
                           </td>
                           <td className="px-4 py-3">
                             {evt.is_success ? (
-                              <span className="text-emerald-400 text-xs font-semibold px-2 py-1 bg-emerald-400/10 rounded-full">Success</span>
+                              <Badge tone="emerald">Success</Badge>
                             ) : (
-                              <span className="text-red-400 text-xs font-semibold px-2 py-1 bg-red-400/10 rounded-full">Failed</span>
+                              <Badge tone="red">Failed</Badge>
                             )}
                           </td>
                           <td className="px-4 py-3 font-mono text-xs">
@@ -165,23 +168,25 @@ export default function SecurityEventsPage() {
                 </table>
               </div>
               <div className="flex justify-between items-center">
-                <button
+                <Button
                   disabled={!hasPrev}
                   onClick={() => setOffset(Math.max(0, offset - limit))}
-                  className="px-4 py-2 bg-slate-800 text-slate-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-700"
+                  variant="outline"
+                  size="sm"
                 >
                   Previous
-                </button>
-                <span className="text-sm text-slate-400">
+                </Button>
+                <span className="text-sm text-muted-foreground">
                   Showing {events.length > 0 ? offset + 1 : 0} to {offset + events.length} of {total}
                 </span>
-                <button
+                <Button
                   disabled={!hasMore}
                   onClick={() => setOffset(offset + limit)}
-                  className="px-4 py-2 bg-slate-800 text-slate-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-700"
+                  variant="outline"
+                  size="sm"
                 >
                   Next
-                </button>
+                </Button>
               </div>
             </div>
           )}
