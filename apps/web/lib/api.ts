@@ -954,30 +954,54 @@ export async function fetchException(id: string): Promise<ExceptionDetail> {
 // ─── Financial Periods (M11) ──────────────────────────────────────────────
 
 export type PeriodStatus = "OPEN" | "CLOSING" | "CLOSED";
-export type ControlStatus = "NOT_EVALUATED" | "READY" | "BLOCKED";
+export type PeriodControlStatus = "PASS" | "WARNING" | "BLOCKED";
+export type PeriodControlSeverity = "INFO" | "WARNING" | "CRITICAL";
 
-export interface PeriodMetrics {
-  total_payments: number;
-  total_settlements: number;
-  total_refunds: number;
-  total_fees: number;
+/** One deterministic close-readiness control (matches backend CloseControlResult). */
+export interface PeriodControlResult {
+  control_code: string;
+  status: PeriodControlStatus;
+  severity: PeriodControlSeverity;
+  count: number;
+  amount_by_currency?: Record<string, number> | null;
+  explanation: string;
+  related_ids?: string[] | null;
 }
 
-export interface ControlDetail {
-  status: ControlStatus;
-  blocking_count: number;
-  message?: string;
+/** Period transaction metrics, always grouped by ISO currency (never merged). */
+export interface CurrencyMetrics {
+  transaction_count: number;
+  total_amount: number;
+  payments_count: number;
+  payments_amount: number;
+  refunds_count: number;
+  refunds_amount: number;
+  fees_count: number;
+  fees_amount: number;
+  settlements_count: number;
+  settlements_amount: number;
+  bank_transactions_count: number;
+  bank_transactions_amount: number;
+}
+
+export interface PeriodMetrics {
+  metrics_by_currency: Record<string, CurrencyMetrics>;
+  reconciled_count: number;
+  unreconciled_count: number;
+  discrepancy_count: number;
+  investigation_count: number;
+  action_request_count: number;
+  execution_failures: number;
+  execution_unknowns: number;
 }
 
 export interface PeriodReadiness {
+  period_id: string;
   is_ready: boolean;
-  controls: {
-    unreconciled_transactions: ControlDetail;
-    unresolved_exceptions: ControlDetail;
-    pending_investigations: ControlDetail;
-    pending_action_requests: ControlDetail;
-    running_executions: ControlDetail;
-  };
+  overall_status: PeriodControlStatus;
+  controls: PeriodControlResult[];
+  metrics: PeriodMetrics;
+  evaluated_at: string;
 }
 
 export interface FinancialPeriod {
@@ -988,6 +1012,8 @@ export interface FinancialPeriod {
   status: PeriodStatus;
   created_at: string;
   updated_at: string;
+  closed_at?: string | null;
+  closed_by?: string | null;
 }
 
 export interface PeriodDetailResponse {

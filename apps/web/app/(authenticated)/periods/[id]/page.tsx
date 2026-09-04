@@ -8,7 +8,7 @@ import {
   closePeriod,
   PeriodDetailResponse,
   PeriodReadiness,
-  ControlDetail,
+  PeriodControlResult,
 } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,10 +42,10 @@ function StatusBadge({ status }: { status: string }) {
 
 function ControlBadge({ status }: { status: string }) {
   switch (status) {
-    case "READY":
+    case "PASS":
       return (
         <Badge className="bg-green-100 text-green-800 hover:bg-green-100 gap-1">
-          <CheckCircle2 className="h-3 w-3" /> READY
+          <CheckCircle2 className="h-3 w-3" /> PASS
         </Badge>
       );
     case "BLOCKED":
@@ -54,23 +54,51 @@ function ControlBadge({ status }: { status: string }) {
           <XCircle className="h-3 w-3" /> BLOCKED
         </Badge>
       );
-    case "NOT_EVALUATED":
-      return <Badge variant="outline">NOT EVALUATED</Badge>;
+    case "WARNING":
+      return (
+        <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100 gap-1">
+          <AlertCircle className="h-3 w-3" /> WARNING
+        </Badge>
+      );
     default:
       return <Badge variant="outline">{status}</Badge>;
   }
 }
 
-function ControlRow({ title, control }: { title: string; control: ControlDetail }) {
+const CONTROL_LABELS: Record<string, string> = {
+  CLOSE_UNRECONCILED_TRANSACTIONS: "Unreconciled Transactions",
+  CLOSE_UNRESOLVED_EXCEPTIONS: "Unresolved Exceptions",
+  CLOSE_PENDING_INVESTIGATIONS: "Pending Investigations",
+  CLOSE_FAILED_INVESTIGATIONS: "Failed Investigations",
+  CLOSE_UNAVAILABLE_INVESTIGATIONS: "Unavailable Investigations",
+  CLOSE_PENDING_ACTION_REQUESTS: "Pending Action Requests",
+  CLOSE_RUNNING_EXECUTIONS: "Running Executions",
+  CLOSE_UNKNOWN_EXECUTIONS: "Unknown Executions",
+  CLOSE_DATA_QUALITY_ERRORS: "Data Quality Errors",
+  CLOSE_DUPLICATE_INGESTION: "Duplicate Ingestion",
+  CLOSE_ORPHAN_RECORDS: "Orphan Records",
+};
+
+function controlLabel(code: string): string {
+  if (CONTROL_LABELS[code]) return CONTROL_LABELS[code];
+  return code
+    .replace(/^CLOSE_/, "")
+    .toLowerCase()
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function ControlRow({ title, control }: { title: string; control: PeriodControlResult }) {
+  const blocked = control.status === "BLOCKED" && control.count > 0;
   return (
     <div className="flex items-center justify-between p-4 border rounded-md">
       <div>
         <div className="font-medium">{title}</div>
         <div className="text-sm text-muted-foreground">
-          {control.status === "BLOCKED" && control.blocking_count > 0 ? (
-            <span className="text-red-600 font-medium">{control.blocking_count} blocking items</span>
+          {blocked ? (
+            <span className="text-red-600 font-medium">{control.count} blocking item{control.count !== 1 ? "s" : ""}</span>
           ) : (
-            control.message || (control.status === "READY" ? "All clear" : "Pending evaluation")
+            control.explanation || "All clear"
           )}
         </div>
       </div>
@@ -254,22 +282,33 @@ export default function PeriodDetailPage() {
             <CardDescription>Transactions within this period</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex justify-between items-center border-b pb-2">
-              <span className="text-sm font-medium text-muted-foreground">Payments</span>
-              <span className="font-semibold">{metrics.total_payments}</span>
-            </div>
-            <div className="flex justify-between items-center border-b pb-2">
-              <span className="text-sm font-medium text-muted-foreground">Settlements</span>
-              <span className="font-semibold">{metrics.total_settlements}</span>
-            </div>
-            <div className="flex justify-between items-center border-b pb-2">
-              <span className="text-sm font-medium text-muted-foreground">Refunds</span>
-              <span className="font-semibold">{metrics.total_refunds}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-muted-foreground">Fees</span>
-              <span className="font-semibold">{metrics.total_fees}</span>
-            </div>
+            {Object.entries(metrics.metrics_by_currency ?? {}).length === 0 ? (
+              <p className="text-sm text-muted-foreground">No transactions in this period.</p>
+            ) : (
+              Object.entries(metrics.metrics_by_currency).map(([ccy, m]) => (
+                <div key={ccy} className="rounded-md border p-3 space-y-2">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    {ccy}
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Payments</span>
+                    <span className="font-semibold">{m.payments_count}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Settlements</span>
+                    <span className="font-semibold">{m.settlements_count}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Refunds</span>
+                    <span className="font-semibold">{m.refunds_count}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Fees</span>
+                    <span className="font-semibold">{m.fees_count}</span>
+                  </div>
+                </div>
+              ))
+            )}
           </CardContent>
         </Card>
       </div>
@@ -301,13 +340,19 @@ export default function PeriodDetailPage() {
                 </Button>
               )}
             </div>
+          ) : readiness.controls.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-md border border-dashed">
+              <p>No controls were evaluated.</p>
+            </div>
           ) : (
             <div className="space-y-3">
-              <ControlRow title="Unreconciled Transactions" control={readiness.controls.unreconciled_transactions} />
-              <ControlRow title="Unresolved Exceptions" control={readiness.controls.unresolved_exceptions} />
-              <ControlRow title="Pending Investigations" control={readiness.controls.pending_investigations} />
-              <ControlRow title="Pending Action Requests" control={readiness.controls.pending_action_requests} />
-              <ControlRow title="Running Action Executions" control={readiness.controls.running_executions} />
+              {readiness.controls.map((control) => (
+                <ControlRow
+                  key={control.control_code}
+                  title={controlLabel(control.control_code)}
+                  control={control}
+                />
+              ))}
             </div>
           )}
         </CardContent>
