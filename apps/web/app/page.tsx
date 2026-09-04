@@ -154,12 +154,12 @@ export default function DashboardPage() {
 
         {/* Status Error Display if API is down */}
         {error && (
-          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 flex items-start space-x-3 text-sm">
-            <AlertTriangle className="w-5 h-5 flex-shrink-0 text-amber-400 mt-0.5" />
+          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 flex items-start space-x-3 text-sm">
+            <AlertTriangle className="w-5 h-5 flex-shrink-0 text-amber-600 dark:text-amber-400 mt-0.5" />
             <div>
               <div className="font-semibold">Backend Connection Notice</div>
-              <div className="text-slate-300 text-xs mt-1">
-                {error}. Ensure the FastAPI server is running on <code className="bg-slate-900 px-1 py-0.5 rounded text-amber-200">http://localhost:8000</code>.
+              <div className="text-muted-foreground text-xs mt-1">
+                {error}. Ensure the FastAPI server is running on <code className="bg-surface-muted px-1 py-0.5 rounded text-amber-700 dark:text-amber-300 border border-border-subtle">http://localhost:8000</code>.
               </div>
             </div>
           </div>
@@ -406,80 +406,80 @@ export default function DashboardPage() {
         {/* Architecture & Verification Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Target Architecture Flow */}
-          <div className="glass-panel rounded-xl p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+          <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
               <div className="flex items-center space-x-2">
-                <Layers className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-semibold text-white text-base">
+                <Layers className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                <h3 className="font-semibold text-foreground text-base">
                   Target Vertical Slice Architecture
                 </h3>
               </div>
-              <span className="text-[11px] font-mono bg-slate-800 text-slate-300 px-2 py-0.5 rounded">
+              <span className="text-[11px] font-mono bg-surface-muted text-muted-foreground px-2 py-0.5 rounded border border-border-subtle">
                 Deterministic First
               </span>
             </div>
 
             <div className="space-y-3 font-mono text-xs">
-              <div className="p-3 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
-                <span className="font-semibold text-emerald-400">1. Data Sources</span>
-                <span className="text-slate-400">MockPaymentGateway / MockBank / MockERP CSV</span>
+              <div className="p-3 rounded-lg bg-surface-muted border border-border text-foreground flex items-center justify-between">
+                <span className="font-semibold text-emerald-600 dark:text-emerald-400">1. Data Sources</span>
+                <span className="text-muted-foreground">MockPaymentGateway / MockBank / MockERP CSV</span>
               </div>
-              <div className="p-3 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
-                <span className="font-semibold text-cyan-400">2. Normalization & Ingestion</span>
-                <span className="text-slate-400">Canonical Transaction Schemas</span>
+              <div className="p-3 rounded-lg bg-surface-muted border border-border text-foreground flex items-center justify-between">
+                <span className="font-semibold text-cyan-700 dark:text-cyan-400">2. Normalization & Ingestion</span>
+                <span className="text-muted-foreground">Canonical Transaction Schemas</span>
               </div>
-              <div className="p-3 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
-                <span className="font-semibold text-purple-400">3. Immutable Ledger</span>
-                <span className="text-slate-400">Double-Entry Debits == Credits</span>
+              <div className="p-3 rounded-lg bg-surface-muted border border-border text-foreground flex items-center justify-between">
+                <span className="font-semibold text-purple-700 dark:text-purple-400">3. Immutable Ledger</span>
+                <span className="text-muted-foreground">Double-Entry Debits == Credits</span>
               </div>
-              <div className="p-3 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
-                <span className="font-semibold text-amber-400">4. Deterministic Reconciliation</span>
-                <span className="text-slate-400">Rule-based 1:1, 1:N & Discrepancies</span>
+              <div className="p-3 rounded-lg bg-surface-muted border border-border text-foreground flex items-center justify-between">
+                <span className="font-semibold text-amber-700 dark:text-amber-400">4. Deterministic Reconciliation</span>
+                <span className="text-muted-foreground">Rule-based 1:1, 1:N & Discrepancies</span>
               </div>
-              <div className="p-3 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
-                <span className="font-semibold text-rose-400">5. Governance & Audit</span>
-                <span className="text-slate-400">Append-Only Audit Logs & Policy Gate</span>
+              <div className="p-3 rounded-lg bg-surface-muted border border-border text-foreground flex items-center justify-between">
+                <span className="font-semibold text-rose-700 dark:text-rose-400">5. Governance & Audit</span>
+                <span className="text-muted-foreground">Append-Only Audit Logs & Policy Gate</span>
               </div>
             </div>
           </div>
 
           {/* Core System Verification Checklist */}
-          <div className="glass-panel rounded-xl p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+          <div className="bg-card border border-border rounded-xl p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
               <div className="flex items-center space-x-2">
-                <Code2 className="w-5 h-5 text-cyan-400" />
-                <h3 className="font-semibold text-white text-base">
+                <Code2 className="w-5 h-5 text-cyan-700 dark:text-cyan-400" />
+                <h3 className="font-semibold text-foreground text-base">
                   Milestone 1 Verification Status
                 </h3>
               </div>
-              <span className="text-[11px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">
+              <span className="text-[11px] font-mono bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded">
                 Verified
               </span>
             </div>
 
             <div className="space-y-2.5 text-xs">
-              <div className="flex items-center space-x-2.5 text-slate-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <span>FastAPI Async REST API configured with versioned routes (<code className="text-emerald-300">/health</code>, <code className="text-emerald-300">/api/v1/system/info</code>)</span>
+              <div className="flex items-center space-x-2.5 text-foreground">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                <span>FastAPI Async REST API configured with versioned routes (<code className="text-emerald-700 dark:text-emerald-300">/health</code>, <code className="text-emerald-700 dark:text-emerald-300">/api/v1/system/info</code>)</span>
               </div>
-              <div className="flex items-center space-x-2.5 text-slate-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <div className="flex items-center space-x-2.5 text-foreground">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
                 <span>Strict Decimal Money value object with banker's rounding & currency mismatch rejection</span>
               </div>
-              <div className="flex items-center space-x-2.5 text-slate-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <div className="flex items-center space-x-2.5 text-foreground">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
                 <span>SQLAlchemy 2.0 connection engine with automatic async SQLite / PostgreSQL dual-mode</span>
               </div>
-              <div className="flex items-center space-x-2.5 text-slate-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                <span>Next.js 14 App Router + Tailwind CSS dark-mode dashboard shell</span>
+              <div className="flex items-center space-x-2.5 text-foreground">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                <span>Next.js 14 App Router + Tailwind CSS dashboard shell</span>
               </div>
-              <div className="flex items-center space-x-2.5 text-slate-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <div className="flex items-center space-x-2.5 text-foreground">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
                 <span>Pytest async unit and integration test suite passing 100%</span>
               </div>
-              <div className="flex items-center space-x-2.5 text-slate-300">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <div className="flex items-center space-x-2.5 text-foreground">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
                 <span>Docker Compose environment with PostgreSQL 16 Alpine container configuration</span>
               </div>
             </div>
