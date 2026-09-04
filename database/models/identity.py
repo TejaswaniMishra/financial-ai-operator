@@ -2,7 +2,7 @@ import uuid
 import enum
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, String, Boolean, Integer, DateTime, ForeignKey, Enum, UniqueConstraint, JSON
+from sqlalchemy import Column, String, Boolean, Integer, DateTime, ForeignKey, Enum, UniqueConstraint, JSON, Text
 from sqlalchemy.orm import relationship
 
 from database.base import Base
@@ -30,6 +30,11 @@ class User(Base):
     #   normal protected functionality until the password is changed.
     credential_version = Column(Integer, nullable=False, default=1, server_default="1")
     must_change_password = Column(Boolean, nullable=False, default=False, server_default="0")
+    # TOTP secret stored FERNET-ENCRYPTED at rest (never plaintext); NULL
+    # while MFA is disabled. mfa_enabled only becomes true after a live
+    # authenticator code has been verified against this secret.
+    mfa_secret_encrypted = Column(Text, nullable=True)
+    mfa_enabled = Column(Boolean, nullable=False, default=False, server_default="0")
 
     # Account-level preferences (server-authoritative, e.g. {"theme": "dark"}).
     # The client may read/write these only through the authenticated
@@ -42,6 +47,9 @@ class User(Base):
     # Relationships
     roles = relationship("UserRole", back_populates="user", cascade="all, delete-orphan")
     credentials = relationship("UserCredential", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    mfa_recovery_codes = relationship(
+        "MfaRecoveryCode", back_populates="user", cascade="all, delete-orphan"
+    )
 
 
 class Role(Base):
