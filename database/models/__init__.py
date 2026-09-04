@@ -8,7 +8,7 @@ from database.models.transaction import (
     SettlementItem,
     BankTransaction,
 )
-from database.models.ingestion import IngestionRecord, IngestionException
+from database.models.ingestion import IngestionRun, IngestionRunRecord, IngestionRecord, IngestionException
 from database.models.event import FinancialEvent
 from database.models.reconciliation import ReconciliationRun, ReconciliationRelationship, Discrepancy
 from database.models.investigation import Investigation, InvestigationAttempt
@@ -29,6 +29,8 @@ __all__ = [
     "Settlement",
     "SettlementItem",
     "BankTransaction",
+    "IngestionRun",
+    "IngestionRunRecord",
     "IngestionRecord",
     "IngestionException",
     "FinancialEvent",
