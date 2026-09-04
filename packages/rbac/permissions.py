@@ -21,6 +21,7 @@ class Permission(str, enum.Enum):
     VIEW_SETTINGS = "VIEW_SETTINGS"
     VIEW_PERIODS = "VIEW_PERIODS"
     VIEW_REPORTS = "VIEW_REPORTS"
+    VIEW_INGESTION = "VIEW_INGESTION"
 
     # Investigation workflow
     RUN_INVESTIGATION = "RUN_INVESTIGATION"
@@ -30,6 +31,9 @@ class Permission(str, enum.Enum):
     REJECT_ACTION_REQUEST = "REJECT_ACTION_REQUEST"
     CANCEL_ACTION_REQUEST = "CANCEL_ACTION_REQUEST"
     EXECUTE_ACTION = "EXECUTE_ACTION"
+
+    # Ingestion workflow (deterministic data import into the financial domain)
+    INGEST_DATA = "INGEST_DATA"
 
     # Financial Close workflow
     CREATE_PERIOD = "CREATE_PERIOD"
