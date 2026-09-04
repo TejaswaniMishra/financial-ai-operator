@@ -9,6 +9,10 @@ import {
   TransactionRecordType,
 } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 const RECORD_TYPES: Array<{ value: TransactionRecordType | ""; label: string }> = [
@@ -20,30 +24,21 @@ const RECORD_TYPES: Array<{ value: TransactionRecordType | ""; label: string }> 
   { value: "BANK_TRANSACTION", label: "Bank transactions" },
 ];
 
-const TYPE_COLORS: Record<string, string> = {
-  PAYMENT: "bg-blue-500/15 text-blue-300 border-blue-500/30",
-  REFUND: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  FEE: "bg-violet-500/15 text-violet-300 border-violet-500/30",
-  SETTLEMENT: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-  BANK_TRANSACTION: "bg-cyan-500/15 text-cyan-300 border-cyan-500/30",
+const TYPE_TONES: Record<string, "blue" | "amber" | "violet" | "emerald" | "cyan" | "neutral"> = {
+  PAYMENT: "blue",
+  REFUND: "amber",
+  FEE: "violet",
+  SETTLEMENT: "emerald",
+  BANK_TRANSACTION: "cyan",
 };
 
 function StatusPill({ status }: { status: string }) {
-  const tone = /FAILED|REJECTED|DENIED|UNRESOLVED/i.test(status)
-    ? "bg-red-500/15 text-red-300 border-red-500/30"
+  const tone: "red" | "amber" | "emerald" = /FAILED|REJECTED|DENIED|UNRESOLVED/i.test(status)
+    ? "red"
     : /PENDING|RUNNING|UNKNOWN/i.test(status)
-      ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
-      : "bg-emerald-500/15 text-emerald-300 border-emerald-500/30";
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
-        tone
-      )}
-    >
-      {status}
-    </span>
-  );
+      ? "amber"
+      : "emerald";
+  return <Badge tone={tone}>{status}</Badge>;
 }
 
 function formatAmount(amount: string, currency: string) {
@@ -54,6 +49,9 @@ function formatAmount(amount: string, currency: string) {
     currency: currency || "USD",
   }).format(n);
 }
+
+const selectClass =
+  "w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2";
 
 export default function TransactionsPage() {
   const [data, setData] = useState<TransactionListResponse | null>(null);
@@ -153,10 +151,10 @@ export default function TransactionsPage() {
     <div className="p-8 space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-50">
+          <h1 className="text-page-title">
             Transactions
           </h1>
-          <p className="text-slate-400 mt-1">
+          <p className="text-secondary mt-1">
             Authoritative financial records across payments, refunds, fees,
             settlements, and bank transactions — with reconciliation and
             exception state.
@@ -167,12 +165,12 @@ export default function TransactionsPage() {
       {/* KPI cards — real backend counts for the current filter set */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {kpis.map((kpi) => (
-          <Card key={kpi.label} className="bg-slate-900 border-slate-800">
+          <Card key={kpi.label}>
             <CardContent className="p-4">
-              <p className="text-xs text-slate-400 uppercase tracking-wide">
+              <p className="text-card-title">
                 {kpi.label}
               </p>
-              <p className="text-2xl font-bold text-slate-50 mt-1">
+              <p className="text-2xl font-bold text-foreground mt-1">
                 {kpi.value.toLocaleString()}
               </p>
             </CardContent>
@@ -181,27 +179,26 @@ export default function TransactionsPage() {
       </div>
 
       {/* Search + filters */}
-      <Card className="bg-slate-900 border-slate-800">
+      <Card>
         <CardContent className="p-4 space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div>
-              <label className="text-xs text-slate-400 mb-1 block">Search</label>
-              <input
+            <div className="space-y-1.5">
+              <Label className="text-muted-foreground">Search</Label>
+              <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Transaction ID, external ID, merchant…"
-                className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 placeholder-slate-500 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none"
               />
             </div>
-            <div>
-              <label className="text-xs text-slate-400 mb-1 block">Type</label>
+            <div className="space-y-1.5">
+              <Label className="text-muted-foreground">Type</Label>
               <select
                 value={recordType}
                 onChange={(e) => {
                   setRecordType(e.target.value as TransactionRecordType | "");
                   setOffset(0);
                 }}
-                className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none"
+                className={selectClass}
               >
                 {RECORD_TYPES.map((t) => (
                   <option key={t.value} value={t.value}>
@@ -210,23 +207,22 @@ export default function TransactionsPage() {
                 ))}
               </select>
             </div>
-            <div>
-              <label className="text-xs text-slate-400 mb-1 block">Status</label>
-              <input
+            <div className="space-y-1.5">
+              <Label className="text-muted-foreground">Status</Label>
+              <Input
                 value={status}
                 onChange={(e) => {
                   setStatus(e.target.value);
                   setOffset(0);
                 }}
                 placeholder="e.g. CAPTURED, SETTLED, COMPLETED"
-                className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 placeholder-slate-500 outline-none"
               />
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-            <div>
-              <label className="text-xs text-slate-400 mb-1 block">Currency</label>
-              <input
+            <div className="space-y-1.5">
+              <Label className="text-muted-foreground">Currency</Label>
+              <Input
                 value={currency}
                 onChange={(e) => {
                   setCurrency(e.target.value.toUpperCase());
@@ -234,68 +230,65 @@ export default function TransactionsPage() {
                 }}
                 placeholder="USD"
                 maxLength={3}
-                className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 placeholder-slate-500 outline-none"
               />
             </div>
-            <div>
-              <label className="text-xs text-slate-400 mb-1 block">Reconciled</label>
+            <div className="space-y-1.5">
+              <Label className="text-muted-foreground">Reconciled</Label>
               <select
                 value={reconciled}
                 onChange={(e) => {
                   setReconciled(e.target.value as "" | "true" | "false");
                   setOffset(0);
                 }}
-                className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none"
+                className={selectClass}
               >
                 <option value="">Any</option>
                 <option value="true">Reconciled</option>
                 <option value="false">Unreconciled</option>
               </select>
             </div>
-            <div>
-              <label className="text-xs text-slate-400 mb-1 block">Exception</label>
+            <div className="space-y-1.5">
+              <Label className="text-muted-foreground">Exception</Label>
               <select
                 value={hasDiscrepancy}
                 onChange={(e) => {
                   setHasDiscrepancy(e.target.value as "" | "true" | "false");
                   setOffset(0);
                 }}
-                className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none"
+                className={selectClass}
               >
                 <option value="">Any</option>
                 <option value="true">Has discrepancy</option>
                 <option value="false">No discrepancy</option>
               </select>
             </div>
-            <div>
-              <label className="text-xs text-slate-400 mb-1 block">From</label>
-              <input
+            <div className="space-y-1.5">
+              <Label className="text-muted-foreground">From</Label>
+              <Input
                 type="date"
                 value={dateFrom}
                 onChange={(e) => {
                   setDateFrom(e.target.value);
                   setOffset(0);
                 }}
-                className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none"
               />
             </div>
-            <div>
-              <label className="text-xs text-slate-400 mb-1 block">To</label>
-              <input
+            <div className="space-y-1.5">
+              <Label className="text-muted-foreground">To</Label>
+              <Input
                 type="date"
                 value={dateTo}
                 onChange={(e) => {
                   setDateTo(e.target.value);
                   setOffset(0);
                 }}
-                className="w-full bg-slate-800 border border-slate-700 rounded p-2 text-sm text-slate-200 outline-none"
               />
             </div>
           </div>
           {hasFilters && (
             <button
               onClick={clearFilters}
-              className="text-xs text-blue-400 hover:text-blue-300 underline underline-offset-2"
+              className="text-xs text-primary hover:underline underline-offset-2"
             >
               Clear filters
             </button>
@@ -305,44 +298,41 @@ export default function TransactionsPage() {
 
       {/* States */}
       {error ? (
-        <Card className="bg-slate-900 border-slate-800">
+        <Card>
           <CardContent className="p-6 text-center space-y-3">
-            <p className="text-red-400 text-sm">{error}</p>
-            <button
-              onClick={load}
-              className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm"
-            >
+            <p className="text-destructive text-sm">{error}</p>
+            <Button onClick={load} variant="outline" size="sm">
               Retry
-            </button>
+            </Button>
           </CardContent>
         </Card>
       ) : loading ? (
-        <Card className="bg-slate-900 border-slate-800">
-          <CardContent className="p-6 text-slate-400 text-sm">
+        <Card>
+          <CardContent className="p-6 text-muted-foreground text-sm">
             Loading transactions…
           </CardContent>
         </Card>
       ) : !data || data.items.length === 0 ? (
-        <Card className="bg-slate-900 border-slate-800">
+        <Card>
           <CardContent className="p-6 text-center">
-            <p className="text-slate-300 font-medium">No transactions found</p>
-            <p className="text-slate-500 text-sm mt-1">
+            <p className="text-foreground font-medium">No transactions found</p>
+            <p className="text-muted-foreground text-sm mt-1">
               Try adjusting the search or filters.
             </p>
           </CardContent>
         </Card>
       ) : (
-        <Card className="bg-slate-900 border-slate-800">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-slate-100">Records</CardTitle>
-            <span className="text-sm text-slate-400">
+            <CardTitle>Records</CardTitle>
+            <span className="text-sm text-muted-foreground">
               {data.total.toLocaleString()} total
             </span>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border border-slate-800 overflow-x-auto">
+            <div className="rounded-md border border-border overflow-x-auto">
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-slate-400 bg-slate-900/50 uppercase border-b border-slate-800">
+                <thead className="text-xs text-muted-foreground bg-surface-muted uppercase border-b border-border">
                   <tr>
                     <th className="px-4 py-3">Type</th>
                     <th className="px-4 py-3">ID</th>
@@ -353,51 +343,46 @@ export default function TransactionsPage() {
                     <th className="px-4 py-3">State</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-border">
                   {data.items.map((item: TransactionRecord) => (
-                    <tr key={`${item.record_type}-${item.id}`} className="hover:bg-slate-800/40">
+                    <tr key={`${item.record_type}-${item.id}`} className="hover:bg-surface-muted/50 transition-colors">
                       <td className="px-4 py-3">
-                        <span
-                          className={cn(
-                            "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
-                            TYPE_COLORS[item.record_type] ?? "bg-slate-500/15 text-slate-300 border-slate-500/30"
-                          )}
-                        >
+                        <Badge tone={TYPE_TONES[item.record_type] ?? "neutral"}>
                           {item.record_type.replace("_", " ")}
-                        </span>
+                        </Badge>
                       </td>
                       <td className="px-4 py-3">
                         <Link
                           href={`/transactions/${item.id}`}
-                          className="text-blue-400 hover:text-blue-300 font-mono text-xs"
+                          className="text-primary hover:text-primary/80 font-mono text-xs"
                         >
                           {item.id}
                         </Link>
                       </td>
-                      <td className="px-4 py-3 text-slate-300">{item.merchant_name}</td>
-                      <td className="px-4 py-3 text-right text-slate-200 font-medium">
+                      <td className="px-4 py-3 text-foreground">{item.merchant_name}</td>
+                      <td className="px-4 py-3 text-right text-foreground font-medium">
                         {formatAmount(item.amount, item.currency)}
                       </td>
                       <td className="px-4 py-3">
                         <StatusPill status={item.status} />
                       </td>
-                      <td className="px-4 py-3 text-slate-400 text-xs">
+                      <td className="px-4 py-3 text-muted-foreground text-xs">
                         {new Date(item.created_at).toLocaleString()}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex gap-1.5">
                           {item.reconciled && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-emerald-500/15 text-emerald-300 border-emerald-500/30">
+                            <Badge tone="emerald">
                               Reconciled
-                            </span>
+                            </Badge>
                           )}
                           {item.has_discrepancy && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-red-500/15 text-red-300 border-red-500/30">
+                            <Badge tone="red">
                               Exception
-                            </span>
+                            </Badge>
                           )}
                           {!item.reconciled && !item.has_discrepancy && (
-                            <span className="text-xs text-slate-600">—</span>
+                            <span className="text-xs text-muted-foreground">—</span>
                           )}
                         </div>
                       </td>
@@ -409,25 +394,27 @@ export default function TransactionsPage() {
 
             {/* Pagination */}
             <div className="flex items-center justify-between mt-4">
-              <span className="text-xs text-slate-500">
+              <span className="text-xs text-muted-foreground">
                 Showing {data.items.length ? offset + 1 : 0}–
                 {offset + data.items.length} of {data.total}
               </span>
               <div className="flex gap-2">
-                <button
+                <Button
                   onClick={() => setOffset(Math.max(0, offset - limit))}
                   disabled={offset === 0}
-                  className="px-3 py-1.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-sm disabled:opacity-40 hover:bg-slate-700"
+                  variant="outline"
+                  size="sm"
                 >
                   Previous
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => setOffset(offset + limit)}
                   disabled={offset + limit >= data.total}
-                  className="px-3 py-1.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-sm disabled:opacity-40 hover:bg-slate-700"
+                  variant="outline"
+                  size="sm"
                 >
                   Next
-                </button>
+                </Button>
               </div>
             </div>
           </CardContent>

@@ -11,32 +11,25 @@ import {
   LineageNode,
 } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const TYPE_COLORS: Record<string, string> = {
-  PAYMENT: "bg-blue-500/15 text-blue-300 border-blue-500/30",
-  REFUND: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  FEE: "bg-violet-500/15 text-violet-300 border-violet-500/30",
-  SETTLEMENT: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-  BANK_TRANSACTION: "bg-cyan-500/15 text-cyan-300 border-cyan-500/30",
+const TYPE_TONES: Record<string, "blue" | "amber" | "violet" | "emerald" | "cyan" | "neutral"> = {
+  PAYMENT: "blue",
+  REFUND: "amber",
+  FEE: "violet",
+  SETTLEMENT: "emerald",
+  BANK_TRANSACTION: "cyan",
 };
 
 function StatusPill({ status }: { status: string }) {
-  const tone = /FAILED|REJECTED|DENIED|UNRESOLVED/i.test(status)
-    ? "bg-red-500/15 text-red-300 border-red-500/30"
+  const tone: "red" | "amber" | "emerald" = /FAILED|REJECTED|DENIED|UNRESOLVED/i.test(status)
+    ? "red"
     : /PENDING|RUNNING|UNKNOWN/i.test(status)
-      ? "bg-amber-500/15 text-amber-300 border-amber-500/30"
-      : "bg-emerald-500/15 text-emerald-300 border-emerald-500/30";
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
-        tone
-      )}
-    >
-      {status}
-    </span>
-  );
+      ? "amber"
+      : "emerald";
+  return <Badge tone={tone}>{status}</Badge>;
 }
 
 function formatAmount(amount: string | null, currency: string | null) {
@@ -52,8 +45,8 @@ function formatAmount(amount: string | null, currency: string | null) {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="text-xs text-slate-500 uppercase tracking-wide">{label}</p>
-      <div className="text-sm text-slate-200 mt-0.5">{children}</div>
+      <p className="text-xs text-muted-foreground uppercase tracking-wide">{label}</p>
+      <div className="text-sm text-foreground mt-0.5">{children}</div>
     </div>
   );
 }
@@ -67,49 +60,37 @@ function LineageNodeRow({ node }: { node: LineageNode }) {
           className={cn(
             "w-3 h-3 rounded-full mt-1.5 ring-4",
             isSource
-              ? "bg-blue-400 ring-blue-500/20"
-              : "bg-amber-400 ring-amber-500/20"
+              ? "bg-blue-500 ring-blue-500/20 dark:ring-blue-400/20"
+              : "bg-amber-500 ring-amber-500/20 dark:ring-amber-400/20"
           )}
         />
-        <div className="w-px flex-1 bg-slate-800" />
+        <div className="w-px flex-1 bg-border" />
       </div>
       <div className="pb-5 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <span
-            className={cn(
-              "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
-              TYPE_COLORS[node.kind] ?? "bg-slate-500/15 text-slate-300 border-slate-500/30"
-            )}
-          >
+          <Badge tone={TYPE_TONES[node.kind] ?? "neutral"}>
             {node.kind.replace("_", " ")}
-          </span>
-          <span
-            className={cn(
-              "inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase border",
-              isSource
-                ? "bg-blue-500/10 text-blue-300 border-blue-500/30"
-                : "bg-amber-500/10 text-amber-300 border-amber-500/30"
-            )}
-          >
+          </Badge>
+          <Badge tone={isSource ? "blue" : "amber"}>
             {node.role}
-          </span>
+          </Badge>
           {node.status && <StatusPill status={node.status} />}
         </div>
-        <p className="text-sm text-slate-200 mt-1.5 font-mono text-xs">{node.label}</p>
-        <p className="text-xs text-slate-400 mt-0.5">
+        <p className="text-sm text-foreground mt-1.5 font-mono text-xs">{node.label}</p>
+        <p className="text-xs text-muted-foreground mt-0.5">
           {node.amount !== null && node.amount !== undefined && (
-            <span className="text-slate-300 font-medium">
+            <span className="text-foreground font-medium">
               {formatAmount(node.amount, node.currency)} ·{" "}
             </span>
           )}
           {node.timestamp ? new Date(node.timestamp).toLocaleString() : ""}
         </p>
         {node.detail && Object.keys(node.detail).length > 0 && (
-          <details className="text-xs text-slate-400 mt-1">
-            <summary className="cursor-pointer text-blue-400 hover:text-blue-300">
+          <details className="text-xs text-muted-foreground mt-1">
+            <summary className="cursor-pointer text-primary hover:text-primary/80">
               Details
             </summary>
-            <pre className="mt-1 p-2 bg-slate-950 rounded border border-slate-800 whitespace-pre-wrap break-all">
+            <pre className="mt-1 p-2 bg-surface-muted rounded border border-border whitespace-pre-wrap break-all text-foreground">
               {JSON.stringify(node.detail, null, 2)}
             </pre>
           </details>
@@ -153,8 +134,8 @@ export default function TransactionDetailPage() {
   if (loading) {
     return (
       <div className="p-8">
-        <Card className="bg-slate-900 border-slate-800">
-          <CardContent className="p-6 text-slate-400 text-sm">
+        <Card>
+          <CardContent className="p-6 text-muted-foreground text-sm">
             Loading transaction…
           </CardContent>
         </Card>
@@ -165,15 +146,12 @@ export default function TransactionDetailPage() {
   if (error) {
     return (
       <div className="p-8">
-        <Card className="bg-slate-900 border-slate-800">
+        <Card>
           <CardContent className="p-6 text-center space-y-3">
-            <p className="text-red-400 text-sm">{error}</p>
-            <button
-              onClick={load}
-              className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm"
-            >
+            <p className="text-destructive text-sm">{error}</p>
+            <Button onClick={load} variant="outline" size="sm">
               Retry
-            </button>
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -191,35 +169,30 @@ export default function TransactionDetailPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <span
-              className={cn(
-                "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border",
-                TYPE_COLORS[detail.record_type] ?? "bg-slate-500/15 text-slate-300 border-slate-500/30"
-              )}
-            >
+            <Badge tone={TYPE_TONES[detail.record_type] ?? "neutral"}>
               {detail.record_type.replace("_", " ")}
-            </span>
+            </Badge>
             <StatusPill status={detail.status} />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-50 mt-2 font-mono">
+          <h1 className="text-page-title mt-2 font-mono">
             {detail.id}
           </h1>
-          <p className="text-slate-400 mt-1">
+          <p className="text-secondary mt-1">
             {detail.external_id && <>External: {detail.external_id} · </>}
             {new Date(detail.created_at).toLocaleString()}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-3xl font-bold text-slate-50">
+          <p className="text-3xl font-bold text-foreground">
             {formatAmount(detail.amount, detail.currency)}
           </p>
-          <p className="text-sm text-slate-400">{detail.currency}</p>
+          <p className="text-sm text-muted-foreground">{detail.currency}</p>
         </div>
       </div>
 
       {/* Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-slate-900 border-slate-800">
+        <Card>
           <CardContent className="p-5 space-y-3">
             <Field label="Merchant">{detail.merchant.name}</Field>
             <Field label="Provider">
@@ -227,10 +200,10 @@ export default function TransactionDetailPage() {
             </Field>
             {detail.order && (
               <Field label="Order">
-                <Link href={`/transactions/${detail.order.id}`} className="text-blue-400 hover:text-blue-300 font-mono">
+                <Link href={`/transactions/${detail.order.id}`} className="text-primary hover:text-primary/80 font-mono">
                   {detail.order.id}
                 </Link>
-                <span className="text-slate-400 text-xs block mt-0.5">
+                <span className="text-muted-foreground text-xs block mt-0.5">
                   {detail.order.status} · {formatAmount(detail.order.amount, detail.order.currency)}
                 </span>
               </Field>
@@ -241,26 +214,26 @@ export default function TransactionDetailPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-slate-800">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-slate-100 text-sm">Reconciliation</CardTitle>
+            <CardTitle className="text-sm">Reconciliation</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {detail.reconciliation.length === 0 ? (
-              <p className="text-sm text-slate-500">No reconciliation relationship established.</p>
+              <p className="text-sm text-muted-foreground">No reconciliation relationship established.</p>
             ) : (
               detail.reconciliation.map((rel) => (
                 <div key={rel.relationship_id} className="space-y-1.5">
                   <div className="flex items-center gap-2">
                     <StatusPill status={rel.relationship_status} />
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-muted-foreground">
                       {rel.relationship_type.replace("_", " ")}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted-foreground">
                     Financial: {rel.financial_status} · Run: {rel.run_status}
                   </p>
-                  <p className="text-xs text-slate-600 font-mono">
+                  <p className="text-xs text-muted-foreground font-mono">
                     {rel.source_entity_type} {rel.source_entity_id.slice(0, 8)} →{" "}
                     {rel.target_entity_type} {rel.target_entity_id.slice(0, 8)}
                   </p>
@@ -270,31 +243,31 @@ export default function TransactionDetailPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-slate-800">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-slate-100 text-sm">Exception state</CardTitle>
+            <CardTitle className="text-sm">Exception state</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {!hasException ? (
-              <p className="text-sm text-slate-500">No discrepancies for this record.</p>
+              <p className="text-sm text-muted-foreground">No discrepancies for this record.</p>
             ) : (
               <>
                 <div className="flex items-center gap-2">
                   <StatusPill status={discrepancy.severity} />
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-muted-foreground">
                     {discrepancy.discrepancy_type.replace("_", " ")}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted-foreground">
                   Rule {discrepancy.rule_code} · diff{" "}
                   {formatAmount(discrepancy.difference_amount, discrepancy.currency)}
                 </p>
                 {detail.investigation && (
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-muted-foreground">
                     Investigation:{" "}
                     <Link
                       href={`/investigations/${detail.investigation.id}`}
-                      className="text-blue-400 hover:text-blue-300"
+                      className="text-primary hover:text-primary/80"
                     >
                       {detail.investigation.status}
                     </Link>
@@ -303,12 +276,12 @@ export default function TransactionDetailPage() {
               </>
             )}
             {detail.action_requests.length > 0 && (
-              <div className="pt-2 border-t border-slate-800">
-                <p className="text-xs text-slate-500 mb-1">Action requests</p>
+              <div className="pt-2 border-t border-border">
+                <p className="text-xs text-muted-foreground mb-1">Action requests</p>
                 {detail.action_requests.map((ar) => (
                   <div key={ar.id} className="flex items-center gap-2">
                     <StatusPill status={ar.status} />
-                    <span className="text-xs text-slate-400">{ar.action.replace("_", " ")}</span>
+                    <span className="text-xs text-muted-foreground">{ar.action.replace("_", " ")}</span>
                   </div>
                 ))}
               </div>
@@ -319,14 +292,14 @@ export default function TransactionDetailPage() {
 
       {/* Financial details / related records */}
       {detail.related.length > 0 && (
-        <Card className="bg-slate-900 border-slate-800">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-slate-100 text-sm">Financial details</CardTitle>
+            <CardTitle className="text-sm">Financial details</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border border-slate-800 overflow-x-auto">
+            <div className="rounded-md border border-border overflow-x-auto">
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-slate-400 bg-slate-900/50 uppercase border-b border-slate-800">
+                <thead className="text-xs text-muted-foreground bg-surface-muted uppercase border-b border-border">
                   <tr>
                     <th className="px-4 py-3">Type</th>
                     <th className="px-4 py-3">ID</th>
@@ -334,28 +307,23 @@ export default function TransactionDetailPage() {
                     <th className="px-4 py-3">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-border">
                   {detail.related.map((r) => (
-                    <tr key={`${r.record_type}-${r.id}`} className="hover:bg-slate-800/40">
+                    <tr key={`${r.record_type}-${r.id}`} className="hover:bg-surface-muted/50 transition-colors">
                       <td className="px-4 py-3">
-                        <span
-                          className={cn(
-                            "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
-                            TYPE_COLORS[r.record_type] ?? "bg-slate-500/15 text-slate-300 border-slate-500/30"
-                          )}
-                        >
+                        <Badge tone={TYPE_TONES[r.record_type] ?? "neutral"}>
                           {r.record_type.replace("_", " ")}
-                        </span>
+                        </Badge>
                       </td>
                       <td className="px-4 py-3">
                         <Link
                           href={`/transactions/${r.id}`}
-                          className="text-blue-400 hover:text-blue-300 font-mono text-xs"
+                          className="text-primary hover:text-primary/80 font-mono text-xs"
                         >
                           {r.id}
                         </Link>
                       </td>
-                      <td className="px-4 py-3 text-right text-slate-200 font-medium">
+                      <td className="px-4 py-3 text-right text-foreground font-medium">
                         {formatAmount(r.amount, r.currency)}
                       </td>
                       <td className="px-4 py-3">{r.status ? <StatusPill status={r.status} /> : "—"}</td>
@@ -369,18 +337,18 @@ export default function TransactionDetailPage() {
       )}
 
       {/* Lineage */}
-      <Card className="bg-slate-900 border-slate-800">
+      <Card>
         <CardHeader>
-          <CardTitle className="text-slate-100">Financial lineage</CardTitle>
-          <p className="text-xs text-slate-500">
-            <span className="text-blue-300">SOURCE</span> = authoritative
-            financial facts · <span className="text-amber-300">DERIVED</span> =
+          <CardTitle>Financial lineage</CardTitle>
+          <p className="text-xs text-muted-foreground">
+            <span className="text-blue-700 dark:text-blue-300">SOURCE</span> = authoritative
+            financial facts · <span className="text-amber-700 dark:text-amber-300">DERIVED</span> =
             reconciliation / investigation / action state
           </p>
         </CardHeader>
         <CardContent>
           {!lineage || lineage.nodes.length === 0 ? (
-            <p className="text-sm text-slate-500">No lineage established.</p>
+            <p className="text-sm text-muted-foreground">No lineage established.</p>
           ) : (
             <div className="space-y-0">
               {lineage.nodes.map((node) => (
@@ -393,15 +361,15 @@ export default function TransactionDetailPage() {
 
       {/* Actions — only for applicable, permitted flows */}
       {(hasException || detail.investigation || detail.action_requests.length > 0) && (
-        <Card className="bg-slate-900 border-slate-800">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-slate-100 text-sm">Actions</CardTitle>
+            <CardTitle className="text-sm">Actions</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-3">
             {hasException && (
               <Link
                 href="/discrepancies"
-                className="px-4 py-2 rounded bg-slate-800 border border-slate-700 text-slate-200 text-sm hover:bg-slate-700"
+                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-surface hover:text-foreground transition-colors"
               >
                 View Exception
               </Link>
@@ -409,7 +377,7 @@ export default function TransactionDetailPage() {
             {detail.investigation && (
               <Link
                 href={`/investigations/${detail.investigation.id}`}
-                className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
               >
                 Investigate
               </Link>
@@ -417,7 +385,7 @@ export default function TransactionDetailPage() {
             {detail.action_requests.length > 0 && (
               <Link
                 href="/action-requests"
-                className="px-4 py-2 rounded bg-slate-800 border border-slate-700 text-slate-200 text-sm hover:bg-slate-700"
+                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-surface hover:text-foreground transition-colors"
               >
                 View Action Requests
               </Link>
