@@ -540,7 +540,11 @@ export interface HealthResponse {
 }
 
 export async function fetchHealth(): Promise<HealthResponse> {
-  const res = await fetch(`${DIRECT_API_BASE}/health`, { cache: "no-store" });
+  // Route through the Next.js BFF (same-origin) so the browser never makes a
+  // cross-origin call to the backend: direct browser → :8000 fetches are
+  // blocked by CORS outside the configured origins and carry no session
+  // cookie. /api/v1/health is a public unauthenticated probe on the backend.
+  const res = await fetch(`${bffBase()}/api/v1/health`, { cache: "no-store" });
   if (!res.ok) {
     throw new Error(`Failed to fetch health status: ${res.statusText}`);
   }

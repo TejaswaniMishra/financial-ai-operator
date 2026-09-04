@@ -6,7 +6,11 @@ async function handler(
   context: { params: { path: string[] } }
 ): Promise<Response> {
   const backendPath = "/api/v1/" + context.params.path.join("/");
-  return proxyAuthenticatedRequest(req, backendPath);
+  // /api/v1/health is a public unauthenticated probe on the backend — the
+  // browser health check must work before any session exists (e.g. the
+  // dashboard's connection notice), so it is forwarded without a token.
+  const requireAuth = backendPath !== "/api/v1/health";
+  return proxyAuthenticatedRequest(req, backendPath, { requireAuth });
 }
 
 export const GET = handler;
