@@ -13,7 +13,8 @@ import {
   type CurrentUser,
   type LoginRequest,
   type SignupRequest,
-  login as apiLogin,
+  loginStep1,
+  loginStep2,
   logout as apiLogout,
   signup as apiSignup,
   fetchCurrentUser,
@@ -21,11 +22,21 @@ import {
 } from "@/lib/api";
 import { validateNextParam } from "@/lib/server/redirect";
 
+/** First-stage login result. mfa_required=true means no session cookie was
+ * issued — the caller must show the authenticator step and call
+ * completeMfaLogin with the returned challenge token. */
+export interface LoginOutcome {
+  mfa_required: boolean;
+  mfa_token: string | null;
+}
+
 interface AuthContextValue {
   user: CurrentUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (payload: LoginRequest, next?: string) => Promise<void>;
+  login: (payload: LoginRequest, next?: string) => Promise<LoginOutcome>;
+  /** Second login stage for MFA-enabled accounts. */
+  completeMfaLogin: (mfaToken: string, code: string, next?: string) => Promise<void>;
   signup: (payload: SignupRequest) => Promise<void>;
   logout: () => Promise<void>;
   /** Re-fetch the authoritative /me identity (e.g. after a profile save). */
@@ -96,9 +107,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user, isLoading, pathname, router]);
 
-  const login = useCallback(
-    async (payload: LoginRequest, next?: string) => {
-      await apiLogin(payload);
+  const adoptSession = useCallback(
+    async (next?: string) => {
       const u = await fetchCurrentUser();
       setUser(u);
       if (u.must_change_password) {
@@ -110,6 +120,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       router.replace(destination);
     },
     [router]
+  );
+
+  const login = useCallback(
+    async (payload: LoginRequest, next?: string): Promise<LoginOutcome> => {
+      const step = await loginStep1(payload);
+      if (step.mfa_required) {
+        if (!step.mfa_token) {
+          throw new Error("MFA challenge could not be issued. Please try again.");
+        }
+        // No session cookie was set — the caller must run the code step.
+        return { mfa_required: true, mfa_token: step.mfa_token };
+      }
+      await adoptSession(next);
+      return { mfa_required: false, mfa_token: null };
+    },
+    [adoptSession]
+  );
+
+  const completeMfaLogin = useCallback(
+    async (mfaToken: string, code: string, next?: string) => {
+      await loginStep2({ mfa_token: mfaToken, code });
+      await adoptSession(next);
+    },
+    [adoptSession]
   );
 
   const signup = useCallback(async (payload: SignupRequest) => {
@@ -141,6 +175,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isLoading,
         isAuthenticated: user !== null,
         login,
+        completeMfaLogin,
         signup,
         logout,
         refreshUser,

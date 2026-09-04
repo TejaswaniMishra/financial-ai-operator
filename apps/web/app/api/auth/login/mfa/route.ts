@@ -10,6 +10,9 @@ const BACKEND_URL =
 // We match the cookie max-age to the access token lifetime.
 const TOKEN_MAX_AGE_SECONDS = 15 * 60;
 
+// POST /api/auth/login/mfa — second login stage for MFA-enabled accounts.
+// Exchanges the short-lived challenge token + TOTP/recovery code for a real
+// session cookie. The challenge token is single-use server-side.
 export async function POST(req: NextRequest): Promise<NextResponse> {
   if (!checkCSRF(req)) {
     return NextResponse.json({ detail: "Cross-origin request blocked" }, { status: 403 });
@@ -22,10 +25,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ detail: "Invalid request body" }, { status: 400 });
   }
 
-  // Forward credentials to the FastAPI backend
   let backendRes: Response;
   try {
-    backendRes = await fetch(`${BACKEND_URL}/api/v1/auth/login`, {
+    backendRes = await fetch(`${BACKEND_URL}/api/v1/auth/mfa/verify`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify(body),
@@ -34,9 +36,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ detail: "Backend unavailable" }, { status: 503 });
   }
 
-  // On failure, forward the backend error safely (never expose internals)
   if (!backendRes.ok) {
-    let detail = "Invalid email or password";
+    let detail = "Invalid authenticator or recovery code";
     try {
       const data = await backendRes.json();
       if (typeof data?.detail === "string") {
@@ -46,31 +47,17 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ detail }, { status: backendRes.status });
   }
 
-  let data: { access_token?: string; mfa_required?: boolean; mfa_token?: string };
+  let data: { access_token?: string };
   try {
     data = await backendRes.json();
   } catch {
     return NextResponse.json({ detail: "Invalid backend response" }, { status: 502 });
   }
 
-  // MFA challenge: no session is established yet. The short-lived mfa_token
-  // is passed to the browser only so the second login stage can exchange it;
-  // it grants access to nothing else.
-  if (data?.mfa_required) {
-    if (!data.mfa_token || typeof data.mfa_token !== "string") {
-      return NextResponse.json({ detail: "Invalid backend response" }, { status: 502 });
-    }
-    return NextResponse.json(
-      { mfa_required: true, mfa_token: data.mfa_token },
-      { status: 200 }
-    );
-  }
-
   if (!data?.access_token || typeof data.access_token !== "string") {
     return NextResponse.json({ detail: "Invalid backend response" }, { status: 502 });
   }
 
-  // Set the JWT in an HttpOnly cookie — it never reaches browser JavaScript
   const response = NextResponse.json({ ok: true }, { status: 200 });
   response.cookies.set(SESSION_COOKIE_NAME, data.access_token, {
     httpOnly: true,

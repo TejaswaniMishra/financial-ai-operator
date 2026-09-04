@@ -33,6 +33,9 @@ export interface CurrentUser {
   /** Server-authoritative account preferences (e.g. {"theme": "dark"}).
    * Written only through the authenticated preferences endpoints. */
   preferences: Record<string, string>;
+  /** Whether the account has completed TOTP enrollment. Secret never leaves
+   * the backend except during the one-time enrollment payload. */
+  mfa_enabled: boolean;
 }
 
 // ─── Self-service Profile & Preferences ─────────────────────────────────────
@@ -268,17 +271,101 @@ async function fetchAuthenticated(
 // ─── Auth API functions (call Next.js BFF, never raw backend) ─────────────
 
 export async function login(payload: LoginRequest): Promise<void> {
+  await loginStep1(payload);
+}
+
+// ─── MFA (TOTP) ───────────────────────────────────────────────────────────────
+
+/** Result of the first login stage. MFA-enabled accounts get a restricted
+ * challenge token and NO session cookie until a code is verified. */
+export interface LoginStep1Result {
+  mfa_required: boolean;
+  mfa_token: string | null;
+}
+
+/** POST /api/auth/login — sets the HttpOnly session cookie when MFA is not
+ * required; otherwise returns a short-lived challenge token only. */
+export async function loginStep1(payload: LoginRequest): Promise<LoginStep1Result> {
   const res = await fetch("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
+  const data = await res.json().catch(() => null);
   if (!res.ok) {
-    const data = await res.json().catch(() => null);
     throw new Error(
       typeof data?.detail === "string" ? data.detail : "Invalid email or password"
     );
   }
+  if (data?.mfa_required) {
+    return { mfa_required: true, mfa_token: data.mfa_token ?? null };
+  }
+  return { mfa_required: false, mfa_token: null };
+}
+
+/** POST /api/auth/login/mfa — exchanges the challenge token + authenticator
+ * code for a real session (HttpOnly cookie). */
+export async function loginStep2(payload: {
+  mfa_token: string;
+  code: string;
+}): Promise<void> {
+  const res = await fetch("/api/auth/login/mfa", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json().catch(() => null);
+  if (!res.ok) {
+    throw new Error(
+      typeof data?.detail === "string"
+        ? data.detail
+        : "Invalid authenticator code"
+    );
+  }
+}
+
+/** POST /api/v1/auth/mfa/setup — starts enrollment, returns the one-time
+ * base32 secret and otpauth URI. */
+export async function mfaSetup(): Promise<{ secret: string; otpauth_url: string }> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/auth/mfa/setup`, {
+    method: "POST",
+  });
+  if (!res.ok) throw new Error(await authErrorMessage(res, "Could not start MFA enrollment."));
+  return res.json();
+}
+
+/** POST /api/v1/auth/mfa/verify-setup — enables MFA; returns one-time codes. */
+export async function mfaVerifySetup(code: string): Promise<string[]> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/auth/mfa/verify-setup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+  });
+  if (!res.ok) throw new Error(await authErrorMessage(res, "Invalid authenticator code."));
+  const data = await res.json();
+  return data.codes;
+}
+
+/** POST /api/v1/auth/mfa/disable — requires a valid TOTP/recovery code. */
+export async function mfaDisable(code: string): Promise<void> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/auth/mfa/disable`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+  });
+  if (!res.ok) throw new Error(await authErrorMessage(res, "Could not disable MFA."));
+}
+
+/** POST /api/v1/auth/mfa/recovery-codes — regenerates codes (password required). */
+export async function mfaRegenerateCodes(currentPassword: string): Promise<string[]> {
+  const res = await fetchAuthenticated(`${bffBase()}/api/v1/auth/mfa/recovery-codes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ current_password: currentPassword }),
+  });
+  if (!res.ok) throw new Error(await authErrorMessage(res, "Could not regenerate recovery codes."));
+  const data = await res.json();
+  return data.codes;
 }
 
 export async function signup(payload: SignupRequest): Promise<void> {
