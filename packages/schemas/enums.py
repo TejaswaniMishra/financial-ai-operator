@@ -64,3 +64,41 @@ class EventType(str, Enum):
 class IngestionStatus(str, Enum):
     PROCESSED = "PROCESSED"
     EXCEPTION = "EXCEPTION"
+
+
+class IngestionRunStatus(str, Enum):
+    """Lifecycle of one auditable ingestion run (durable batch import)."""
+
+    PENDING = "PENDING"
+    RUNNING = "RUNNING"
+    COMPLETED = "COMPLETED"
+    COMPLETED_WITH_ERRORS = "COMPLETED_WITH_ERRORS"
+    FAILED = "FAILED"
+
+
+class IngestionRunRecordStatus(str, Enum):
+    """Row-level outcome of one source record inside an ingestion run.
+
+    - ACCEPTED: validated and materialized into the financial domain
+    - DUPLICATE: logically identical source row already processed (skipped)
+    - REJECTED: invalid source row (validation error, never persisted)
+    - FAILED: valid row whose processing failed and can be retried
+    """
+
+    ACCEPTED = "ACCEPTED"
+    DUPLICATE = "DUPLICATE"
+    REJECTED = "REJECTED"
+    FAILED = "FAILED"
+
+
+class IngestionSourceType(str, Enum):
+    """Identifies where a batch of source records originated.
+
+    MOCK / API / CSV are local or deterministic synthetic sources. This
+    platform does NOT ship credentials or connectors for real external
+    providers; adapters for production providers are future work.
+    """
+
+    MOCK = "MOCK"
+    API = "API"
+    CSV = "CSV"
