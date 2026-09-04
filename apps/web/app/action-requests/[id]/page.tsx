@@ -101,13 +101,13 @@ export default function ActionRequestDetailPage({ params }: { params: { id: stri
 
     try {
       if (actionType === "approve") {
-        await approveActionRequest(request.id, "Current User");
+        await approveActionRequest(request.id);
         setSubmitSuccess("Action request approved successfully.");
       } else if (actionType === "reject") {
-        await rejectActionRequest(request.id, reason, "Current User");
+        await rejectActionRequest(request.id, reason);
         setSubmitSuccess("Action request rejected successfully.");
       } else if (actionType === "cancel") {
-        await cancelActionRequest(request.id, reason, "Current User");
+        await cancelActionRequest(request.id, reason);
         setSubmitSuccess("Action request cancelled successfully.");
       }
       

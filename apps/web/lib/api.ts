@@ -969,11 +969,14 @@ export async function fetchActionRequest(id: string): Promise<ActionRequestRespo
   return res.json();
 }
 
-export async function approveActionRequest(id: string, actor: string = "system"): Promise<ActionRequestResponse> {
+// NOTE: no `actor` field is sent. The backend records the authenticated
+// user from the session — decision attribution is server-authoritative and
+// never client-supplied.
+export async function approveActionRequest(id: string): Promise<ActionRequestResponse> {
   const res = await fetchAuthenticated(`${bffBase()}/api/v1/action-requests/${id}/approve`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ actor }),
+    body: JSON.stringify({}),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => null);
@@ -982,11 +985,11 @@ export async function approveActionRequest(id: string, actor: string = "system")
   return res.json();
 }
 
-export async function rejectActionRequest(id: string, reason: string, actor: string = "system"): Promise<ActionRequestResponse> {
+export async function rejectActionRequest(id: string, reason: string): Promise<ActionRequestResponse> {
   const res = await fetchAuthenticated(`${bffBase()}/api/v1/action-requests/${id}/reject`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ reason, actor }),
+    body: JSON.stringify({ reason }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => null);
@@ -995,11 +998,11 @@ export async function rejectActionRequest(id: string, reason: string, actor: str
   return res.json();
 }
 
-export async function cancelActionRequest(id: string, reason: string, actor: string = "system"): Promise<ActionRequestResponse> {
+export async function cancelActionRequest(id: string, reason: string): Promise<ActionRequestResponse> {
   const res = await fetchAuthenticated(`${bffBase()}/api/v1/action-requests/${id}/cancel`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ reason, actor }),
+    body: JSON.stringify({ reason }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => null);
