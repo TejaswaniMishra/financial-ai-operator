@@ -38,7 +38,35 @@ async def create_period(
     )
     db.add(period)
     await db.flush()
+    await db.commit()
     return period
+
+async def record_period_evaluation(
+    db: AsyncSession, period: FinancialPeriod, readiness: CloseReadiness, actor: str
+) -> PeriodCloseEvaluation:
+    """Persist a readiness evaluation as an audit-trail record.
+
+    POST /periods/{id}/evaluate records the deterministic control snapshot so
+    the reporting layer can show evaluation outcomes, blocker counts, and
+    evaluation timestamps (PeriodCloseEvaluation is documented as an audit
+    trail in M11). The request-scoped session never auto-commits, so the row
+    must be committed here.
+    """
+    evaluation = PeriodCloseEvaluation(
+        id=str(uuid.uuid4()),
+        period_id=period.id,
+        evaluated_at=readiness.evaluated_at,
+        evaluated_by=actor,
+        is_ready=readiness.is_ready,
+        blocking_count=sum(1 for c in readiness.controls if c.status == ControlStatus.BLOCKED),
+        warning_count=sum(1 for c in readiness.controls if c.status == ControlStatus.WARNING),
+        control_results=[c.model_dump() for c in readiness.controls],
+        metrics_snapshot=readiness.metrics.model_dump(),
+    )
+    db.add(evaluation)
+    await db.commit()
+    return evaluation
+
 
 async def get_period(db: AsyncSession, period_id: str) -> Optional[FinancialPeriod]:
     result = await db.execute(select(FinancialPeriod).where(FinancialPeriod.id == period_id))
@@ -342,7 +370,9 @@ async def close_period(db: AsyncSession, period: FinancialPeriod, actor: str) ->
     # Evaluate again deterministically
     readiness = await evaluate_close_readiness(db, locked_period)
     
-    # Save the evaluation snapshot
+    # Save the evaluation snapshot. The session never auto-commits, so the
+    # evaluation must be committed explicitly or it is silently rolled back
+    # when the request-scoped session closes.
     evaluation = PeriodCloseEvaluation(
         id=str(uuid.uuid4()),
         period_id=locked_period.id,
@@ -355,9 +385,11 @@ async def close_period(db: AsyncSession, period: FinancialPeriod, actor: str) ->
         metrics_snapshot=readiness.metrics.model_dump()
     )
     db.add(evaluation)
-    
+
     if not readiness.is_ready:
-        await db.flush()
+        # Persist the blocked evaluation as an audit record before failing
+        # the close attempt.
+        await db.commit()
         raise ValueError(f"Period is blocked from closing. Blockers: {evaluation.blocking_count}")
 
     # Ready to close
@@ -380,5 +412,5 @@ async def close_period(db: AsyncSession, period: FinancialPeriod, actor: str) ->
     )
     db.add(sec_event)
     
-    await db.flush()
+    await db.commit()
     return locked_period

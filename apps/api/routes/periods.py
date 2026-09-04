@@ -21,6 +21,7 @@ from services.period import (
     list_periods,
     get_period,
     evaluate_close_readiness,
+    record_period_evaluation,
     close_period,
     calculate_period_metrics
 )
@@ -109,8 +110,12 @@ async def api_evaluate_period_close(
     period = await get_period(db, period_id)
     if not period:
         raise HTTPException(status_code=404, detail="Period not found")
-    
-    return await evaluate_close_readiness(db, period)
+
+    readiness = await evaluate_close_readiness(db, period)
+    # Persist the deterministic evaluation snapshot as an audit record so
+    # period/close analytics can show outcomes and blocker counts.
+    await record_period_evaluation(db, period, readiness, actor=user.email)
+    return readiness
 
 @router.post("/{period_id}/close", response_model=PeriodResponse)
 async def api_close_period(
