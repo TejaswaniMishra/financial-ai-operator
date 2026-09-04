@@ -24,6 +24,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import { format } from "date-fns";
 import { useAuth } from "@/components/providers/auth-provider";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 import { Progress } from "@/components/ui/progress";
 
 function StatusBadge({ status }: { status: string }) {
@@ -82,7 +83,7 @@ export default function PeriodDetailPage() {
   const params = useParams();
   const id = params.id as string;
   const router = useRouter();
-  const { hasPermission } = useAuth();
+  const { user } = useAuth();
 
   const [data, setData] = useState<PeriodDetailResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -90,9 +91,9 @@ export default function PeriodDetailPage() {
   const [closing, setClosing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canEvaluate = hasPermission("EVALUATE_PERIOD_CLOSE");
-  const canApprove = hasPermission("APPROVE_PERIOD_CLOSE"); // Used to gate the actual close action
-  const canClose = hasPermission("CLOSE_PERIOD");
+  const canEvaluate = hasPermission(user, PERMISSIONS.EVALUATE_PERIOD_CLOSE);
+  const canApprove = hasPermission(user, PERMISSIONS.APPROVE_PERIOD_CLOSE); // Used to gate the actual close action
+  const canClose = hasPermission(user, PERMISSIONS.CLOSE_PERIOD);
 
   const load = async () => {
     try {
@@ -283,7 +284,7 @@ export default function PeriodDetailPage() {
               </CardDescription>
             </div>
             {readiness && (
-              <Badge variant={readiness.is_ready ? "default" : "destructive"} className="text-sm px-3 py-1">
+              <Badge variant={readiness.is_ready ? "default" : "error"} className="text-sm px-3 py-1">
                 {readiness.is_ready ? "READY TO CLOSE" : "BLOCKED"}
               </Badge>
             )}

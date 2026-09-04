@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { AlertCircle, Calendar, Plus } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useAuth } from "@/components/providers/auth-provider";
+import { hasPermission, PERMISSIONS } from "@/lib/permissions";
 
 function StatusBadge({ status }: { status: FinancialPeriod["status"] }) {
   switch (status) {
@@ -31,13 +32,13 @@ function StatusBadge({ status }: { status: FinancialPeriod["status"] }) {
 }
 
 export default function PeriodsPage() {
-  const { hasPermission } = useAuth();
+  const { user } = useAuth();
   const [data, setData] = useState<PeriodListResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
 
-  const canCreate = hasPermission("CREATE_PERIOD");
+  const canCreate = hasPermission(user, PERMISSIONS.CREATE_PERIOD);
 
   useEffect(() => {
     async function load() {
