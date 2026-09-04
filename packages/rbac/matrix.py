@@ -22,6 +22,7 @@ OPERATOR_PERMISSIONS = frozenset({
     Permission.VIEW_PERIODS,
     Permission.CREATE_PERIOD,
     Permission.EVALUATE_PERIOD_CLOSE,
+    Permission.VIEW_REPORTS,
 })
 
 FINANCE_MANAGER_PERMISSIONS = OPERATOR_PERMISSIONS | frozenset({
