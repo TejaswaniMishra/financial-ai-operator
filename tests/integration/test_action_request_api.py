@@ -137,12 +137,15 @@ async def sample_action_request(db_session, sample_evaluation_approval_required)
 async def test_action_request_approve(async_client: AsyncClient, sample_action_request, db_session, finance_manager_headers):
     response = await async_client.post(
         f"/api/v1/action-requests/{sample_action_request.id}/approve",
-        json={"actor": "test_user"}
+        # The client may send an arbitrary `actor`, but the audit trail must
+        # record the authenticated user (server-derived), never the label.
+        json={"actor": "spoofed_actor"}
     , headers=finance_manager_headers)
     
     assert response.status_code == 200
     assert response.json()["status"] == "APPROVED"
-    assert response.json()["approved_by"] == "test_user"
+    assert response.json()["approved_by"] == "Finance Manager User"
+    assert response.json()["approved_by"] != "spoofed_actor"
     assert response.json()["approved_at"] is not None
     
     # Check audit log
