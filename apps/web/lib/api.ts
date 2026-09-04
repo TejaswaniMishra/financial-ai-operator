@@ -926,6 +926,7 @@ export async function fetchExceptions(params?: {
   size?: number;
   type?: string;
   state?: string;
+  currency?: string;
   transaction_type?: string;
 }): Promise<ExceptionListResponse> {
   const url = new URL(`${bffBase()}/api/v1/exceptions`);
@@ -935,87 +936,8 @@ export async function fetchExceptions(params?: {
   }
   if (params?.type && params.type !== "ALL") url.searchParams.set("type", params.type);
   if (params?.state && params.state !== "ALL") url.searchParams.set("state", params.state);
+  if (params?.currency && params.currency !== "ALL") url.searchParams.set("currency", params.currency);
   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
-
-
-export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
-
-export interface ExceptionReadSummary {
-  id: string;
-  type: string;
-  severity: string;
-  overall_state: OverallExceptionState;
-  amount: number | null;
-  currency: string | null;
-  source_entity_type: string;
-  source_entity_id: string;
-  detected_at: string;
-  investigation_status: string | null;
-  policy_decision: string | null;
-  action_request_status: string | null;
-  execution_status: string | null;
-}
-
-export interface ExceptionListResponse {
-  items: ExceptionReadSummary[];
-  total: number;
-  page: number;
-  size: number;
-}
-
-export interface ExceptionDetail {
-  id: string;
-  type: string;
-  severity: string;
-  overall_state: OverallExceptionState;
-  amount: number | null;
-  expected_amount: number | null;
-  actual_amount: number | null;
-  difference_amount: number | null;
-  currency: string | null;
-  source_entity_type: string;
-  source_entity_id: string;
-  related_entity_type: string | null;
-  related_entity_id: string | null;
-  detected_at: string;
-  run_id: string;
-  rule_code: string;
-  
-  investigation_status: string | null;
-  investigation_id: string | null;
-  root_cause: string | null;
-  investigation_explanation: string | null;
-  
-  policy_decision: string | null;
-  policy_action: string | null;
-  policy_rule_code: string | null;
-  policy_reason: string | null;
-  
-  action_request_id: string | null;
-  action_request_status: string | null;
-  action_request_action: string | null;
-  
-  execution_id: string | null;
-  execution_status: string | null;
-  execution_error: string | null;
-}
-
-export async function fetchExceptions(params?: {
-  page?: number;
-  size?: number;
-  type?: string;
-  state?: string;
-  transaction_type?: string;
-}): Promise<ExceptionListResponse> {
-  const url = new URL(`${bffBase()}/api/v1/exceptions`);
-  if (params?.page && params?.size) {
-    url.searchParams.set("offset", String((params.page - 1) * params.size));
-    url.searchParams.set("limit", String(params.size));
-  }
-  if (params?.type && params.type !== "ALL") url.searchParams.set("type", params.type);
-  if (params?.state && params.state !== "ALL") url.searchParams.set("state", params.state);
-  if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
-
   const res = await fetchAuthenticated(url.toString());
   if (!res.ok) throw new Error(`Failed to fetch exceptions: ${res.statusText}`);
   return res.json();
@@ -1294,7 +1216,9 @@ export type TrendMetric =
   | "exception_count";
 export type BreakdownDimension = "provider" | "payment_method" | "merchant_id";
 
-function buildReportUrl(path: string, params: Record<string, string | undefined | null>): string {
+type ReportUrlParams = Record<string, string | undefined | null>;
+
+function buildReportUrl(path: string, params: ReportUrlParams): string {
   const url = new URL(`${bffBase()}/api/v1/reports/${path}`);
   for (const [k, v] of Object.entries(params)) {
     if (v != null && v !== "") url.searchParams.set(k, v);
