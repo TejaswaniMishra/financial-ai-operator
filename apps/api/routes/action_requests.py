@@ -57,15 +57,22 @@ async def get_action_request(
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
+# Server-derived decision actor. The `actor` field on the request bodies is
+# accepted for API compatibility but IGNORED: the audit trail must record the
+# authenticated user, never a client-supplied label.
+def _actor_label(current_user) -> str:
+    return current_user.display_name or current_user.email
+
 @router.post("/{request_id}/approve", response_model=ActionRequestResponse, dependencies=[Depends(require_permission(Permission.APPROVE_ACTION_REQUEST))])
 async def approve_action_request(
     request_id: str,
     payload: ActionRequestApprove,
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
+    current_user = Depends(get_current_user)
 ):
     service = ActionRequestService(db)
     try:
-        return await service.approve_action_request(request_id, actor=payload.actor)
+        return await service.approve_action_request(request_id, actor=_actor_label(current_user))
     except ValueError as e:
         if "not found" in str(e).lower():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
@@ -75,11 +82,12 @@ async def approve_action_request(
 async def reject_action_request(
     request_id: str,
     payload: ActionRequestReject,
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
+    current_user = Depends(get_current_user)
 ):
     service = ActionRequestService(db)
     try:
-        return await service.reject_action_request(request_id, reason=payload.reason, actor=payload.actor)
+        return await service.reject_action_request(request_id, reason=payload.reason, actor=_actor_label(current_user))
     except ValueError as e:
         if "not found" in str(e).lower():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
@@ -89,11 +97,12 @@ async def reject_action_request(
 async def cancel_action_request(
     request_id: str,
     payload: ActionRequestCancel,
-    db: AsyncSession = Depends(get_db_session)
+    db: AsyncSession = Depends(get_db_session),
+    current_user = Depends(get_current_user)
 ):
     service = ActionRequestService(db)
     try:
-        return await service.cancel_action_request(request_id, reason=payload.reason, actor=payload.actor)
+        return await service.cancel_action_request(request_id, reason=payload.reason, actor=_actor_label(current_user))
     except ValueError as e:
         if "not found" in str(e).lower():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
