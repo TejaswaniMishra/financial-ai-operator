@@ -17,6 +17,7 @@ from database.models.action_request import ActionRequest, ActionRequestAudit
 from database.models.action_execution import ActionExecution, ActionExecutionAttempt
 from database.models.identity import User, Role, UserRole, RoleName, UserCredential, TokenRevocation
 from database.models.security import SecurityEvent
+from database.models.period import FinancialPeriod, PeriodCloseEvaluation
 
 __all__ = [
     "Merchant",
@@ -48,4 +49,6 @@ __all__ = [
     "UserCredential",
     "TokenRevocation",
     "SecurityEvent",
+    "FinancialPeriod",
+    "PeriodCloseEvaluation",
 ]
