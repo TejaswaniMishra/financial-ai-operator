@@ -228,3 +228,34 @@ async def recovery_code_used(db: AsyncSession, user_id: str, request: Optional[R
 
 async def recovery_codes_regenerated(db: AsyncSession, user_id: str, request: Optional[Request] = None) -> None:
     await _log_event(db, SecurityEventType.RECOVERY_CODES_REGENERATED, user_id=user_id, request=request)
+
+
+async def ingestion_started(db: AsyncSession, user_id: str, run_id: str) -> None:
+    """Audit that an ingestion run was created (no raw source content logged)."""
+    await _log_event(
+        db,
+        SecurityEventType.INGESTION_STARTED,
+        user_id=user_id,
+        metadata_payload={"run_id": run_id},
+    )
+
+
+async def ingestion_completed(db: AsyncSession, user_id: str, run_id: str) -> None:
+    """Audit that an ingestion run completed without failures."""
+    await _log_event(
+        db,
+        SecurityEventType.INGESTION_COMPLETED,
+        user_id=user_id,
+        metadata_payload={"run_id": run_id},
+    )
+
+
+async def ingestion_failed(db: AsyncSession, user_id: str, run_id: str) -> None:
+    """Audit that an ingestion run completed with failures or crashed."""
+    await _log_event(
+        db,
+        SecurityEventType.INGESTION_FAILED,
+        user_id=user_id,
+        is_success=False,
+        metadata_payload={"run_id": run_id},
+    )
