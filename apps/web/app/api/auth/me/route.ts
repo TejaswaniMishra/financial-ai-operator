@@ -56,6 +56,16 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
     // Backend-controlled flag: an admin password reset is pending and the
     // user must choose a new password before accessing the platform.
     must_change_password: data.must_change_password === true,
+    // Backend-controlled security + preference state (no secrets are ever
+    // included server-side: mfa_enabled is a boolean, preferences is a plain
+    // key/value map such as {"theme": "dark"}).
+    mfa_enabled: data.mfa_enabled === true,
+    preferences:
+      data.preferences !== null &&
+      typeof data.preferences === "object" &&
+      !Array.isArray(data.preferences)
+        ? (data.preferences as Record<string, string>)
+        : {},
   };
 
   return NextResponse.json(safeUser, { status: 200 });
