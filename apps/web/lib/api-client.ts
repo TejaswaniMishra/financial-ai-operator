@@ -9,7 +9,23 @@ export class APIError extends Error {
   }
 }
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const DIRECT_API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+/**
+ * Base URL for API calls.
+ * Browser: relative path (same-origin) so the request flows through the
+ * Next.js BFF proxy, which reads the HttpOnly session cookie and injects the
+ * Authorization header. Direct browser → :8000 fetches are blocked by CORS
+ * outside the configured origins and never carry the session cookie.
+ * Server: absolute URL to the backend (no CORS, cookies handled in code).
+ */
+function bffBase(): string {
+  if (typeof window !== "undefined") {
+    return "";
+  }
+  return DIRECT_API_BASE;
+}
 
 interface FetchOptions extends RequestInit {
   params?: Record<string, string>;
@@ -17,13 +33,18 @@ interface FetchOptions extends RequestInit {
 
 export async function fetchClient<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
   const { params, headers, ...customConfig } = options;
-  
-  const url = new URL(`${API_BASE_URL}${endpoint}`);
+
+  // Build the URL without `new URL` on a possibly-relative path: the URL
+  // constructor rejects relative browser paths (bffBase() === "" in the
+  // browser), which previously made every request throw client-side.
+  const query = new URLSearchParams();
   if (params) {
     Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.append(key, value);
+      query.append(key, value);
     });
   }
+  const qs = query.toString();
+  const url = `${bffBase()}${endpoint}${qs ? `?${qs}` : ""}`;
 
   const config: RequestInit = {
     ...customConfig,
@@ -35,8 +56,8 @@ export async function fetchClient<T>(endpoint: string, options: FetchOptions = {
   };
 
   try {
-    const response = await fetch(url.toString(), config);
-    
+    const response = await fetch(url, config);
+
     // Attempt to parse JSON response
     let data;
     const contentType = response.headers.get("content-type");
