@@ -176,11 +176,14 @@ export default function ExceptionsPage() {
                         </Link>
                       </td>
                       <td className="px-4 py-3 text-right text-slate-200 font-medium">
-                        {item.amount != null ? (
-                          <span className={item.amount > 0 ? "text-amber-400" : "text-emerald-400"}>
-                            {item.amount > 0 ? "+" : ""}{item.amount.toFixed(2)} {item.currency}
-                          </span>
-                        ) : "N/A"}
+                        {item.amount != null ? (() => {
+                          const amount = Number(item.amount);
+                          return (
+                            <span className={amount > 0 ? "text-amber-400" : "text-emerald-400"}>
+                              {amount > 0 ? "+" : ""}{amount.toFixed(2)} {item.currency}
+                            </span>
+                          );
+                        })() : "N/A"}
                       </td>
                       <td className="px-4 py-3 text-slate-400 text-xs">
                         {new Date(item.detected_at).toLocaleString()}

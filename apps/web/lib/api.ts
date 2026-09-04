@@ -607,7 +607,8 @@ export interface DiscrepancyResponse {
   source_entity_id: string;
   related_entity_type: string | null;
   related_entity_id: string | null;
-  difference_amount: number | null;
+  /** Decimal amounts arrive as JSON strings (Pydantic Decimal serialization). */
+  difference_amount: string | null;
   currency: string | null;
   created_at: string;
 }
@@ -870,7 +871,8 @@ export interface ExceptionReadSummary {
   type: string;
   severity: string;
   overall_state: OverallExceptionState;
-  amount: number | null;
+  /** Decimal amounts arrive as JSON strings (Pydantic Decimal serialization). */
+  amount: string | null;
   currency: string | null;
   source_entity_type: string;
   source_entity_id: string;
@@ -893,10 +895,11 @@ export interface ExceptionDetail {
   type: string;
   severity: string;
   overall_state: OverallExceptionState;
-  amount: number | null;
-  expected_amount: number | null;
-  actual_amount: number | null;
-  difference_amount: number | null;
+  /** Decimal amounts arrive as JSON strings (Pydantic Decimal serialization). */
+  amount: string | null;
+  expected_amount: string | null;
+  actual_amount: string | null;
+  difference_amount: string | null;
   currency: string | null;
   source_entity_type: string;
   source_entity_id: string;

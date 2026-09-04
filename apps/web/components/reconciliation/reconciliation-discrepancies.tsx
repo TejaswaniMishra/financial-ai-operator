@@ -4,14 +4,15 @@ import { Badge } from "../ui/badge";
 import { AlertCircle, ArrowRight, FileSearch } from "lucide-react";
 import Link from "next/link";
 
-function formatCurrency(amount: number, currency: string) {
+function formatCurrency(amount: number | string, currency: string) {
   try {
+    // Backend Decimal amounts arrive as JSON strings — coerce for formatting.
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: currency,
-    }).format(amount);
+    }).format(Number(amount));
   } catch (e) {
-    return `${currency} ${amount.toFixed(2)}`;
+    return `${currency} ${Number(amount).toFixed(2)}`;
   }
 }
 

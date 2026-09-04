@@ -127,9 +127,14 @@ export default function ExceptionDetailPage() {
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <p className="text-slate-400 text-xs">Difference Amount</p>
-                <p className={cn("font-medium text-lg", (data.difference_amount ?? 0) > 0 ? "text-amber-400" : "text-emerald-400")}>
-                  {(data.difference_amount ?? 0) > 0 ? "+" : ""}{data.difference_amount} {data.currency}
-                </p>
+                {(() => {
+                  const diff = data.difference_amount != null ? Number(data.difference_amount) : null;
+                  return (
+                    <p className={cn("font-medium text-lg", diff !== null && diff > 0 ? "text-amber-400" : "text-emerald-400")}>
+                      {diff !== null && diff > 0 ? "+" : ""}{data.difference_amount} {data.currency}
+                    </p>
+                  );
+                })()}
               </div>
               <div>
                 <p className="text-slate-400 text-xs">Reconciliation Rule</p>

@@ -367,7 +367,7 @@ export default function DashboardPage() {
                       </td>
                       <td className="px-5 py-3 text-right font-mono">
                         {disc.difference_amount !== null ? (
-                          new Intl.NumberFormat('en-US', { style: 'currency', currency: disc.currency || 'USD' }).format(disc.difference_amount)
+                          new Intl.NumberFormat('en-US', { style: 'currency', currency: disc.currency || 'USD' }).format(Number(disc.difference_amount))
                         ) : (
                           <span className="text-muted-foreground">—</span>
                         )}

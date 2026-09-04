@@ -18,14 +18,15 @@ import {
   runInvestigation,
 } from "../../lib/api";
 
-function formatCurrency(amount: number, currency: string) {
+function formatCurrency(amount: number | string, currency: string) {
   try {
+    // Backend Decimal amounts arrive as JSON strings — coerce for formatting.
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: currency,
-    }).format(amount);
+    }).format(Number(amount));
   } catch (e) {
-    return `${currency} ${amount.toFixed(2)}`;
+    return `${currency} ${Number(amount).toFixed(2)}`;
   }
 }
 
@@ -156,7 +157,7 @@ export default function DiscrepanciesPage() {
   const totalDifference = useMemo(() => {
     let sum = 0;
     discrepancies.forEach((d) => {
-      if (d.difference_amount !== null) sum += Math.abs(d.difference_amount);
+      if (d.difference_amount !== null) sum += Math.abs(Number(d.difference_amount));
     });
     return sum;
   }, [discrepancies]);
