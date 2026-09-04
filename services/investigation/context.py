@@ -117,7 +117,7 @@ class ContextBuilder:
                             "id": bt.id,
                             "amount": str(bt.amount),
                             "currency": bt.currency,
-                            "posted_date": bt.posted_date.isoformat() if bt.posted_date else None
+                            "transaction_date": bt.transaction_date.isoformat() if bt.transaction_date else None
                         }
 
         return lineage
