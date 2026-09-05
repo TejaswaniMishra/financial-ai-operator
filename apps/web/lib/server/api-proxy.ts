@@ -156,11 +156,17 @@ export async function proxyAuthenticatedRequest(
       headers: responseHeaders,
     });
   } catch (err) {
-    // Only log the error type, not content that might contain tokens/secrets
-    console.error("[proxy] Backend fetch failed:", (err as Error).name);
+    // Safe diagnostic logging: never log tokens, headers, request bodies, or secrets.
+    const error = err as Error;
+    console.error("[proxy] Backend fetch failed:", {
+      name: error.name,
+      message: error.message,
+    });
+
     return NextResponse.json(
       { detail: "Backend unavailable" },
       { status: 503 }
     );
   }
 }
+
