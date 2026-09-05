@@ -11,7 +11,7 @@ const SAFE_FORWARD_HEADERS = ["content-type", "accept"];
 
 // Headers we explicitly strip from backend responses before returning to browser.
 // Never forward internal backend headers like Set-Cookie to the browser.
-const STRIP_RESPONSE_HEADERS = new Set(["set-cookie", "server", "x-powered-by"]);
+const STRIP_RESPONSE_HEADERS = new Set(["set-cookie", "server", "x-powered-by", "content-encoding", "content-length", "transfer-encoding"]);
 
 const BACKEND_URL =
   process.env.BACKEND_INTERNAL_URL ||
