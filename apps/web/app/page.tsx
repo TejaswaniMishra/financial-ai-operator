@@ -164,7 +164,7 @@ export default function DashboardPage() {
             <div>
               <div className="font-semibold">Backend Connection Notice</div>
               <div className="text-muted-foreground text-xs mt-1">
-                {error}. Ensure the FastAPI server is running on <code className="bg-surface-muted px-1 py-0.5 rounded text-amber-700 dark:text-amber-300 border border-border-subtle">http://localhost:8000</code>.
+                {error}. Please verify the backend API is operational.
               </div>
             </div>
           </div>
