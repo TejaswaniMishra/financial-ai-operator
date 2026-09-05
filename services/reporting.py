@@ -746,7 +746,10 @@ async def get_trends(
     stored in the database.  The response documents this clearly.
 
     Granularity: 'day' groups by date; 'week' by ISO week start; 'month' by
-    year-month.  Using SQLAlchemy func.strftime for SQLite compatibility.
+    year-month.
+
+    Dialect: Uses func.to_char() on PostgreSQL and func.strftime() on SQLite so
+    that the same output format (e.g. '2024-06-15') is produced on both engines.
     """
     VALID_METRICS = {
         "payment_count", "payment_volume",
@@ -757,19 +760,29 @@ async def get_trends(
     if metric not in VALID_METRICS:
         raise ValueError(f"Unsupported metric: {metric}. Valid: {sorted(VALID_METRICS)}")
 
-    if granularity == "day":
-        fmt = "%Y-%m-%d"
-    elif granularity == "week":
-        fmt = "%Y-W%W"
-    elif granularity == "month":
-        fmt = "%Y-%m"
-    else:
+    # Granularity → format tokens for each dialect.
+    # Output strings are identical across dialects so the API contract is unchanged.
+    _SQLITE_FMTS = {"day": "%Y-%m-%d", "week": "%Y-W%W", "month": "%Y-%m"}
+    _PG_FMTS     = {"day": "YYYY-MM-DD", "week": "IYYY-IW", "month": "YYYY-MM"}
+
+    if granularity not in _SQLITE_FMTS:
         raise ValueError(f"Unsupported granularity: {granularity}")
+
+    # Detect the active dialect from the connection; fall back to SQLite behaviour.
+    dialect_name = session.get_bind().dialect.name if hasattr(session, "get_bind") else "sqlite"
+    is_postgresql = dialect_name == "postgresql"
+
+    def _bucket(col):
+        """Return a SQLAlchemy column expression that truncates *col* to the
+        requested granularity bucket string, compatible with the active dialect."""
+        if is_postgresql:
+            return func.to_char(col, _PG_FMTS[granularity]).label("bucket")
+        return func.strftime(_SQLITE_FMTS[granularity], col).label("bucket")
 
     data: list[TrendPoint] = []
 
     if metric in ("payment_count", "payment_volume"):
-        date_fn = func.strftime(fmt, Payment.processed_at).label("bucket")
+        date_fn = _bucket(Payment.processed_at)
         q = select(
             date_fn,
             Payment.currency,
@@ -786,7 +799,7 @@ async def get_trends(
             data.append(TrendPoint(bucket=row.bucket, currency=row.currency, metric=metric, value=value.quantize(Decimal("0.0001"))))
 
     elif metric in ("refund_count", "refund_volume"):
-        date_fn = func.strftime(fmt, Refund.processed_at).label("bucket")
+        date_fn = _bucket(Refund.processed_at)
         q = select(
             date_fn,
             Refund.currency,
@@ -803,7 +816,7 @@ async def get_trends(
             data.append(TrendPoint(bucket=row.bucket, currency=row.currency, metric=metric, value=value.quantize(Decimal("0.0001"))))
 
     elif metric in ("settlement_count", "settlement_volume"):
-        date_fn = func.strftime(fmt, Settlement.settlement_date).label("bucket")
+        date_fn = _bucket(Settlement.settlement_date)
         q = select(
             date_fn,
             Settlement.currency,
@@ -820,7 +833,7 @@ async def get_trends(
             data.append(TrendPoint(bucket=row.bucket, currency=row.currency, metric=metric, value=value.quantize(Decimal("0.0001"))))
 
     elif metric == "exception_count":
-        date_fn = func.strftime(fmt, Discrepancy.created_at).label("bucket")
+        date_fn = _bucket(Discrepancy.created_at)
         q = select(
             date_fn,
             func.count(distinct(Discrepancy.id)).label("cnt"),
