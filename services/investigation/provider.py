@@ -224,8 +224,17 @@ class GeminiLLMProvider(ILLMProvider):
             # Log full detail server-side for operations; never propagate raw
             # provider internals (model errors can contain request metadata).
             logger.error("Gemini generation failed: %s", e)
+            
+            err_str = str(e)
+            msg = "The AI provider could not complete the investigation request. Please retry."
+            
+            # If the provider is experiencing high demand, surface that directly
+            # so the UI can accurately reflect a transport/capacity failure.
+            if ("503" in err_str and "UNAVAILABLE" in err_str) or ("429" in err_str and "RESOURCE_EXHAUSTED" in err_str):
+                msg = "The AI model is currently experiencing high demand or quota limits. Please try again later."
+                
             raise InvestigationProviderError(
-                "The AI provider could not complete the investigation request. Please retry.",
+                msg,
                 kind="TRANSPORT",
             ) from e
 
