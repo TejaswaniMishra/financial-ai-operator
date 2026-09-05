@@ -854,12 +854,30 @@ export interface InvestigationRunResponse {
   errors: unknown | null;
 }
 
+export interface InvestigationDiscrepancy {
+  id: string;
+  run_id: string;
+  rule_code: string;
+  type: string;
+  severity: string;
+  source_entity_type: string;
+  source_entity_id: string;
+  related_entity_type: string | null;
+  related_entity_id: string | null;
+  expected_amount: string | null;
+  actual_amount: string | null;
+  difference_amount: string | null;
+  currency: string | null;
+  created_at: string | null;
+}
+
 export interface InvestigationResponse {
   id: string;
   discrepancy_id: string;
   status: string;
   active_attempt_id: string | null;
   created_at: string | null;
+  discrepancy: InvestigationDiscrepancy | null;
 }
 
 export interface InvestigationListItem {

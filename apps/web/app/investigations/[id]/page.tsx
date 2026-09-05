@@ -110,6 +110,10 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
     }
   }, [investigation?.id, selectedAttemptId]);
 
+  // Authoritative discrepancy evidence returned by the backend; the UI
+  // renders these deterministic facts verbatim (never reconstructed).
+  const discrepancy = investigation?.discrepancy ?? null;
+
   const handleApprove = async () => {
     if (!investigation || investigation.status !== "COMPLETED") return;
     setApproving(true);
@@ -296,8 +300,89 @@ export default function InvestigationDetailPage({ params }: { params: { id: stri
                 Discrepancy Evidence
               </h2>
             </div>
-            <div className="p-6 text-center text-sm text-muted-foreground">
-              Evidence details will appear here.
+            <div className="p-5 space-y-4">
+              {loading ? (
+                <div className="text-sm text-secondary animate-pulse">Loading evidence...</div>
+              ) : discrepancy ? (
+                <>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      className={cn(
+                        "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium",
+                        discrepancy.severity === "HIGH" || discrepancy.severity === "CRITICAL"
+                          ? "bg-red-500/10 text-red-600 dark:text-red-400"
+                          : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                      )}
+                    >
+                      {discrepancy.severity}
+                    </span>
+                    <span className="inline-flex items-center rounded-md bg-surface-muted px-2 py-0.5 text-xs font-medium text-secondary">
+                      {discrepancy.type.replace(/_/g, " ")}
+                    </span>
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {discrepancy.rule_code}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-1">Source Entity</div>
+                      <div className="font-mono text-xs text-secondary break-all">
+                        {discrepancy.source_entity_type} · {discrepancy.source_entity_id}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-muted-foreground mb-1">Related Entity</div>
+                      <div className="font-mono text-xs text-secondary break-all">
+                        {discrepancy.related_entity_type && discrepancy.related_entity_id
+                          ? `${discrepancy.related_entity_type} · ${discrepancy.related_entity_id}`
+                          : <span className="text-muted-foreground">—</span>}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Deterministic Financial Facts</div>
+                    <div className="rounded-md border border-border bg-surface-muted/50 overflow-hidden">
+                      <table className="w-full text-sm">
+                        <tbody>
+                          {[
+                            ["Expected", discrepancy.expected_amount],
+                            ["Actual", discrepancy.actual_amount],
+                            ["Difference", discrepancy.difference_amount],
+                          ].map(([label, value]) => (
+                            <tr key={label as string} className="border-b border-border last:border-b-0">
+                              <td className="px-3 py-2 text-xs text-muted-foreground w-32">{label as string}</td>
+                              <td className="px-3 py-2 font-mono text-xs text-secondary">
+                                {value != null ? (
+                                  <>
+                                    {value as string}{" "}
+                                    {discrepancy.currency && (
+                                      <span className="text-muted-foreground">{discrepancy.currency}</span>
+                                    )}
+                                  </>
+                                ) : (
+                                  <span className="text-muted-foreground">—</span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {discrepancy.created_at && (
+                    <div className="text-xs text-muted-foreground">
+                      Detected {new Date(discrepancy.created_at).toLocaleString()}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center text-sm text-muted-foreground">
+                  No discrepancy evidence available for this investigation.
+                </div>
+              )}
             </div>
           </div>
         </div>

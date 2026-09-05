@@ -112,13 +112,39 @@ async def get_investigation(
     investigation = (await db.execute(stmt)).scalar_one_or_none()
     if not investigation:
         raise HTTPException(status_code=404, detail="Investigation not found")
-        
+
+    # Authoritative deterministic discrepancy evidence. The investigation is
+    # anchored to exactly one discrepancy; its facts are always rendered from
+    # the database rather than reconstructed in the frontend.
+    discrepancy = None
+    if investigation.discrepancy_id:
+        disc_stmt = select(Discrepancy).where(Discrepancy.id == investigation.discrepancy_id)
+        disc = (await db.execute(disc_stmt)).scalar_one_or_none()
+        if disc is not None:
+            discrepancy = {
+                "id": disc.id,
+                "run_id": disc.run_id,
+                "rule_code": disc.rule_code,
+                "type": disc.discrepancy_type.value if hasattr(disc.discrepancy_type, 'value') else str(disc.discrepancy_type),
+                "severity": disc.severity.value if hasattr(disc.severity, 'value') else str(disc.severity),
+                "source_entity_type": disc.source_entity_type,
+                "source_entity_id": disc.source_entity_id,
+                "related_entity_type": disc.related_entity_type,
+                "related_entity_id": disc.related_entity_id,
+                "expected_amount": str(disc.expected_amount) if disc.expected_amount is not None else None,
+                "actual_amount": str(disc.actual_amount) if disc.actual_amount is not None else None,
+                "difference_amount": str(disc.difference_amount) if disc.difference_amount is not None else None,
+                "currency": disc.currency,
+                "created_at": disc.created_at.isoformat() if disc.created_at else None,
+            }
+
     return {
         "id": investigation.id,
         "discrepancy_id": investigation.discrepancy_id,
         "status": investigation.status.value if hasattr(investigation.status, 'value') else str(investigation.status),
         "active_attempt_id": investigation.active_attempt_id,
-        "created_at": investigation.created_at.isoformat() if investigation.created_at else None
+        "created_at": investigation.created_at.isoformat() if investigation.created_at else None,
+        "discrepancy": discrepancy
     }
 
 @router.get("/{investigation_id}/attempts", dependencies=[Depends(require_permission(Permission.VIEW_INVESTIGATIONS))])

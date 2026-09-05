@@ -1,0 +1,1142 @@
+
+> financial-ai-operator-web@0.1.0 dev
+> next dev -p 3000
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 36.4s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 897ms (85 modules)
+ ○ Compiling /login ...
+ ✓ Compiled /login in 72.6s (729 modules)
+ GET /login 200 in 17386ms
+ ✓ Compiled in 2.5s (368 modules)
+ GET /login 200 in 340ms
+ GET /login 200 in 120ms
+ ○ Compiling /api/auth/me ...
+ ✓ Compiled /api/auth/me in 9.7s (388 modules)
+ GET /api/auth/me 401 in 12827ms
+ GET /login 200 in 61ms
+ GET /login 200 in 167ms
+ GET /login 200 in 190ms
+ ○ Compiling /api/auth/login ...
+ ✓ Compiled /api/auth/login in 918ms (390 modules)
+ GET /api/auth/me 401 in 156ms
+ POST /api/auth/login 200 in 3370ms
+ GET /api/auth/me 200 in 184ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1502ms (762 modules)
+ ✓ Compiled /api/v1/[...path] in 587ms (402 modules)
+ GET /api/v1/reconciliation/discrepancies 200 in 2524ms
+ GET /api/v1/reconciliation/runs 200 in 2562ms
+ GET /api/v1/system/info 200 in 2578ms
+ GET /api/v1/system/info 200 in 2596ms
+ GET /api/v1/metrics/overview 200 in 2699ms
+ GET /api/v1/metrics/overview 200 in 2793ms
+ GET /api/v1/reconciliation/runs 200 in 285ms
+ GET /api/v1/reconciliation/discrepancies 200 in 330ms
+ ○ Compiling /transactions ...
+ ✓ Compiled /transactions in 2.8s (772 modules)
+ GET /api/v1/transactions?limit=50&offset=0 200 in 2153ms
+ GET /api/v1/transactions?limit=50&offset=0 200 in 2173ms
+ GET /api/v1/transactions?limit=50&offset=50 200 in 157ms
+ GET /api/v1/transactions?limit=50&offset=0 200 in 204ms
+ ○ Compiling /settings ...
+ ✓ Compiled /settings in 1482ms (788 modules)
+ GET /login 200 in 299ms
+ ✓ Compiled in 4.7s (766 modules)
+ ✓ Compiled in 919ms (388 modules)
+ ✓ Compiled in 2.2s (851 modules)
+ ✓ Compiled in 1653ms (837 modules)
+ ✓ Compiled in 3.8s (766 modules)
+ ✓ Compiled in 3.7s (768 modules)
+ ✓ Compiled in 890ms (389 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1848ms (771 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 3.9s (984 modules)
+ GET /login 404 in 6885ms
+ ✓ Compiled in 1121ms (575 modules)
+ ✓ Compiled in 707ms (575 modules)
+ GET /login 200 in 898ms
+ GET /login 200 in 89ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 2.6s (984 modules)
+ GET /_next/static/chunks/main-app.js?v=1788504221219 404 in 3027ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 3014ms
+ ✓ Compiled in 686ms (577 modules)
+ ✓ Compiled in 691ms (577 modules)
+ ✓ Compiled in 1454ms (998 modules)
+ ✓ Compiled in 602ms (577 modules)
+ ○ Compiling /api/auth/login ...
+ ✓ Compiled /api/auth/login in 1513ms (456 modules)
+ POST /api/auth/login 200 in 3653ms
+ ○ Compiling /api/auth/me ...
+ ✓ Compiled /api/auth/me in 818ms (458 modules)
+ GET /api/auth/me 200 in 1032ms
+ POST /api/auth/login 200 in 406ms
+ GET /api/auth/me 200 in 91ms
+ POST /api/auth/login 200 in 543ms
+ GET /api/auth/me 200 in 140ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1998ms (1036 modules)
+ POST /api/auth/login 404 in 2569ms
+ POST /api/auth/login 200 in 390ms
+ GET /api/auth/me 200 in 71ms
+ GET /login 404 in 103ms
+ GET /_next/static/css/app/layout.css?v=1788504528892 404 in 188ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 208ms
+ GET /_next/static/chunks/main-app.js?v=1788504528892 404 in 205ms
+ GET /login 404 in 153ms
+ GET /login 404 in 69ms
+ GET /login 404 in 37ms
+ GET /login 404 in 29ms
+ GET /login 404 in 29ms
+ GET /login 404 in 39ms
+ GET /login 404 in 25ms
+ GET /login 404 in 40ms
+ GET /login 404 in 30ms
+ GET /login 404 in 29ms
+ GET /login 404 in 32ms
+ GET /login 404 in 35ms
+ GET /login 404 in 25ms
+ GET /login 404 in 28ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 26ms
+ GET /login 404 in 24ms
+ GET /login 404 in 25ms
+ GET /login 404 in 30ms
+ GET /login 404 in 35ms
+ GET /login 404 in 21ms
+ GET /login 404 in 29ms
+ GET /login 404 in 31ms
+ GET /login 404 in 30ms
+ GET /login 404 in 41ms
+ GET /login 404 in 28ms
+ GET /login 404 in 26ms
+ GET /login 404 in 41ms
+ GET /login 404 in 41ms
+ GET /login 404 in 27ms
+ GET /login 404 in 45ms
+ GET /login 404 in 36ms
+ GET /login 404 in 32ms
+ GET /login 404 in 72ms
+ GET /login 404 in 55ms
+ GET /login 404 in 36ms
+ GET /login 404 in 36ms
+ GET /login 404 in 32ms
+ GET /login 404 in 67ms
+ GET /login 404 in 56ms
+ GET /login 404 in 38ms
+ GET /login 404 in 31ms
+ GET /login 404 in 38ms
+ GET /login 404 in 30ms
+ GET /login 404 in 55ms
+ GET /login 404 in 44ms
+ GET /login 404 in 33ms
+ GET /login 404 in 34ms
+ GET /login 404 in 28ms
+ GET /login 404 in 34ms
+ GET /login 404 in 27ms
+ GET /login 404 in 29ms
+ GET /login 404 in 31ms
+ GET /login 404 in 26ms
+ GET /login 404 in 31ms
+ GET /login 404 in 31ms
+ GET /login 404 in 27ms
+ ✓ Compiled in 2s (984 modules)
+ GET /login 200 in 270ms
+ GET /login 200 in 59ms
+ GET /_next/static/css/app/layout.css?v=1788505019242 404 in 89ms
+ GET /_next/static/chunks/main-app.js?v=1788505019242 404 in 44ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 94ms
+ ✓ Compiled in 1164ms (984 modules)
+ GET /login 200 in 331ms
+ GET /_next/static/css/app/layout.css?v=1788505032530 404 in 180ms
+ GET /_next/static/chunks/main-app.js?v=1788505032530 404 in 401ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 415ms
+ GET /login 200 in 146ms
+ GET /_next/static/css/app/layout.css?v=1788506262863 404 in 145ms
+ GET /_next/static/chunks/main-app.js?v=1788506262863 404 in 251ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 259ms
+ ✓ Compiled in 2.1s (981 modules)
+ ✓ Compiled in 660ms (575 modules)
+ ✓ Compiled in 2.6s (995 modules)
+ ✓ Compiled in 471ms (575 modules)
+ ✓ Compiled in 527ms (575 modules)
+ ✓ Compiled in 1943ms (995 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 2.6s (998 modules)
+ GET /login 404 in 3013ms
+ GET /_next/static/css/app/layout.css?v=1788509528469 404 in 117ms
+ GET /_next/static/chunks/main-app.js?v=1788509528469 404 in 157ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 163ms
+ GET /login 404 in 83ms
+ GET /_next/static/css/app/layout.css?v=1788509531442 404 in 99ms
+ GET /_next/static/chunks/main-app.js?v=1788509531442 404 in 107ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 107ms
+ GET /login 404 in 74ms
+ GET /_next/static/css/app/layout.css?v=1788510085632 404 in 132ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 202ms
+ GET /_next/static/chunks/main-app.js?v=1788510085632 404 in 211ms
+ GET /login 404 in 145ms
+ GET /_next/static/css/app/layout.css?v=1788510118644 404 in 119ms
+ GET /_next/static/chunks/main-app.js?v=1788510118644 404 in 133ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 135ms
+ GET /login 404 in 92ms
+ GET /_next/static/css/app/layout.css?v=1788510123141 404 in 153ms
+ GET /_next/static/chunks/main-app.js?v=1788510123141 404 in 180ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 179ms
+ GET /login 404 in 87ms
+ GET /login 404 in 68ms
+ GET /login 404 in 50ms
+ GET /login 404 in 33ms
+ GET /login 404 in 32ms
+ GET /login 404 in 31ms
+ GET /login 404 in 33ms
+ GET /login 404 in 70ms
+ GET /login 404 in 232ms
+ GET /login 404 in 112ms
+ GET /login 404 in 34ms
+ GET /login 404 in 33ms
+ GET /login 404 in 36ms
+ GET /login 404 in 33ms
+ GET /login 404 in 33ms
+ GET /login 404 in 28ms
+ GET /login 404 in 53ms
+ GET /login 404 in 27ms
+ GET /login 404 in 33ms
+ GET /login 404 in 33ms
+ GET /login 404 in 35ms
+ GET /login 404 in 42ms
+ GET /login 404 in 32ms
+ GET /login 404 in 42ms
+ GET /login 404 in 31ms
+ GET /login 404 in 101ms
+ GET /login 404 in 40ms
+ GET /login 404 in 28ms
+ GET /login 404 in 29ms
+ GET /login 404 in 43ms
+ GET /login 404 in 30ms
+ GET /login 404 in 29ms
+ GET /login 404 in 27ms
+ GET /login 404 in 27ms
+ GET /login 404 in 27ms
+ GET /login 404 in 31ms
+ GET /login 404 in 32ms
+ GET /login 404 in 37ms
+ GET /login 404 in 42ms
+ GET /login 404 in 58ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 29ms
+ GET /login 404 in 33ms
+ GET /login 404 in 27ms
+ GET /login 404 in 25ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 45ms
+ GET /login 404 in 28ms
+ GET /login 404 in 25ms
+ GET /login 404 in 38ms
+ GET /login 404 in 26ms
+ GET /login 404 in 59ms
+ GET /login 404 in 127ms
+ GET /login 404 in 54ms
+ GET /login 404 in 30ms
+ GET /login 404 in 137ms
+ GET /login 404 in 35ms
+ GET /login 404 in 30ms
+ GET /login 404 in 36ms
+ GET /login 404 in 72ms
+ GET /login 404 in 28ms
+ GET /login 404 in 31ms
+ GET /login 404 in 26ms
+ GET /login 404 in 25ms
+ GET /login 404 in 270ms
+ GET /login 404 in 20ms
+ GET /login 404 in 25ms
+ GET /login 404 in 22ms
+ GET /login 404 in 37ms
+ GET /login 404 in 23ms
+ GET /login 404 in 40ms
+ GET /login 404 in 21ms
+ GET /login 404 in 26ms
+ GET /login 404 in 47ms
+ GET /login 404 in 25ms
+ GET /login 404 in 23ms
+ GET /login 404 in 33ms
+ GET /login 404 in 26ms
+ GET /login 404 in 70ms
+ GET /login 404 in 136ms
+ GET /login 404 in 21ms
+ GET /login 404 in 26ms
+ GET /login 404 in 30ms
+ GET /login 404 in 40ms
+ GET /login 404 in 36ms
+ GET /login 404 in 23ms
+ GET /login 404 in 27ms
+ GET /login 404 in 23ms
+ GET /login 404 in 24ms
+ GET /login 404 in 40ms
+ GET /login 404 in 18ms
+ GET /login 404 in 17ms
+ GET /login 404 in 23ms
+ GET /login 404 in 28ms
+ GET /login 404 in 27ms
+ GET /login 404 in 24ms
+ GET /login 404 in 26ms
+ GET /login 404 in 22ms
+ GET /login 404 in 25ms
+ GET /login 404 in 54ms
+ GET /login 404 in 75ms
+ GET /login 404 in 74ms
+ GET /login 404 in 54ms
+ GET /login 404 in 74ms
+ GET /login 404 in 75ms
+ GET /login 404 in 61ms
+ GET /login 404 in 78ms
+ GET /login 404 in 58ms
+ GET /login 404 in 22ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 23ms
+ GET /login 404 in 25ms
+ GET /login 404 in 30ms
+ GET /login 404 in 26ms
+ GET /login 404 in 27ms
+ GET /login 404 in 24ms
+ GET /login 404 in 23ms
+ GET /login 404 in 25ms
+ GET /login 404 in 25ms
+ GET /login 404 in 38ms
+ GET /login 404 in 32ms
+ GET /login 404 in 31ms
+ GET /login 404 in 22ms
+ GET /login 404 in 24ms
+ GET /login 404 in 29ms
+ GET /login 404 in 11ms
+ GET /login 404 in 19ms
+ GET /login 404 in 22ms
+ GET /login 404 in 24ms
+ GET /login 404 in 21ms
+ GET /login 404 in 30ms
+ GET /login 404 in 23ms
+ GET /login 404 in 24ms
+ GET /login 404 in 25ms
+ GET /login 404 in 16ms
+ GET /login 404 in 24ms
+ GET /login 404 in 23ms
+ GET /login 404 in 23ms
+ GET /login 404 in 23ms
+ GET /login 404 in 21ms
+ GET /login 404 in 24ms
+ GET /login 404 in 22ms
+ GET /login 404 in 23ms
+ GET /login 404 in 25ms
+ GET /login 404 in 28ms
+ GET /login 404 in 30ms
+ GET /login 404 in 22ms
+ GET /login 404 in 21ms
+ GET /login 404 in 21ms
+ GET /login 404 in 30ms
+ GET /login 404 in 24ms
+ GET /login 404 in 38ms
+ GET /login 404 in 27ms
+ GET /login 404 in 33ms
+ GET /login 404 in 25ms
+ GET /login 404 in 25ms
+ GET /login 404 in 22ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 21ms
+ GET /login 404 in 23ms
+ GET /login 404 in 22ms
+ GET /login 404 in 18ms
+ GET /login 404 in 192ms
+ GET /login 404 in 30ms
+ GET /login 404 in 25ms
+ GET /login 404 in 27ms
+ GET /login 404 in 43ms
+ GET /login 404 in 21ms
+ GET /login 404 in 138ms
+ GET /login 404 in 144ms
+ GET /login 404 in 278ms
+ GET /login 404 in 120ms
+ GET /login 404 in 21ms
+ GET /login 404 in 24ms
+ GET /login 404 in 31ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 26ms
+ GET /login 404 in 24ms
+ GET /login 404 in 26ms
+ GET /login 404 in 31ms
+ GET /login 404 in 43ms
+ GET /login 404 in 27ms
+ GET /login 404 in 25ms
+ GET /login 404 in 29ms
+ GET /login 404 in 31ms
+ GET /login 404 in 22ms
+ GET /login 404 in 23ms
+ GET /login 404 in 35ms
+ GET /login 404 in 28ms
+ GET /login 404 in 60ms
+ GET /login 404 in 22ms
+ GET /login 404 in 38ms
+ GET /login 404 in 26ms
+ GET /login 404 in 31ms
+ GET /login 404 in 33ms
+ GET /login 404 in 27ms
+ GET /login 404 in 27ms
+ GET /login 404 in 25ms
+ GET /login 404 in 23ms
+ GET /login 404 in 25ms
+ GET /login 404 in 22ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 30ms
+ GET /login 404 in 23ms
+ GET /login 404 in 24ms
+ GET /login 404 in 27ms
+ GET /login 404 in 23ms
+ GET /login 404 in 29ms
+ GET /login 404 in 32ms
+ GET /login 404 in 193ms
+ GET /login 404 in 23ms
+ GET /login 404 in 27ms
+ GET /login 404 in 22ms
+ GET /login 404 in 47ms
+ GET /login 404 in 24ms
+ GET /login 404 in 31ms
+ GET /login 404 in 23ms
+ GET /login 404 in 24ms
+ GET /login 404 in 27ms
+ GET /login 404 in 23ms
+ GET /login 404 in 67ms
+ GET /login 404 in 31ms
+ GET /login 404 in 28ms
+ GET /login 404 in 43ms
+ GET /login 404 in 34ms
+ GET /login 404 in 23ms
+ GET /login 404 in 27ms
+ GET /login 404 in 25ms
+ GET /login 404 in 28ms
+ GET /login 404 in 54ms
+ GET /login 404 in 25ms
+ GET /login 404 in 28ms
+ GET /login 404 in 101ms
+ GET /login 404 in 153ms
+ GET /login 404 in 190ms
+ GET /login 404 in 30ms
+ GET /login 404 in 23ms
+ GET /login 404 in 27ms
+ GET /login 404 in 29ms
+ GET /login 404 in 31ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 25ms
+ GET /login 404 in 24ms
+ GET /login 404 in 28ms
+ GET /login 404 in 23ms
+ GET /login 404 in 23ms
+ GET /login 404 in 24ms
+ GET /login 404 in 30ms
+ GET /login 404 in 23ms
+ GET /login 404 in 26ms
+ GET /login 404 in 22ms
+ GET /login 404 in 30ms
+ GET /login 404 in 22ms
+ GET /login 404 in 29ms
+ GET /login 404 in 23ms
+ GET /login 404 in 27ms
+ GET /login 404 in 25ms
+ GET /login 404 in 22ms
+ GET /login 404 in 27ms
+ GET /login 404 in 23ms
+ GET /login 404 in 25ms
+ GET /login 404 in 27ms
+ GET /login 404 in 27ms
+ GET /login 404 in 30ms
+ GET /login 404 in 24ms
+ GET /login 404 in 26ms
+ GET /login 404 in 33ms
+ GET /login 404 in 36ms
+ GET /login 404 in 28ms
+ GET /login 404 in 30ms
+ GET /login 404 in 28ms
+ GET /login 404 in 35ms
+ GET /login 404 in 48ms
+ GET /login 404 in 64ms
+ GET /login 404 in 44ms
+ GET /login 404 in 51ms
+ GET /login 404 in 32ms
+ GET /login 404 in 34ms
+ GET /login 404 in 34ms
+ GET /login 404 in 31ms
+ GET /login 404 in 28ms
+ GET /login 404 in 31ms
+ GET /login 404 in 30ms
+ GET /login 404 in 32ms
+ GET /login 404 in 39ms
+ GET /login 404 in 32ms
+ GET /login 404 in 34ms
+ GET /login 404 in 35ms
+ GET /login 404 in 27ms
+ GET /login 404 in 75ms
+ GET /login 404 in 47ms
+ GET /login 404 in 50ms
+ GET /login 404 in 33ms
+ GET /login 404 in 30ms
+ GET /login 404 in 31ms
+ GET /login 404 in 48ms
+ GET /login 404 in 109ms
+ GET /login 404 in 32ms
+ GET /login 404 in 33ms
+ GET /login 404 in 32ms
+ GET /login 404 in 34ms
+ GET /login 404 in 77ms
+ GET /login 404 in 28ms
+ GET /login 404 in 31ms
+ GET /login 404 in 31ms
+ GET /login 404 in 33ms
+ GET /login 404 in 31ms
+ GET /login 404 in 27ms
+ GET /login 404 in 27ms
+ GET /login 404 in 36ms
+ GET /login 404 in 30ms
+ GET /login 404 in 29ms
+ GET /login 404 in 27ms
+ GET /login 404 in 31ms
+ GET /login 404 in 65ms
+ GET /login 404 in 28ms
+ GET /login 404 in 23ms
+ GET /login 404 in 31ms
+ GET /login 404 in 24ms
+ GET /login 404 in 29ms
+ GET /login 404 in 49ms
+ GET /login 404 in 53ms
+ GET /login 404 in 48ms
+ GET /login 404 in 39ms
+ GET /login 404 in 42ms
+ GET /login 404 in 19ms
+ GET /login 404 in 81ms
+ GET /login 404 in 48ms
+ GET /login 404 in 50ms
+ GET /login 404 in 84ms
+ GET /login 404 in 61ms
+ GET /login 404 in 40ms
+ GET /login 404 in 14ms
+ GET /login 404 in 44ms
+ GET /login 404 in 43ms
+ GET /login 404 in 34ms
+ GET /login 404 in 31ms
+ GET /login 404 in 28ms
+ GET /login 404 in 36ms
+ GET /login 404 in 39ms
+ GET /login 404 in 41ms
+ GET /login 404 in 119ms
+ GET /login 404 in 34ms
+ GET /login 404 in 31ms
+ GET /login 404 in 70ms
+ GET /login 404 in 33ms
+ GET /login 404 in 46ms
+ GET /login 404 in 35ms
+ GET /login 404 in 33ms
+ GET /login 404 in 49ms
+ GET /login 404 in 12ms
+ GET /login 404 in 13ms
+ GET /login 404 in 42ms
+ GET /login 404 in 31ms
+ GET /login 404 in 31ms
+ GET /login 404 in 46ms
+ GET /login 404 in 29ms
+ GET /login 404 in 30ms
+ GET /login 404 in 32ms
+ GET /login 404 in 16ms
+ GET /login 404 in 12ms
+ GET /login 404 in 31ms
+ GET /login 404 in 36ms
+ GET /login 404 in 38ms
+ GET /login 404 in 42ms
+ GET /login 404 in 28ms
+ GET /login 404 in 213ms
+ GET /login 404 in 56ms
+ GET /login 404 in 34ms
+ GET /login 404 in 77ms
+ GET /login 404 in 33ms
+ GET /login 404 in 29ms
+ GET /login 404 in 37ms
+ GET /login 404 in 55ms
+ GET /login 404 in 51ms
+ GET /login 404 in 31ms
+ GET /login 404 in 15ms
+ GET /login 404 in 12ms
+ GET /login 404 in 30ms
+ GET /login 404 in 102ms
+ GET /login 404 in 45ms
+ GET /login 404 in 31ms
+ GET /login 404 in 32ms
+ GET /login 404 in 57ms
+ GET /login 404 in 31ms
+ GET /login 404 in 80ms
+ GET /login 404 in 34ms
+ GET /login 404 in 15ms
+ GET /login 404 in 18ms
+ GET /login 404 in 32ms
+ GET /login 404 in 44ms
+ GET /login 404 in 17ms
+ GET /login 404 in 27ms
+ GET /login 404 in 41ms
+ GET /login 404 in 33ms
+ GET /login 404 in 31ms
+ GET /login 404 in 40ms
+ GET /login 404 in 36ms
+ GET /login 404 in 26ms
+ GET /login 404 in 33ms
+ GET /login 404 in 57ms
+ GET /login 404 in 35ms
+ GET /login 404 in 36ms
+ GET /login 404 in 27ms
+ GET /login 404 in 38ms
+ GET /login 404 in 33ms
+ GET /login 404 in 34ms
+ GET /login 404 in 29ms
+ GET /login 404 in 28ms
+ GET /login 404 in 31ms
+ GET /login 404 in 31ms
+ GET /login 404 in 32ms
+ GET /login 404 in 29ms
+ GET /login 404 in 32ms
+ GET /login 404 in 29ms
+ GET /login 404 in 32ms
+ GET /login 404 in 32ms
+ GET /login 404 in 33ms
+ GET /login 404 in 41ms
+ GET /login 404 in 30ms
+ GET /login 404 in 30ms
+ GET /login 404 in 28ms
+ GET /login 404 in 31ms
+ GET /login 404 in 77ms
+ GET /login 404 in 28ms
+ GET /login 404 in 31ms
+ GET /login 404 in 29ms
+ GET /login 404 in 36ms
+ GET /login 404 in 29ms
+ GET /login 404 in 42ms
+ GET /login 404 in 29ms
+ GET /login 404 in 33ms
+ GET /login 404 in 29ms
+ GET /login 404 in 32ms
+ GET /login 404 in 31ms
+ GET /login 404 in 33ms
+ GET /login 404 in 32ms
+ GET /login 404 in 51ms
+ GET /login 404 in 32ms
+ GET /login 404 in 53ms
+ GET /login 404 in 32ms
+ GET /login 404 in 37ms
+ GET /login 404 in 32ms
+ GET /login 404 in 30ms
+ GET /login 404 in 51ms
+ GET /login 404 in 54ms
+ GET /login 404 in 31ms
+ GET /login 404 in 37ms
+ GET /login 404 in 37ms
+ GET /login 404 in 32ms
+ GET /login 404 in 32ms
+ GET /login 404 in 29ms
+ GET /login 404 in 48ms
+ GET /login 404 in 31ms
+ GET /login 404 in 30ms
+ GET /login 404 in 31ms
+ GET /login 404 in 29ms
+ GET /login 404 in 45ms
+ GET /login 404 in 30ms
+ GET /login 404 in 45ms
+ GET /login 404 in 51ms
+ GET /login 404 in 41ms
+ GET /login 404 in 32ms
+ GET /login 404 in 93ms
+ GET /login 404 in 36ms
+ GET /login 404 in 31ms
+ GET /login 404 in 27ms
+ GET /login 404 in 32ms
+ GET /login 404 in 39ms
+ GET /login 404 in 30ms
+ GET /login 404 in 48ms
+ GET /login 404 in 42ms
+ GET /login 404 in 47ms
+ GET /login 404 in 29ms
+ GET /login 404 in 113ms
+ GET /login 404 in 43ms
+ GET /login 404 in 32ms
+ GET /login 404 in 31ms
+ GET /login 404 in 29ms
+ GET /login 404 in 41ms
+ GET /login 404 in 29ms
+ GET /login 404 in 34ms
+ GET /login 404 in 32ms
+ GET /login 404 in 28ms
+ GET /login 404 in 38ms
+ GET /login 404 in 32ms
+ GET /login 404 in 33ms
+ GET /login 404 in 60ms
+ GET /login 404 in 40ms
+ GET /login 404 in 31ms
+ GET /login 404 in 27ms
+ GET /login 404 in 32ms
+ GET /login 404 in 32ms
+ GET /login 404 in 34ms
+ GET /login 404 in 33ms
+ GET /login 404 in 33ms
+ GET /login 404 in 46ms
+ GET /login 404 in 36ms
+ GET /login 404 in 33ms
+ GET /login 404 in 30ms
+ GET /login 404 in 272ms
+ GET /login 404 in 114ms
+ GET /login 404 in 33ms
+ GET /login 404 in 35ms
+ GET /login 404 in 33ms
+ GET /login 404 in 29ms
+ GET /login 404 in 34ms
+ GET /login 404 in 46ms
+ GET /login 404 in 45ms
+ GET /login 404 in 53ms
+ GET /login 404 in 40ms
+ GET /login 404 in 33ms
+ GET /login 404 in 33ms
+ GET /login 404 in 52ms
+ GET /login 404 in 38ms
+ GET /login 404 in 46ms
+ GET /login 404 in 125ms
+ GET /login 404 in 42ms
+ GET /login 404 in 54ms
+ GET /login 404 in 33ms
+ GET /login 404 in 28ms
+ GET /login 404 in 33ms
+ GET /login 404 in 31ms
+ GET /login 404 in 37ms
+ GET /login 404 in 55ms
+ GET /login 404 in 33ms
+ GET /login 404 in 29ms
+ GET /login 404 in 57ms
+ GET /login 404 in 33ms
+ GET /login 404 in 38ms
+ GET /login 404 in 35ms
+ GET /login 404 in 45ms
+ GET /login 404 in 36ms
+ GET /login 404 in 55ms
+ GET /login 404 in 36ms
+ GET /login 404 in 33ms
+ GET /login 404 in 32ms
+ GET /login 404 in 32ms
+ GET /login 404 in 32ms
+ GET /login 404 in 40ms
+ GET /login 404 in 33ms
+ GET /login 404 in 33ms
+ GET /login 404 in 37ms
+ GET /login 404 in 56ms
+ GET /login 404 in 35ms
+ GET /login 404 in 31ms
+ GET /login 404 in 27ms
+ GET /login 404 in 30ms
+ GET /login 404 in 30ms
+ GET /login 404 in 42ms
+ GET /login 404 in 40ms
+ GET /login 404 in 50ms
+ GET /login 404 in 31ms
+ GET /login 404 in 34ms
+ GET /login 404 in 29ms
+ GET /login 404 in 33ms
+ GET /login 404 in 31ms
+ GET /login 404 in 31ms
+ GET /login 404 in 33ms
+ GET /login 404 in 44ms
+ GET /login 404 in 32ms
+ GET /login 404 in 45ms
+ GET /login 404 in 31ms
+ GET /login 404 in 30ms
+ GET /login 404 in 40ms
+ GET /login 404 in 53ms
+ GET /login 404 in 40ms
+ GET /login 404 in 43ms
+ GET /login 404 in 36ms
+ GET /login 404 in 33ms
+ GET /login 404 in 28ms
+ GET /login 404 in 37ms
+ GET /login 404 in 30ms
+ GET /login 404 in 33ms
+ GET /login 404 in 24ms
+ GET /login 404 in 22ms
+ GET /login 404 in 22ms
+ GET /login 404 in 24ms
+ GET /login 404 in 31ms
+ GET /login 404 in 26ms
+ GET /login 404 in 27ms
+ GET /login 404 in 25ms
+ GET /login 404 in 30ms
+ GET /login 404 in 28ms
+ GET /login 404 in 23ms
+ GET /login 404 in 25ms
+ GET /login 404 in 35ms
+ GET /login 404 in 29ms
+ GET /login 404 in 25ms
+ GET /login 404 in 24ms
+ GET /login 404 in 29ms
+ GET /login 404 in 28ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 28ms
+ GET /login 404 in 28ms
+ GET /login 404 in 22ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 26ms
+ GET /login 404 in 24ms
+ GET /login 404 in 27ms
+ GET /login 404 in 27ms
+ GET /login 404 in 20ms
+ GET /login 404 in 30ms
+ GET /login 404 in 25ms
+ GET /login 404 in 24ms
+ GET /login 404 in 28ms
+ GET /login 404 in 25ms
+ GET /login 404 in 27ms
+ GET /login 404 in 25ms
+ GET /login 404 in 26ms
+ GET /login 404 in 24ms
+ GET /login 404 in 26ms
+ GET /login 404 in 30ms
+ GET /login 404 in 25ms
+ GET /login 404 in 32ms
+ GET /login 404 in 35ms
+ GET /login 404 in 40ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 27ms
+ GET /login 404 in 23ms
+ GET /login 404 in 26ms
+ GET /login 404 in 24ms
+ GET /login 404 in 26ms
+ GET /login 404 in 25ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 25ms
+ GET /login 404 in 24ms
+ GET /login 404 in 25ms
+ GET /login 404 in 24ms
+ GET /login 404 in 26ms
+ GET /login 404 in 24ms
+ GET /login 404 in 23ms
+ GET /login 404 in 21ms
+ GET /login 404 in 25ms
+ GET /login 404 in 22ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 24ms
+ GET /login 404 in 23ms
+ GET /login 404 in 24ms
+ GET /login 404 in 25ms
+ GET /login 404 in 29ms
+ GET /login 404 in 28ms
+ GET /login 404 in 29ms
+ GET /login 404 in 23ms
+ GET /login 404 in 22ms
+ GET /login 404 in 22ms
+ GET /login 404 in 28ms
+ GET /login 404 in 23ms
+ GET /login 404 in 24ms
+ GET /login 404 in 24ms
+ GET /login 404 in 33ms
+ GET /login 404 in 26ms
+ GET /login 404 in 36ms
+ GET /login 404 in 26ms
+ GET /login 404 in 30ms
+ GET /login 404 in 26ms
+ GET /login 404 in 26ms
+ GET /login 404 in 29ms
+ GET /login 404 in 39ms
+ GET /login 404 in 38ms
+ GET /login 404 in 60ms
+ GET /login 404 in 54ms
+ GET /login 404 in 137ms
+ GET /login 404 in 234ms
+ GET /login 404 in 163ms
+ GET /login 404 in 39ms
+ GET /login 404 in 202ms
+ GET /login 404 in 38ms
+ GET /login 404 in 42ms
+ GET /login 404 in 46ms
+ GET /login 404 in 51ms
+ GET /login 404 in 55ms
+ GET /login 404 in 60ms
+ GET /login 404 in 60ms
+ GET /login 404 in 48ms
+ GET /login 404 in 41ms
+ GET /login 404 in 99ms
+ GET /login 404 in 84ms
+ GET /login 404 in 50ms
+ GET /login 404 in 63ms
+ GET /login 404 in 45ms
+ GET /login 404 in 42ms
+ GET /login 404 in 40ms
+ GET /login 404 in 57ms
+ GET /login 404 in 45ms
+ GET /login 404 in 32ms
+ GET /login 404 in 29ms
+ GET /login 404 in 26ms
+ GET /login 404 in 39ms
+ GET /login 404 in 37ms
+ GET /login 404 in 56ms
+ GET /login 404 in 79ms
+ GET /login 404 in 49ms
+ GET /login 404 in 34ms
+ GET /login 404 in 32ms
+ GET /login 404 in 45ms
+ GET /login 404 in 44ms
+ GET /login 404 in 39ms
+ GET /login 404 in 54ms
+ GET /login 404 in 57ms
+ GET /login 404 in 39ms
+ GET /login 404 in 54ms
+ GET /login 404 in 64ms
+ GET /login 404 in 51ms
+ GET /login 404 in 36ms
+ GET /login 404 in 45ms
+ GET /login 404 in 29ms
+ GET /login 404 in 28ms
+ GET /login 404 in 33ms
+ GET /login 404 in 26ms
+ GET /login 404 in 25ms
+ GET /login 404 in 33ms
+ GET /login 404 in 28ms
+ GET /login 404 in 27ms
+ GET /login 404 in 25ms
+ GET /login 404 in 25ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 35ms
+ GET /login 404 in 27ms
+ GET /login 404 in 37ms
+ GET /login 404 in 36ms
+ GET /login 404 in 36ms
+ GET /login 404 in 37ms
+ GET /login 404 in 36ms
+ GET /login 404 in 40ms
+ GET /login 404 in 40ms
+ GET /login 404 in 39ms
+ GET /login 404 in 36ms
+ GET /login 404 in 56ms
+ GET /login 404 in 29ms
+ GET /login 404 in 28ms
+ GET /login 404 in 30ms
+ GET /login 404 in 30ms
+ GET /login 404 in 39ms
+ GET /login 404 in 32ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 28ms
+ GET /login 404 in 29ms
+ GET /login 404 in 31ms
+ GET /login 404 in 27ms
+ GET /login 404 in 29ms
+ GET /login 404 in 35ms
+ GET /login 404 in 26ms
+ GET /login 404 in 27ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 26ms
+ GET /login 404 in 28ms
+ GET /login 404 in 29ms
+ GET /login 404 in 27ms
+ GET /login 404 in 30ms
+ GET /login 404 in 28ms
+ GET /login 404 in 26ms
+ GET /login 404 in 26ms
+ GET /login 404 in 28ms
+ GET /login 404 in 25ms
+ GET /login 404 in 32ms
+ GET /login 404 in 26ms
+ GET /login 404 in 25ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 25ms
+ GET /login 404 in 31ms
+ GET /login 404 in 26ms
+ GET /login 404 in 25ms
+ GET /login 404 in 27ms
+ GET /login 404 in 25ms
+ GET /login 404 in 26ms
+ GET /login 404 in 25ms
+ GET /login 404 in 26ms
+ GET /login 404 in 25ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 27ms
+ GET /login 404 in 28ms
+ GET /login 404 in 27ms
+ GET /login 404 in 27ms
+ GET /login 404 in 24ms
+ GET /login 404 in 28ms
+ GET /login 404 in 27ms
+ GET /login 404 in 32ms
+ GET /login 404 in 27ms
+ GET /login 404 in 30ms
+ GET /login 404 in 29ms
+ GET /login 404 in 28ms
+ GET /login 404 in 26ms
+ GET /login 404 in 28ms
+ GET /login 404 in 28ms
+ GET /login 404 in 28ms
+ GET /login 404 in 33ms
+ GET /login 404 in 29ms
+ GET /login 404 in 27ms
+ GET /login 404 in 30ms
+ GET /login 404 in 31ms
+ GET /login 404 in 32ms
+ GET /login 404 in 27ms
+ GET /login 404 in 28ms
+ GET /login 404 in 27ms
+ GET /login 404 in 26ms
+ GET /login 404 in 31ms
+ GET /login 404 in 31ms
+ GET /login 404 in 29ms
+ GET /login 404 in 27ms
+ GET /login 404 in 31ms
+ GET /login 404 in 26ms
+ GET /login 404 in 25ms
+ GET /login 404 in 29ms
+ GET /login 404 in 29ms
+ GET /login 404 in 27ms
+ GET /login 404 in 31ms
+ GET /login 404 in 29ms
+ GET /login 404 in 39ms
+ ✓ Compiled in 1626ms (998 modules)
+ GET /login 200 in 980ms
+ GET /login 200 in 80ms
+ GET /_next/static/css/app/layout.css?v=1788512355769 404 in 115ms
+ GET /_next/static/chunks/main-app.js?v=1788512355769 404 in 203ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 200ms
+ ✓ Compiled in 1488ms (995 modules)
+ ✓ Compiled in 1130ms (995 modules)
+ ✓ Compiled in 1129ms (995 modules)
+ ✓ Compiled in 325ms (575 modules)
+ ✓ Compiled in 874ms (575 modules)
+ ✓ Compiled in 1213ms (1003 modules)
+ ✓ Compiled in 357ms (579 modules)
+ ✓ Compiled in 417ms (579 modules)
+ ✓ Compiled in 341ms (579 modules)
+ ✓ Compiled in 498ms (579 modules)
+ ✓ Compiled in 337ms (579 modules)
+ ✓ Compiled in 995ms (1003 modules)
+ GET /login 200 in 464ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 912ms (992 modules)
+ GET /_next/static/chunks/main-app.js?v=1788516373592 404 in 1266ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 1145ms
+ ✓ Compiled in 1117ms (989 modules)
+ ✓ Compiled in 1292ms (1003 modules)
+ ✓ Compiled in 1583ms (1074 modules)
+ ✓ Compiled in 1120ms (1074 modules)
+ ✓ Compiled in 824ms (1003 modules)
+ GET /login 200 in 424ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1335ms (1006 modules)
+ GET /_next/static/chunks/main-app.js?v=1788516905938 404 in 1650ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 1110ms
+ GET /login 200 in 167ms
+ GET /_next/static/chunks/main-app.js?v=1788516969208 404 in 49ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 57ms
+ ✓ Compiled in 3.8s (1003 modules)
+ ✓ Compiled in 655ms (579 modules)
+ ✓ Compiled in 438ms (579 modules)
+ ✓ Compiled in 2.3s (1025 modules)
+ GET /login 200 in 1914ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 3.5s (1014 modules)
+ GET /_next/static/chunks/app-pages-internals.js 404 in 4800ms
+ GET /_next/static/chunks/main-app.js?v=1788520382555 404 in 4796ms
+ GET /login 200 in 543ms
+ GET /_next/static/chunks/main-app.js?v=1788520450110 404 in 771ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 752ms
+ ✓ Compiled in 1529ms (1025 modules)
+ ✓ Compiled in 458ms (590 modules)
+ ✓ Compiled in 2.2s (1096 modules)
+ ✓ Compiled in 1309ms (1025 modules)
+ ✓ Compiled in 1804ms (1011 modules)
+ ✓ Compiled in 664ms (590 modules)
+ ✓ Compiled in 426ms (590 modules)
+ ✓ Compiled in 604ms (590 modules)
+ ✓ Compiled in 1810ms (590 modules)
+ ✓ Compiled in 618ms (590 modules)
+ ✓ Compiled in 696ms (590 modules)
+ ✓ Compiled in 423ms (590 modules)
+ ✓ Compiled in 388ms (590 modules)
+ ✓ Compiled in 1472ms (1025 modules)
+ GET /login 500 in 5941ms
+ ✓ Compiled in 2.4s (590 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 2.9s (1014 modules)
+ GET /login 500 in 2560ms
+ GET /_next/static/webpack/c926d3ede414728e.webpack.hot-update.json 500 in 2664ms
+ GET /login 200 in 25ms
+ GET /login 500 in 88ms
+ ✓ Compiled in 978ms (592 modules)
+ GET /_next/static/webpack/c926d3ede414728e.webpack.hot-update.json 500 in 88ms
+ GET /login 200 in 88ms
+ GET /login 500 in 77ms
+ ✓ Compiled in 729ms (592 modules)
+ GET /_next/static/webpack/c926d3ede414728e.webpack.hot-update.json 500 in 69ms
+ GET /login 200 in 71ms
+ GET /login 500 in 94ms
+ ✓ Compiled in 3.1s (1014 modules)
+ GET /_next/static/webpack/c926d3ede414728e.webpack.hot-update.json 500 in 1734ms
+ GET /login 500 in 81ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 4.7s (1083 modules)
+ GET /_next/static/webpack/c926d3ede414728e.webpack.hot-update.json 404 in 2113ms
+ GET /login 200 in 135ms
+ GET /_next/static/chunks/main-app.js?v=1788547104214 404 in 134ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 134ms
+ GET /_next/static/chunks/app/login/page.js 404 in 107ms
+ ✓ Compiled in 1942ms (1080 modules)
+ ✓ Compiled in 1316ms (1009 modules)
+ GET /login 200 in 447ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 939ms (1012 modules)
+ GET /_next/static/css/app/layout.css?v=1788549643034 404 in 1294ms
+ GET /_next/static/chunks/main-app.js?v=1788549643034 404 in 942ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 936ms
+ GET /_next/static/chunks/app/login/page.js 404 in 942ms
+ GET /login 200 in 352ms
+ GET /_next/static/css/app/layout.css?v=1788549753046 404 in 304ms
+ GET /_next/static/chunks/main-app.js?v=1788549753046 404 in 397ms
+ GET /_next/static/chunks/app/login/page.js 404 in 396ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 395ms
+ ✓ Compiled in 877ms (995 modules)
+ ✓ Compiled in 504ms (583 modules)
+ GET /login 200 in 489ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 768ms (998 modules)
+ GET /_next/static/css/app/layout.css?v=1788550365684 404 in 1077ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 940ms
+ GET /_next/static/chunks/main-app.js?v=1788550365684 404 in 941ms
+ ✓ Compiled in 1758ms (583 modules)
+ ✓ Compiled in 1027ms (583 modules)
+ ✓ Compiled in 1704ms (583 modules)
+ ✓ Compiled in 3.6s (1009 modules)
+ ✓ Compiled in 711ms (583 modules)
+ ✓ Compiled in 518ms (583 modules)
+ ✓ Compiled in 629ms (583 modules)
+[?25h

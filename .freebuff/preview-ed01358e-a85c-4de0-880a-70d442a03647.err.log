@@ -1,0 +1,1749 @@
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:938:1]
+ [2m938[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m939[0m | 
+ [2m940[0m | 
+ [2m941[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m942[0m | 
+ [2m943[0m | export interface ExceptionReadSummary {
+ [2m944[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m 'import', and 'export' cannot be used outside of module code
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:929:1]
+ [2m929[0m |   transaction_type?: string;
+ [2m930[0m | }): Promise<ExceptionListResponse> {
+ [2m931[0m | 
+ [2m932[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m^^^^^^[0m
+ [2m933[0m | 
+ [2m934[0m | export interface ExceptionReadSummary {
+ [2m935[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m Expected ';', got 'type'
+     ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:923:1]
+ [2m923[0m | 
+ [2m924[0m | export async function fetchExceptions(params?: {
+ [2m925[0m | 
+ [2m926[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+     : [31;1m       ^^^^[0m
+ [2m927[0m | 
+ [2m928[0m | export interface ExceptionReadSummary {
+ [2m929[0m |   id: string;
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⨯ ./lib/api.ts
+Error: 
+  [31mx[0m the name `fetchExceptions` is defined multiple times
+      ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\lib\api.ts[0m:921:1]
+ [2m 921[0m |   execution_error: string | null;
+ [2m 922[0m | }
+ [2m 923[0m | 
+ [2m 924[0m | export async function fetchExceptions(params?: {
+      : [31;1m                      ^^^^^^^|^^^^^^^[0m
+      :                              [31;1m`-- [31;1mprevious definition of `fetchExceptions` here[0m[0m
+ [2m 925[0m |   page?: number;
+ [2m 926[0m |   size?: number;
+ [2m 927[0m |   type?: string;
+ [2m 928[0m |   state?: string;
+ [2m 929[0m |   currency?: string;
+ [2m 930[0m |   transaction_type?: string;
+ [2m 931[0m | }): Promise<ExceptionListResponse> {
+ [2m 932[0m |   const url = new URL(`${bffBase()}/api/v1/exceptions`);
+ [2m 933[0m |   if (params?.page && params?.size) {
+ [2m 934[0m |     url.searchParams.set("offset", String((params.page - 1) * params.size));
+ [2m 935[0m |     url.searchParams.set("limit", String(params.size));
+ [2m 936[0m |   }
+ [2m 937[0m |   if (params?.type && params.type !== "ALL") url.searchParams.set("type", params.type);
+ [2m 938[0m |   if (params?.state && params.state !== "ALL") url.searchParams.set("state", params.state);
+ [2m 939[0m |   if (params?.currency && params.currency !== "ALL") url.searchParams.set("currency", params.currency);
+ [2m 940[0m |   if (params?.transaction_type && params.transaction_type !== "ALL") url.searchParams.set("transaction_type", params.transaction_type);
+ [2m 941[0m |   const res = await fetchAuthenticated(url.toString());
+ [2m 942[0m |   if (!res.ok) throw new Error(`Failed to fetch exceptions: ${res.statusText}`);
+ [2m 943[0m |   return res.json();
+ [2m 944[0m | }
+ [2m 945[0m | 
+ [2m 946[0m | export type OverallExceptionState = "OPEN" | "INVESTIGATING" | "AWAITING_APPROVAL" | "APPROVED" | "EXECUTING" | "RESOLVED" | "FAILED" | "UNKNOWN";
+ [2m 947[0m | 
+ [2m 948[0m | export interface ExceptionReadSummary {
+ [2m 949[0m |   id: string;
+ [2m 950[0m |   type: string;
+ [2m 951[0m |   severity: string;
+ [2m 952[0m |   overall_state: OverallExceptionState;
+ [2m 953[0m |   amount: number | null;
+ [2m 954[0m |   currency: string | null;
+ [2m 955[0m |   source_entity_type: string;
+ [2m 956[0m |   source_entity_id: string;
+ [2m 957[0m |   detected_at: string;
+ [2m 958[0m |   investigation_status: string | null;
+ [2m 959[0m |   policy_decision: string | null;
+ [2m 960[0m |   action_request_status: string | null;
+ [2m 961[0m |   execution_status: string | null;
+ [2m 962[0m | }
+ [2m 963[0m | 
+ [2m 964[0m | export interface ExceptionListResponse {
+ [2m 965[0m |   items: ExceptionReadSummary[];
+ [2m 966[0m |   total: number;
+ [2m 967[0m |   page: number;
+ [2m 968[0m |   size: number;
+ [2m 969[0m | }
+ [2m 970[0m | 
+ [2m 971[0m | export interface ExceptionDetail {
+ [2m 972[0m |   id: string;
+ [2m 973[0m |   type: string;
+ [2m 974[0m |   severity: string;
+ [2m 975[0m |   overall_state: OverallExceptionState;
+ [2m 976[0m |   amount: number | null;
+ [2m 977[0m |   expected_amount: number | null;
+ [2m 978[0m |   actual_amount: number | null;
+ [2m 979[0m |   difference_amount: number | null;
+ [2m 980[0m |   currency: string | null;
+ [2m 981[0m |   source_entity_type: string;
+ [2m 982[0m |   source_entity_id: string;
+ [2m 983[0m |   related_entity_type: string | null;
+ [2m 984[0m |   related_entity_id: string | null;
+ [2m 985[0m |   detected_at: string;
+ [2m 986[0m |   run_id: string;
+ [2m 987[0m |   rule_code: string;
+ [2m 988[0m |   
+ [2m 989[0m |   investigation_status: string | null;
+ [2m 990[0m |   investigation_id: string | null;
+ [2m 991[0m |   root_cause: string | null;
+ [2m 992[0m |   investigation_explanation: string | null;
+ [2m 993[0m |   
+ [2m 994[0m |   policy_decision: string | null;
+ [2m 995[0m |   policy_action: string | null;
+ [2m 996[0m |   policy_rule_code: string | null;
+ [2m 997[0m |   policy_reason: string | null;
+ [2m 998[0m |   
+ [2m 999[0m |   action_request_id: string | null;
+ [2m1000[0m |   action_request_status: string | null;
+ [2m1001[0m |   action_request_action: string | null;
+ [2m1002[0m |   
+ [2m1003[0m |   execution_id: string | null;
+ [2m1004[0m |   execution_status: string | null;
+ [2m1005[0m |   execution_error: string | null;
+ [2m1006[0m | }
+ [2m1007[0m | 
+ [2m1008[0m | export async function fetchExceptions(params?: {
+      : [33;1m                      ^^^^^^^|^^^^^^^[0m
+      :                              [33;1m`-- [33;1m`fetchExceptions` redefined here[0m[0m
+ [2m1009[0m |   page?: number;
+ [2m1010[0m |   size?: number;
+ [2m1010[0m |   type?: string;
+      `----
+
+Import trace for requested module:
+./lib/api.ts
+./components/providers/auth-provider.tsx
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ./app/login/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+    ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\app\login\page.tsx[0m:91:1]
+ [2m91[0m |   }
+ [2m92[0m | 
+ [2m93[0m |   return (
+ [2m94[0m |     <div className="flex min-h-screen bg-background">
+    : [31;1m     ^^^[0m
+ [2m95[0m |       {/* Left Panel */}
+ [2m96[0m |       <div className="hidden lg:flex lg:w-1/2 bg-[hsl(222,47%,11%)] flex-col items-start justify-between p-12">
+ [2m97[0m |         <div className="flex items-center gap-3">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/login/page.tsx
+ ⨯ ./app/login/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+    ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\app\login\page.tsx[0m:91:1]
+ [2m91[0m |   }
+ [2m92[0m | 
+ [2m93[0m |   return (
+ [2m94[0m |     <div className="flex min-h-screen bg-background">
+    : [31;1m     ^^^[0m
+ [2m95[0m |       {/* Left Panel */}
+ [2m96[0m |       <div className="hidden lg:flex lg:w-1/2 bg-[hsl(222,47%,11%)] flex-col items-start justify-between p-12">
+ [2m97[0m |         <div className="flex items-center gap-3">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/login/page.tsx
+ ⨯ ./app/login/page.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+    ,-[[36;1;4mC:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\app\login\page.tsx[0m:91:1]
+ [2m91[0m |   }
+ [2m92[0m | 
+ [2m93[0m |   return (
+ [2m94[0m |     <div className="flex min-h-screen bg-background">
+    : [31;1m     ^^^[0m
+ [2m95[0m |       {/* Left Panel */}
+ [2m96[0m |       <div className="hidden lg:flex lg:w-1/2 bg-[hsl(222,47%,11%)] flex-col items-start justify-between p-12">
+ [2m97[0m |         <div className="flex items-center gap-3">
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/login/page.tsx
+ ⨯ Error: Cannot find module './276.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11523
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11572)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:818:17)
+    at async C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\app\\login\\page.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/login'
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\app\\login\\page.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './276.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11523
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11572)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:818:17)
+    at async C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\app\\login\\page.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/login'
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ Error: Cannot find module './276.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11523
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11572)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:818:17)
+    at async C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/login'
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './276.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11523
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11572)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:818:17)
+    at async C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/login'
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ Error: Cannot find module './276.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11523
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11572)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:818:17)
+    at async C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/login'
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './276.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11523
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11572)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:818:17)
+    at async C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/login'
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ Error: Cannot find module './276.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11523
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11572)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:818:17)
+    at async C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/login'
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './276.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11523
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\login\page.js:1:11572)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:84
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:103:26)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36)
+    at async DevServer.findPageComponents (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:577:20)
+    at async DevServer.renderPageComponent (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1910:24)
+    at async DevServer.renderToResponseImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:1962:32)
+    at async DevServer.pipeImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:922:25)
+    at async NextNodeServer.handleCatchallRenderRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:272:17)
+    at async DevServer.handleRequestImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\base-server.js:818:17)
+    at async C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:339:20
+    at async Span.traceAsyncFn (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\trace\trace.js:154:20)
+    at async DevServer.handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\next-dev-server.js:336:24)
+    at async invokeRender (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:179:21)
+    at async handleRequest (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:359:24)
+    at async requestHandlerImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js:383:13)
+    at async Server.requestListener (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js:141:13) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ],
+  page: '/login'
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\pages\\_document.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\_not-found\page.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\app\\_not-found\\page.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ Error: Cannot find module './682.js'
+Require stack:
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\app\_not-found\page.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\build\utils.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-middleware.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\dev\hot-reloader-webpack.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\router-server.js
+- C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\lib\start-server.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1447:15)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:55:36
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1233:25)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at __webpack_require__.f.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:203:28)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:111:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:110:67)
+    at Array.map (<anonymous>)
+    at __webpack_require__.X (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\webpack-runtime.js:162:22)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:335
+    at Object.<anonymous> (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\.next\server\pages\_document.js:1:376)
+    at Module._compile (node:internal/modules/cjs/loader:1803:14)
+    at Object..js (node:internal/modules/cjs/loader:1934:10)
+    at Module.load (node:internal/modules/cjs/loader:1524:32)
+    at Module._load (node:internal/modules/cjs/loader:1326:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:245:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1547:12)
+    at mod.require (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require-hook.js:65:28)
+    at require (node:internal/modules/helpers:152:16)
+    at requirePage (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\require.js:109:84)
+    at C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:72:65
+    at async Promise.all (index 0)
+    at async loadComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\load-components.js:71:33)
+    at async DevServer.findPageComponentsImpl (C:\Users\tejas\OneDrive\Desktop\FinOps\apps\web\node_modules\next\dist\server\next-server.js:714:36) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\webpack-runtime.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\.next\\server\\app\\_not-found\\page.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\require.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\load-components.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\build\\utils.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-middleware.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\dev\\hot-reloader-webpack.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-utils\\setup-dev-bundler.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\router-server.js',
+    'C:\\Users\\tejas\\OneDrive\\Desktop\\FinOps\\apps\\web\\node_modules\\next\\dist\\server\\lib\\start-server.js'
+  ]
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload

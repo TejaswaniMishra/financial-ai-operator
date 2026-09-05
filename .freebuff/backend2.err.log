@@ -1,0 +1,15 @@
+INFO:     Started server process [25668]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+C:\Users\tejas\AppData\Local\Programs\Python\Python310\lib\site-packages\jwt\api_jwt.py:147: InsecureKeyLengthWarning: The HMAC key is 24 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  return self._jws.encode(
+C:\Users\tejas\AppData\Local\Programs\Python\Python310\lib\site-packages\jwt\api_jwt.py:368: InsecureKeyLengthWarning: The HMAC key is 24 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+  decoded = self.decode_complete(
+Upgrading deprecated model gemini-2.5-flash to gemini-3.6-flash
+Upgrading deprecated model gemini-2.5-flash to gemini-3.6-flash
+Gemini generation failed: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\nPlease retry in 53.832736859s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.6-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '53s'}]}}
+Upgrading deprecated model gemini-2.5-flash to gemini-3.6-flash
+Gemini generation failed: Cannot connect to host generativelanguage.googleapis.com:443 ssl:<ssl.SSLContext object at 0x0000021506977D40> [getaddrinfo failed]
+Upgrading deprecated model gemini-2.5-flash to gemini-3.6-flash
+Gemini generation failed: Cannot connect to host generativelanguage.googleapis.com:443 ssl:<ssl.SSLContext object at 0x0000021506976EC0> [getaddrinfo failed]

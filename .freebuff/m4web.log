@@ -1,0 +1,315 @@
+
+> financial-ai-operator-web@0.1.0 dev
+> next dev -p 3003
+
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3003
+
+ ✓ Starting...
+ ✓ Ready in 19.6s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 2s (85 modules)
+ ○ Compiling /login ...
+ ✓ Compiled /login in 40.9s (759 modules)
+ GET /login 200 in 2511ms
+ ✓ Compiled in 1377ms (383 modules)
+ GET /login 200 in 79ms
+ ○ Compiling /api/auth/me ...
+ ✓ Compiled /api/auth/me in 715ms (403 modules)
+ GET /api/auth/me 401 in 3266ms
+ GET /login 200 in 186ms
+ GET /api/auth/me 401 in 42ms
+ ✓ Compiled /api/auth/login in 234ms (405 modules)
+ POST /api/auth/login 200 in 1131ms
+ GET /api/auth/me 200 in 102ms
+ ○ Compiling / ...
+ ✓ Compiled / in 924ms (790 modules)
+ ✓ Compiled /api/v1/[...path] in 261ms (416 modules)
+ GET /api/v1/health 200 in 1452ms
+ GET /api/v1/system/info 200 in 1545ms
+ GET /api/v1/reconciliation/runs 200 in 1536ms
+ GET /api/v1/reconciliation/discrepancies 200 in 1544ms
+ GET /api/v1/notifications/unread-count 200 in 1571ms
+ GET /api/v1/metrics/overview 200 in 1595ms
+ GET /api/v1/notifications/unread-count 200 in 142ms
+ GET /api/v1/health 200 in 105ms
+ GET /api/v1/system/info 200 in 174ms
+ GET /api/v1/reconciliation/runs 200 in 183ms
+ GET /api/v1/reconciliation/discrepancies 200 in 162ms
+ GET /api/v1/metrics/overview 200 in 215ms
+ ○ Compiling /exceptions/[id] ...
+ ✓ Compiled /exceptions/[id] in 944ms (806 modules)
+ GET /exceptions/fc262b6e-4e29-4e69-b68d-85f019ca79d2 200 in 1897ms
+ GET /api/auth/me 200 in 125ms
+ GET /api/v1/notifications/unread-count 200 in 230ms
+ GET /api/v1/notifications/unread-count 200 in 226ms
+ GET /api/v1/exceptions/fc262b6e-4e29-4e69-b68d-85f019ca79d2 200 in 254ms
+ GET /api/v1/exceptions/fc262b6e-4e29-4e69-b68d-85f019ca79d2 200 in 286ms
+ POST /api/v1/investigations/discrepancy/fc262b6e-4e29-4e69-b68d-85f019ca79d2/run 200 in 1458ms
+ ○ Compiling /investigations/[id] ...
+ ✓ Compiled /investigations/[id] in 912ms (818 modules)
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228 200 in 166ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228/attempts 200 in 191ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228/attempts 200 in 186ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228 200 in 189ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228/attempts/542375f3-ecbb-4423-8f9f-6920649d1828 200 in 80ms
+ GET /api/v1/notifications/unread-count 200 in 128ms
+ GET /api/v1/notifications/unread-count 200 in 80ms
+ GET /api/v1/notifications/unread-count 200 in 102ms
+ GET /api/v1/notifications/unread-count 200 in 111ms
+ GET /exceptions/fc262b6e-4e29-4e69-b68d-85f019ca79d2 200 in 327ms
+ GET /api/auth/me 200 in 144ms
+ GET /api/v1/notifications/unread-count 200 in 237ms
+ GET /api/v1/notifications/unread-count 200 in 245ms
+ GET /api/v1/exceptions/fc262b6e-4e29-4e69-b68d-85f019ca79d2 200 in 285ms
+ GET /api/v1/exceptions/fc262b6e-4e29-4e69-b68d-85f019ca79d2 200 in 290ms
+ POST /api/v1/investigations/discrepancy/fc262b6e-4e29-4e69-b68d-85f019ca79d2/run 200 in 1104ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228/attempts 200 in 150ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228 200 in 154ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228 200 in 178ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228/attempts 200 in 174ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228/attempts/47a5197b-71a0-4260-ad64-3a49ab954bc0 200 in 74ms
+ GET /api/v1/notifications/unread-count 200 in 93ms
+ GET /investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3 200 in 124ms
+ GET /api/auth/me 200 in 145ms
+ GET /api/v1/notifications/unread-count 200 in 274ms
+ GET /api/v1/investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3/attempts 200 in 277ms
+ GET /api/v1/notifications/unread-count 200 in 260ms
+ GET /api/v1/investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3 200 in 285ms
+ GET /api/v1/investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3 200 in 272ms
+ GET /api/v1/investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3/attempts 200 in 134ms
+ GET /api/v1/investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3/attempts/aea78910-91e4-449a-b496-e00538ae825c 200 in 76ms
+ GET / 200 in 137ms
+ GET /api/v1/health 200 in 147ms
+ GET /api/v1/notifications/unread-count 200 in 214ms
+ GET /api/v1/system/info 200 in 266ms
+ GET /api/v1/reconciliation/runs 200 in 256ms
+ GET /api/v1/reconciliation/discrepancies 200 in 280ms
+ GET /api/auth/me 200 in 130ms
+ GET /api/v1/metrics/overview 200 in 307ms
+ GET /api/v1/notifications/unread-count 200 in 122ms
+ GET /api/v1/health 200 in 119ms
+ GET /api/v1/system/info 200 in 192ms
+ GET /api/v1/reconciliation/runs 200 in 192ms
+ GET /api/v1/reconciliation/discrepancies 200 in 201ms
+ GET /api/v1/metrics/overview 200 in 224ms
+ GET /investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3 200 in 123ms
+ GET /api/v1/investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3 200 in 199ms
+ GET /api/v1/investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3/attempts 200 in 213ms
+ GET /api/auth/me 200 in 212ms
+ GET /api/v1/notifications/unread-count 200 in 223ms
+ GET /api/v1/notifications/unread-count 200 in 223ms
+ GET /api/v1/investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3 200 in 250ms
+ GET /api/v1/investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3/attempts 200 in 88ms
+ GET /api/v1/investigations/202ee43b-3c30-4ef5-bba7-d53b326696d3/attempts/aea78910-91e4-449a-b496-e00538ae825c 200 in 70ms
+ GET /api/v1/notifications/unread-count 200 in 84ms
+ GET /exceptions/3c827670-646a-4378-b416-c56f9a03a7a8 200 in 103ms
+ GET /api/auth/me 200 in 936ms
+ GET /api/v1/notifications/unread-count 200 in 970ms
+ GET /api/v1/exceptions/3c827670-646a-4378-b416-c56f9a03a7a8 200 in 973ms
+ GET /api/v1/notifications/unread-count 200 in 993ms
+ GET /api/v1/exceptions/3c827670-646a-4378-b416-c56f9a03a7a8 200 in 1005ms
+ POST /api/v1/investigations/discrepancy/3c827670-646a-4378-b416-c56f9a03a7a8/run 200 in 220ms
+ GET /api/v1/investigations/7432c535-e157-4cce-be45-a215537955a2 200 in 203ms
+ GET /api/v1/investigations/7432c535-e157-4cce-be45-a215537955a2/attempts 200 in 231ms
+ GET /api/v1/investigations/7432c535-e157-4cce-be45-a215537955a2 200 in 243ms
+ GET /api/v1/investigations/7432c535-e157-4cce-be45-a215537955a2/attempts 200 in 250ms
+ GET /api/v1/investigations/7432c535-e157-4cce-be45-a215537955a2/attempts/1ab805a3-c78c-4c5b-8e08-9f40610fde19 200 in 83ms
+ GET /exceptions/3c827670-646a-4378-b416-c56f9a03a7a8 200 in 105ms
+ GET /api/auth/me 200 in 106ms
+ GET /api/v1/notifications/unread-count 200 in 183ms
+ GET /api/v1/notifications/unread-count 200 in 181ms
+ GET /api/v1/exceptions/3c827670-646a-4378-b416-c56f9a03a7a8 200 in 223ms
+ GET /api/v1/exceptions/3c827670-646a-4378-b416-c56f9a03a7a8 200 in 245ms
+ GET /api/v1/notifications/unread-count 200 in 89ms
+ GET /api/v1/notifications/unread-count 200 in 89ms
+ GET /api/v1/notifications/unread-count 200 in 88ms
+ GET /api/v1/notifications/unread-count 200 in 88ms
+ GET /api/v1/notifications/unread-count 200 in 83ms
+ GET /api/v1/notifications/unread-count 200 in 94ms
+ GET /api/v1/notifications/unread-count 200 in 95ms
+ GET /api/v1/notifications/unread-count 200 in 120ms
+ GET /api/v1/notifications/unread-count 200 in 163ms
+ GET /api/v1/notifications/unread-count 200 in 97ms
+ GET /api/v1/notifications/unread-count 200 in 119ms
+ GET /api/v1/notifications/unread-count 200 in 107ms
+ GET /api/v1/notifications?limit=30&offset=0 200 in 102ms
+ ○ Compiling /api/auth/logout ...
+ ✓ Compiled /api/auth/logout in 528ms (429 modules)
+ POST /api/auth/logout 200 in 754ms
+ ✓ Compiled /api/auth/login in 206ms (431 modules)
+ POST /api/auth/login 401 in 336ms
+ GET /login?next=%2Finvestigations%2Facadb0b9-cc66-4dbb-9c0a-288b09014228 200 in 171ms
+ ✓ Compiled /api/auth/me in 271ms (429 modules)
+ GET /api/auth/me 401 in 378ms
+ POST /api/auth/login 401 in 112ms
+ POST /api/auth/login 401 in 102ms
+ GET /login?next=%2Finvestigations%2Facadb0b9-cc66-4dbb-9c0a-288b09014228 200 in 166ms
+ GET /api/auth/me 401 in 41ms
+ POST /api/auth/login 401 in 321ms
+ POST /api/auth/login 401 in 295ms
+ ○ Compiling /signup ...
+ ✓ Compiled /signup in 2.7s (838 modules)
+ ✓ Compiled in 763ms (405 modules)
+ ✓ Compiled /api/auth/signup in 456ms (436 modules)
+ POST /api/auth/signup 201 in 853ms
+ POST /api/auth/login 200 in 265ms
+ ✓ Compiled /api/auth/me in 506ms (438 modules)
+ GET /api/auth/me 200 in 663ms
+ ○ Compiling /api/v1/[...path] ...
+ ✓ Compiled /api/v1/[...path] in 860ms (440 modules)
+ GET /api/v1/health 200 in 1134ms
+ GET /api/v1/notifications/unread-count 200 in 1345ms
+ GET /api/v1/reconciliation/discrepancies 200 in 1362ms
+ GET /api/v1/reconciliation/runs 200 in 1373ms
+ GET /api/v1/system/info 200 in 1406ms
+ GET /api/v1/notifications/unread-count 200 in 312ms
+ GET /api/v1/metrics/overview 200 in 1511ms
+ GET /api/v1/health 200 in 145ms
+ GET /api/v1/reconciliation/runs 200 in 240ms
+ GET /api/v1/system/info 200 in 275ms
+ GET /api/v1/reconciliation/discrepancies 200 in 250ms
+ GET /api/v1/metrics/overview 200 in 308ms
+ GET /api/v1/notifications/unread-count 200 in 115ms
+ GET /api/v1/notifications/unread-count 200 in 86ms
+ POST /api/v1/investigations/discrepancy/fc262b6e-4e29-4e69-b68d-85f019ca79d2/run 200 in 212ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228 200 in 175ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228/attempts 200 in 231ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228/attempts 200 in 246ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228 200 in 255ms
+ GET /api/v1/investigations/acadb0b9-cc66-4dbb-9c0a-288b09014228/attempts/7f2c6be2-1f5b-4b34-99c8-62bacf0ea447 200 in 135ms
+ ○ Compiling /discrepancies ...
+ ✓ Compiled /discrepancies in 3.2s (850 modules)
+ GET /api/v1/reconciliation/discrepancies 200 in 203ms
+ GET /api/v1/reconciliation/discrepancies 200 in 205ms
+ ○ Compiling /investigations ...
+ ✓ Compiled /investigations in 1298ms (858 modules)
+ GET /api/v1/investigations 200 in 168ms
+ GET /api/v1/investigations 200 in 175ms
+ GET /api/v1/notifications/unread-count 200 in 109ms
+ GET /api/v1/notifications/unread-count 200 in 108ms
+ GET /api/v1/notifications/unread-count 200 in 110ms
+ GET /api/v1/notifications/unread-count 200 in 108ms
+ GET /api/v1/notifications/unread-count 200 in 112ms
+ ○ Compiling /settings ...
+ ✓ Compiled /settings in 3.2s (860 modules)
+ GET /api/v1/notifications/unread-count 200 in 135ms
+ GET /api/v1/notifications/unread-count 200 in 111ms
+ GET /api/v1/notifications/unread-count 200 in 108ms
+ GET /api/v1/notifications/unread-count 200 in 107ms
+ GET /settings 200 in 413ms
+ ○ Compiling /api/auth/me ...
+ ✓ Compiled /api/auth/me in 654ms (435 modules)
+ GET /api/v1/notifications/unread-count 200 in 1302ms
+ GET /api/v1/notifications/unread-count 200 in 1322ms
+ GET /api/auth/me 200 in 1344ms
+ ○ Compiling / ...
+ ✓ Compiled / in 817ms (441 modules)
+ GET /api/v1/health 200 in 230ms
+ GET /api/v1/health 200 in 272ms
+ GET /api/v1/reconciliation/discrepancies 200 in 388ms
+ GET /api/v1/reconciliation/runs 200 in 406ms
+ GET /api/v1/system/info 200 in 426ms
+ GET /api/v1/metrics/overview 200 in 439ms
+ GET /api/v1/system/info 200 in 271ms
+ GET /api/v1/metrics/overview 200 in 176ms
+ GET /api/v1/reconciliation/runs 200 in 121ms
+ GET /api/v1/reconciliation/discrepancies 200 in 139ms
+ GET /api/v1/notifications/unread-count 200 in 107ms
+ GET /api/v1/notifications/unread-count 200 in 95ms
+ GET /api/v1/notifications/unread-count 200 in 96ms
+ GET /api/v1/notifications/unread-count 200 in 84ms
+ GET /api/v1/notifications/unread-count 200 in 87ms
+ GET /api/v1/notifications/unread-count 200 in 96ms
+ GET /api/v1/notifications/unread-count 200 in 102ms
+ GET /api/v1/notifications/unread-count 200 in 107ms
+ GET /api/v1/notifications/unread-count 200 in 117ms
+ GET /api/v1/notifications/unread-count 200 in 104ms
+ GET /api/v1/notifications/unread-count 200 in 122ms
+ GET /api/v1/notifications/unread-count 200 in 105ms
+ GET /api/v1/notifications/unread-count 200 in 126ms
+ GET /api/v1/notifications/unread-count 200 in 109ms
+ GET /api/v1/notifications/unread-count 200 in 111ms
+ GET /api/v1/notifications/unread-count 200 in 119ms
+ GET /api/v1/notifications/unread-count 200 in 101ms
+ GET /api/v1/notifications/unread-count 401 in 55ms
+ ○ Compiling /api/auth/login ...
+ ✓ Compiled /api/auth/login in 1891ms (433 modules)
+ POST /api/auth/login 200 in 2555ms
+ ✓ Compiled /api/auth/me in 369ms (435 modules)
+ GET /api/auth/me 200 in 523ms
+ ○ Compiling /api/v1/[...path] ...
+ ✓ Compiled /api/v1/[...path] in 557ms (437 modules)
+ GET /api/v1/notifications/unread-count 200 in 910ms
+ GET /api/v1/notifications/unread-count 200 in 915ms
+ GET /settings 200 in 415ms
+ GET /api/auth/me 200 in 101ms
+ GET /api/v1/notifications/unread-count 200 in 212ms
+ GET /api/v1/notifications/unread-count 200 in 217ms
+ GET /api/v1/notifications/unread-count 200 in 106ms
+ GET /settings 200 in 94ms
+ GET /api/auth/me 200 in 224ms
+ GET /api/v1/notifications/unread-count 200 in 236ms
+ GET /api/v1/notifications/unread-count 200 in 247ms
+ GET /api/v1/health 200 in 181ms
+ GET /api/v1/health 200 in 216ms
+ GET /api/v1/reconciliation/runs 200 in 269ms
+ GET /api/v1/reconciliation/discrepancies 200 in 280ms
+ GET /api/v1/system/info 200 in 300ms
+ GET /api/v1/metrics/overview 200 in 348ms
+ GET /api/v1/system/info 200 in 231ms
+ GET /api/v1/metrics/overview 200 in 189ms
+ GET /api/v1/reconciliation/discrepancies 200 in 160ms
+ GET /api/v1/reconciliation/runs 200 in 165ms
+ GET /api/v1/notifications/unread-count 200 in 116ms
+ GET /api/v1/notifications/unread-count 200 in 97ms
+ GET /api/v1/notifications/unread-count 200 in 92ms
+ GET / 200 in 102ms
+ GET /api/v1/health 200 in 197ms
+ GET /api/v1/notifications/unread-count 200 in 260ms
+ GET /api/v1/reconciliation/runs 200 in 268ms
+ GET /api/v1/reconciliation/discrepancies 200 in 279ms
+ GET /api/v1/system/info 200 in 299ms
+ GET /api/v1/metrics/overview 200 in 316ms
+ GET /api/auth/me 200 in 219ms
+ GET /api/v1/health 200 in 175ms
+ GET /api/v1/reconciliation/runs 200 in 255ms
+ GET /api/v1/notifications/unread-count 200 in 319ms
+ GET /api/v1/system/info 200 in 326ms
+ GET /api/v1/reconciliation/discrepancies 200 in 171ms
+ GET /api/v1/metrics/overview 200 in 341ms
+ GET /api/v1/notifications/unread-count 200 in 104ms
+ GET /api/v1/notifications/unread-count 200 in 93ms
+ GET /api/v1/notifications/unread-count 200 in 107ms
+ GET /api/v1/notifications/unread-count 200 in 101ms
+ GET /api/v1/notifications/unread-count 200 in 143ms
+ GET /api/v1/notifications/unread-count 200 in 135ms
+ GET /api/v1/notifications/unread-count 200 in 102ms
+ GET /settings 200 in 112ms
+ GET /api/auth/me 200 in 129ms
+ GET /api/v1/notifications/unread-count 200 in 205ms
+ GET /api/v1/notifications/unread-count 200 in 187ms
+ GET /api/v1/notifications/unread-count 200 in 98ms
+ GET /settings 200 in 90ms
+ GET /api/auth/me 200 in 123ms
+ GET /api/v1/notifications/unread-count 200 in 219ms
+ GET /api/v1/notifications/unread-count 200 in 225ms
+ GET /api/v1/notifications/unread-count 200 in 115ms
+ GET /api/v1/notifications/unread-count 200 in 116ms
+ GET /api/v1/notifications/unread-count 200 in 104ms
+ GET /api/v1/notifications/unread-count 200 in 132ms
+ GET /settings 200 in 96ms
+ GET /api/auth/me 200 in 114ms
+ GET /api/v1/notifications/unread-count 200 in 195ms
+ GET /api/v1/notifications/unread-count 200 in 200ms
+ GET /settings 200 in 81ms
+ GET /api/auth/me 200 in 235ms
+ GET /api/v1/notifications/unread-count 200 in 297ms
+ GET /api/v1/notifications/unread-count 200 in 299ms
+ GET /api/v1/notifications/unread-count 200 in 194ms
+ GET /api/v1/notifications/unread-count 200 in 168ms
+ GET /api/v1/notifications/unread-count 200 in 158ms
+ GET /api/v1/notifications/unread-count 200 in 124ms
+ GET /api/v1/notifications/unread-count 200 in 100ms
+ GET /api/v1/notifications/unread-count 200 in 106ms
+[?25h

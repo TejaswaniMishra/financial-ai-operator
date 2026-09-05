@@ -318,3 +318,73 @@ async def test_investigation_api_list(async_client: AsyncClient, seeded_discrepa
     inv3_data = next((inv for inv in data2 if inv["id"] == inv3_id), None)
     assert inv3_data is not None
     assert inv3_data["active_attempt_id"] is None
+
+
+@pytest.mark.asyncio
+async def test_investigation_detail_returns_authoritative_discrepancy_evidence(
+    async_client: AsyncClient,
+    db_session: AsyncSession,
+    auth_headers,
+):
+    """The investigation detail response must carry the authoritative
+    deterministic discrepancy evidence (rule, severity, entities, amounts)
+    so the UI renders real facts instead of a placeholder."""
+    run_id = str(uuid4())
+    db_session.add(ReconciliationRun(id=run_id))
+
+    disc_id = str(uuid4())
+    disc = Discrepancy(
+        id=disc_id,
+        run_id=run_id,
+        rule_code="EVIDENCE_TEST_001",
+        discrepancy_type="AMOUNT_MISMATCH",
+        severity="HIGH",
+        source_entity_type="SETTLEMENT",
+        source_entity_id=f"set_{uuid4().hex[:16]}",
+        related_entity_type="BANK_TRANSACTION",
+        related_entity_id=f"btx_{uuid4().hex[:16]}",
+        expected_amount=Decimal("195.0000"),
+        actual_amount=Decimal("190.0000"),
+        difference_amount=Decimal("5.0000"),
+        currency="USD",
+    )
+    db_session.add(disc)
+
+    from database.models.investigation import Investigation, InvestigationStatus
+    inv_id = str(uuid4())
+    db_session.add(
+        Investigation(
+            id=inv_id,
+            discrepancy_id=disc_id,
+            status=InvestigationStatus.PENDING,
+            active_attempt_id=None,
+        )
+    )
+    await db_session.commit()
+
+    resp = await async_client.get(f"/api/v1/investigations/{inv_id}", headers=auth_headers)
+    assert resp.status_code == 200
+    data = resp.json()
+
+    assert data["id"] == inv_id
+    assert data["discrepancy_id"] == disc_id
+    disc_data = data["discrepancy"]
+    assert disc_data is not None
+    assert disc_data["id"] == disc_id
+    assert disc_data["rule_code"] == "EVIDENCE_TEST_001"
+    assert disc_data["type"] == "AMOUNT_MISMATCH"
+    assert disc_data["severity"] == "HIGH"
+    assert disc_data["source_entity_type"] == "SETTLEMENT"
+    assert disc_data["source_entity_id"] == disc.source_entity_id
+    assert disc_data["related_entity_type"] == "BANK_TRANSACTION"
+    assert disc_data["related_entity_id"] == disc.related_entity_id
+    # Amounts are string-serialized to preserve decimal precision exactly.
+    assert disc_data["expected_amount"] == "195.0000"
+    assert disc_data["actual_amount"] == "190.0000"
+    assert disc_data["difference_amount"] == "5.0000"
+    assert disc_data["currency"] == "USD"
+
+    # No internal/insecure fields may leak through the evidence block.
+    assert "raw_llm_response" not in disc_data
+    assert "context_snapshot" not in disc_data
+    assert "context_hash" not in disc_data

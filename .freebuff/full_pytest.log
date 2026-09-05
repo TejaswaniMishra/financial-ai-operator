@@ -1,0 +1,321 @@
+EE...................................................................... [ 21%]
+............................F........................................... [ 42%]
+........................................................................ [ 64%]
+........................................................................ [ 85%]
+...............................................                          [100%]
+=================================== ERRORS ====================================
+____________ ERROR at setup of test_execute_pending_request_denied ____________
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:183: in execute
+    self._adapt_connection._handle_exception(error)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:343: in _handle_exception
+    raise error
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:165: in execute
+    self.await_(_cursor.execute(operation, parameters))
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:132: in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:196: in greenlet_spawn
+    value = await result
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\cursor.py:40: in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\cursor.py:32: in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\core.py:160: in _execute
+    return await future
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\core.py:63: in _connection_worker_thread
+    result = function()
+E   sqlite3.OperationalError: no such table: investigation
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_action_execution.py:21: in sample_investigation
+    await db_session.commit()
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\ext\asyncio\session.py:999: in commit
+    await greenlet_spawn(self.sync_session.commit)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:203: in greenlet_spawn
+    result = context.switch(value)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\session.py:2035: in commit
+    trans.commit(_to_root=True)
+<string>:2: in commit
+    ???
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\session.py:1316: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\session.py:1290: in _prepare_impl
+    self.session.flush()
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\session.py:4353: in flush
+    self._flush(objects)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\session.py:4488: in _flush
+    with util.safe_reraise():
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\langhelpers.py:122: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\session.py:4449: in _flush
+    flush_context.execute()
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\unitofwork.py:465: in execute
+    rec.execute(self)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\unitofwork.py:641: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\persistence.py:94: in save_obj
+    _emit_insert_statements(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\orm\persistence.py:1049: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:183: in execute
+    self._adapt_connection._handle_exception(error)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:343: in _handle_exception
+    raise error
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:165: in execute
+    self.await_(_cursor.execute(operation, parameters))
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:132: in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:196: in greenlet_spawn
+    value = await result
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\cursor.py:40: in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\cursor.py:32: in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\core.py:160: in _execute
+    return await future
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\core.py:63: in _connection_worker_thread
+    result = function()
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: investigation
+E   [SQL: INSERT INTO investigation (id, discrepancy_id, status, active_attempt_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)]
+E   [parameters: ('dcc3d61f-924d-4962-832b-a4dbc5d3d9c3', '15df8581-1b84-4494-8dbe-42aa85333904', 'COMPLETED', None, '2026-09-04 17:18:11.300979', '2026-09-04 17:18:11.300979')]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)
+__________ ERROR at teardown of test_execute_pending_request_denied ___________
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:183: in execute
+    self._adapt_connection._handle_exception(error)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:343: in _handle_exception
+    raise error
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:165: in execute
+    self.await_(_cursor.execute(operation, parameters))
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:132: in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:196: in greenlet_spawn
+    value = await result
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\cursor.py:40: in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\cursor.py:32: in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\core.py:160: in _execute
+    return await future
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\core.py:63: in _connection_worker_thread
+    result = function()
+E   sqlite3.OperationalError: no such table: merchants
+
+The above exception was the direct cause of the following exception:
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\pytest_asyncio\plugin.py:363: in finalizer
+    event_loop.run_until_complete(task)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\asyncio\base_events.py:641: in run_until_complete
+    return future.result()
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\pytest_asyncio\plugin.py:354: in async_finalizer
+    await gen_obj.__anext__()  # type: ignore[union-attr]
+tests\conftest.py:58: in db_session
+    await conn.run_sync(Base.metadata.drop_all)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\ext\asyncio\engine.py:888: in run_sync
+    return await greenlet_spawn(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:201: in greenlet_spawn
+    result = context.throw(*sys.exc_info())
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\sql\schema.py:5958: in drop_all
+    bind._run_ddl_visitor(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:2469: in _run_ddl_visitor
+    ).traverse_single(element)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\sql\visitors.py:661: in traverse_single
+    return meth(obj, **kw)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\sql\ddl.py:1143: in visit_metadata
+    self.traverse_single(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\sql\visitors.py:661: in traverse_single
+    return meth(obj, **kw)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\sql\ddl.py:1210: in visit_table
+    DropTable(table)._invoke_with(self.connection)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\sql\ddl.py:322: in _invoke_with
+    return bind.execute(self)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\sql\ddl.py:188: in _execute_on_connection
+    return connection._execute_ddl(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1532: in _execute_ddl
+    ret = self._execute_context(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:183: in execute
+    self._adapt_connection._handle_exception(error)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:343: in _handle_exception
+    raise error
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\sqlite\aiosqlite.py:165: in execute
+    self.await_(_cursor.execute(operation, parameters))
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:132: in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\util\_concurrency_py3k.py:196: in greenlet_spawn
+    value = await result
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\cursor.py:40: in execute
+    await self._execute(self._cursor.execute, sql, parameters)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\cursor.py:32: in _execute
+    return await self._conn._execute(fn, *args, **kwargs)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\core.py:160: in _execute
+    return await future
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\aiosqlite\core.py:63: in _connection_worker_thread
+    result = function()
+E   sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: merchants
+E   [SQL: 
+E   DROP TABLE merchants]
+E   (Background on this error at: https://sqlalche.me/e/20/e3q8)
+================================== FAILURES ===================================
+__________________ test_real_gemini_structured_investigation __________________
+services\investigation\provider.py:176: in generate_structured_investigation
+    response = await self.client.aio.models.generate_content(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\google\genai\models.py:8642: in generate_content
+    response = await self._generate_content(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\google\genai\models.py:7102: in _generate_content
+    response = await self._api_client.async_request(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\google\genai\_api_client.py:1657: in async_request
+    result = await self._async_request(
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\google\genai\_api_client.py:1590: in _async_request
+    return await self._async_retry(  # type: ignore[no-any-return]
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\tenacity\asyncio\__init__.py:112: in __call__
+    do = await self.iter(retry_state=retry_state)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\tenacity\asyncio\__init__.py:157: in iter
+    result = await action(retry_state)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\tenacity\_utils.py:111: in inner
+    return call(*args, **kwargs)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\tenacity\__init__.py:413: in exc_check
+    raise retry_exc.reraise()
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\tenacity\__init__.py:184: in reraise
+    raise self.last_attempt.result()
+..\..\..\AppData\Local\Programs\Python\Python310\lib\concurrent\futures\_base.py:438: in result
+    return self.__get_result()
+..\..\..\AppData\Local\Programs\Python\Python310\lib\concurrent\futures\_base.py:390: in __get_result
+    raise self._exception
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\tenacity\asyncio\__init__.py:116: in __call__
+    result = await fn(*args, **kwargs)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\google\genai\_api_client.py:1521: in _async_request_once
+    await errors.APIError.raise_for_async_response(response)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\google\genai\errors.py:247: in raise_for_async_response
+    await cls.raise_error_async(status_code, response_json, response)
+..\..\..\AppData\Local\Programs\Python\Python310\lib\site-packages\google\genai\errors.py:269: in raise_error_async
+    raise ClientError(status_code, response_json, response)
+E   google.genai.errors.ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\nPlease retry in 47.246993425s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '47s'}]}}
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_investigation_gemini.py:111: in test_real_gemini_structured_investigation
+    result = await real_provider.generate_structured_investigation(
+services\investigation\provider.py:227: in generate_structured_investigation
+    raise InvestigationProviderError(
+E   services.investigation.provider.InvestigationProviderError: The AI provider could not complete the investigation request. Please retry.
+------------------------------ Captured log call ------------------------------
+WARNING  services.investigation.provider:provider.py:140 Upgrading deprecated model gemini-2.5-flash to gemini-3.6-flash
+ERROR    services.investigation.provider:provider.py:226 Gemini generation failed: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\nPlease retry in 47.246993425s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.6-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '47s'}]}}
+============================== warnings summary ===============================
+tests/integration/test_action_execution.py: 4 warnings
+tests/integration/test_action_request_api.py: 6 warnings
+tests/integration/test_admin_user_management.py: 28 warnings
+tests/integration/test_api_health.py: 1 warning
+tests/integration/test_auth.py: 6 warnings
+tests/integration/test_exceptions_api.py: 2 warnings
+tests/integration/test_ingestion_api.py: 19 warnings
+tests/integration/test_investigation_api.py: 7 warnings
+tests/integration/test_investigation_m4_regression.py: 3 warnings
+tests/integration/test_mfa_api.py: 8 warnings
+tests/integration/test_notifications_api.py: 3 warnings
+tests/integration/test_password_management.py: 25 warnings
+tests/integration/test_periods_api.py: 9 warnings
+tests/integration/test_policy_api.py: 3 warnings
+tests/integration/test_profile_preferences_api.py: 6 warnings
+tests/integration/test_rbac.py: 20 warnings
+tests/integration/test_reconciliation_api.py: 1 warning
+tests/integration/test_reports_api.py: 30 warnings
+tests/integration/test_scenario_data.py: 10 warnings
+tests/integration/test_security_events.py: 3 warnings
+tests/integration/test_token_lifecycle.py: 8 warnings
+tests/integration/test_transactions_api.py: 3 warnings
+tests/integration/test_transactions_workspace.py: 23 warnings
+  C:\Users\tejas\AppData\Local\Programs\Python\Python310\lib\site-packages\jwt\api_jwt.py:147: InsecureKeyLengthWarning: The HMAC key is 24 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+    return self._jws.encode(
+
+tests/integration/test_action_execution.py: 4 warnings
+tests/integration/test_action_request_api.py: 6 warnings
+tests/integration/test_admin_user_management.py: 25 warnings
+tests/integration/test_api_health.py: 1 warning
+tests/integration/test_auth.py: 6 warnings
+tests/integration/test_exceptions_api.py: 2 warnings
+tests/integration/test_ingestion_api.py: 19 warnings
+tests/integration/test_investigation_api.py: 7 warnings
+tests/integration/test_investigation_m4_regression.py: 3 warnings
+tests/integration/test_mfa_api.py: 8 warnings
+tests/integration/test_notifications_api.py: 3 warnings
+tests/integration/test_password_management.py: 23 warnings
+tests/integration/test_periods_api.py: 9 warnings
+tests/integration/test_policy_api.py: 3 warnings
+tests/integration/test_profile_preferences_api.py: 6 warnings
+tests/integration/test_rbac.py: 18 warnings
+tests/integration/test_reconciliation_api.py: 1 warning
+tests/integration/test_reports_api.py: 29 warnings
+tests/integration/test_scenario_data.py: 2 warnings
+tests/integration/test_security_events.py: 3 warnings
+tests/integration/test_token_lifecycle.py: 8 warnings
+tests/integration/test_transactions_api.py: 3 warnings
+tests/integration/test_transactions_workspace.py: 22 warnings
+  C:\Users\tejas\AppData\Local\Programs\Python\Python310\lib\site-packages\jwt\api_jwt.py:368: InsecureKeyLengthWarning: The HMAC key is 24 bytes long, which is below the minimum recommended length of 32 bytes for SHA256. See RFC 7518 Section 3.2.
+    decoded = self.decode_complete(
+
+tests/integration/test_password_management.py::test_change_password_weak_new_is_422
+  C:\Users\tejas\AppData\Local\Programs\Python\Python310\lib\site-packages\fastapi\routing.py:352: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+    return await dependant.call(**values)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============================ slowest 15 durations =============================
+2.95s setup    tests/integration/test_notifications_api.py::test_action_request_creation_notifies_approvers
+2.45s call     tests/integration/test_password_management.py::test_admin_reset_full_forced_change_flow
+2.12s setup    tests/integration/test_notifications_api.py::test_mark_read_and_unread_count_persist
+1.94s call     tests/integration/test_password_management.py::test_change_password_body_user_id_is_ignored
+1.89s call     tests/integration/test_password_management.py::test_change_password_invalidates_all_existing_tokens
+1.67s setup    tests/integration/test_ingestion_api.py::test_retry_rejects_when_nothing_to_retry
+1.66s setup    tests/integration/test_notifications_api.py::test_notifications_are_user_scoped
+1.65s setup    tests/integration/test_rbac.py::test_operator_can_view_investigations
+1.63s call     tests/integration/test_password_management.py::test_change_password_success_roundtrip
+1.58s call     tests/integration/test_password_management.py::test_concurrent_admin_resets_keep_consistent_state
+1.57s call     tests/integration/test_password_management.py::test_concurrent_password_changes_are_serialized
+1.56s setup    tests/integration/test_exceptions_api.py::test_exceptions_list_api
+1.55s setup    tests/integration/test_periods_api.py::test_create_period_persists_across_requests
+1.55s setup    tests/integration/test_periods_api.py::test_concurrent_close
+1.55s setup    tests/integration/test_investigation_api.py::test_investigation_api_not_found
+=========================== short test summary info ===========================
+FAILED tests/integration/test_investigation_gemini.py::test_real_gemini_structured_investigation
+ERROR tests/integration/test_action_execution.py::test_execute_pending_request_denied
+ERROR tests/integration/test_action_execution.py::test_execute_pending_request_denied
+1 failed, 332 passed, 440 warnings, 2 errors in 553.82s (0:09:13)
+PYTEST_EXIT:1
