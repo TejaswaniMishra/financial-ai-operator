@@ -27,6 +27,12 @@ function tokenMaxAgeSeconds(accessToken: string): number {
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  console.log("[auth/login] backend config:", {
+    configured: Boolean(BACKEND_URL),
+    isLocalhost: BACKEND_URL.includes("localhost"),
+    isRender: BACKEND_URL.includes("onrender.com"),
+  });
+
   if (!checkCSRF(req)) {
     return NextResponse.json({ detail: "Cross-origin request blocked" }, { status: 403 });
   }
@@ -58,7 +64,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       if (typeof data?.detail === "string") {
         detail = data.detail;
       }
-    } catch {}
+    } catch { }
     return NextResponse.json({ detail }, { status: backendRes.status });
   }
 
