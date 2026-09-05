@@ -3,7 +3,6 @@ import uuid
 from decimal import Decimal
 from sqlalchemy import select, and_, not_
 from sqlalchemy.orm import selectinload
-from sqlalchemy.dialects.postgresql import insert as pg_insert
 
 from database.models import Payment, Settlement, SettlementItem, Fee
 from database.models.reconciliation import (
@@ -140,6 +139,7 @@ class PaymentToSettlementMatcher(BaseMatcher):
                 evidence=evidence
             )
             self.session.add(rel)
+            await self.session.flush()  # make insert visible within this transaction before the next SELECT
             return True
         return False
 
@@ -168,6 +168,7 @@ class PaymentToSettlementMatcher(BaseMatcher):
                 currency=payment.currency
             )
             self.session.add(disc)
+            await self.session.flush()  # make insert visible within this transaction before the next SELECT
             return True
         return False
         

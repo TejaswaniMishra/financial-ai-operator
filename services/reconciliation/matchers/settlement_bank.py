@@ -176,6 +176,7 @@ class SettlementToBankTransactionMatcher(BaseMatcher):
                 evidence=evidence
             )
             self.session.add(rel)
+            await self.session.flush()  # make insert visible within this transaction before the next SELECT
             return True
         return False
 
@@ -204,5 +205,6 @@ class SettlementToBankTransactionMatcher(BaseMatcher):
                 currency=currency
             )
             self.session.add(disc)
+            await self.session.flush()  # make insert visible within this transaction before the next SELECT
             return True
         return False
